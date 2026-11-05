@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "build:search": "node --experimental-strip-types src/lib/search-mdx.ts",
-    "dev": "npm run build:search && vite",
+    "dev": "npm run build:search && node scripts/write-seo.mjs --data && vite",
     "dev:clean": "rm -rf node_modules/.vite && vite --force",
-    "build": "npm run build:search && vite build && cp dist/index.html dist/404.html",
+    "build": "npm run build:search && node scripts/write-seo.mjs --data && vite build && node scripts/write-seo.mjs --html && cp dist/index.html dist/404.html",
     "preview": "vite preview",
     "start": "vite preview",
     "clean": "rm -rf dist node_modules"

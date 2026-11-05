@@ -1,3 +1,4 @@
+import { Seo } from '@/lib/seo';
 import Home from '@/pages/home';
 import { DocsLoading } from '@/pages/docs/docs-loading';
 import { SafeAreaProvider } from '@/ui/safe-area-provider';
@@ -57,6 +58,7 @@ function Layout() {
     <div className="min-h-svh font-sans antialiased" lang="en">
       <SafeAreaProvider>
         <RootProvider search={search}>
+          <Seo />
           <Outlet />
         </RootProvider>
       </SafeAreaProvider>

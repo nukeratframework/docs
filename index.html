@@ -3,20 +3,56 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NukeRat Framework | Post Exploitation for Red Teams</title>
+    <meta
+      name="description"
+      content="Open source post exploitation framework for red team operations. Docs cover implants, listeners, pivoting, the armory, and the operator client." />
+    <link rel="canonical" href="https://nukerat.com/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="NukeRat Framework" />
+    <meta property="og:title" content="NukeRat Framework | Post Exploitation for Red Teams" />
+    <meta
+      property="og:description"
+      content="Open source post exploitation framework for red team operations. Docs cover implants, listeners, pivoting, the armory, and the operator client." />
+    <meta property="og:url" content="https://nukerat.com/" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="NukeRat Framework | Post Exploitation for Red Teams" />
+    <meta
+      name="twitter:description"
+      content="Open source post exploitation framework for red team operations. Docs cover implants, listeners, pivoting, the armory, and the operator client." />
+    <!-- seo:alternates -->
+    <link rel="alternate" hreflang="en" href="https://nukerat.com/" />
+    <link rel="alternate" hreflang="x-default" href="https://nukerat.com/" />
+    <!-- /seo:alternates -->
+    <script type="application/ld+json" id="seo-jsonld">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "NukeRat Framework",
+        "applicationCategory": "SecurityApplication",
+        "operatingSystem": "Linux, macOS, Windows",
+        "description": "Open source post exploitation framework for red team operations. Docs cover implants, listeners, pivoting, the armory, and the operator client.",
+        "url": "https://nukerat.com/"
+      }
+    </script>
     <link rel="icon" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400&family=Geist:wght@100..900&display=swap"
       rel="stylesheet" />
-    <title>NukeRat Framework</title>
   </head>
   <body>
     <script>
       globalThis.global = globalThis;
       globalThis.process = globalThis.process || { env: { NODE_ENV: 'development' } };
     </script>
-    <div id="root"></div>
+    <div id="root">
+      <main>
+        <h1>NukeRat Framework</h1>
+        <p>A post exploitation framework for modern red team operations.</p>
+      </main>
+    </div>
     <script type="module" src="/src/App.tsx"></script>
   </body>
 </html>
