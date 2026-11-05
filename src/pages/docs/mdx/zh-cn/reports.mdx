@@ -1,0 +1,76 @@
+---
+title: 报告
+---
+
+import { Callout } from '@/ui/custom/callout';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import activityReport from '@/assets/img/tutorial/report.png';
+
+NukeRat 可生成一次行动中发生内容的报告。每份报告可导出为 PDF（默认）、HTML 或 JSON。可用报告类型：
+
+- **Activity**：已执行的终端命令与捕获的凭据
+- **Hosts Report**：已控主机详情
+- **Indicators of Compromise**：入侵指标（IoC）列表
+
+## 活动报告
+
+活动报告从较高层面概览行动过程，结构如下：
+
+| 章节 | 说明 |
+|---------|-------------|
+| Target scope | 已控主机列表 |
+| Queue activity | 最多 200 条终端命令（时间、主机名、用户、命令） |
+| Captured credentials | 最多 200 条捕获的凭据 |
+
+创建活动报告时可启用 **Hide credentials**，在导出中掩码凭据内容。
+
+<Callout type="info">
+  提示：queue activity 行来自终端队列条目。可在生成报告前前往 **NukeRat** > **Queue** 删除不需要的命令。
+</Callout>
+
+## 主机报告
+
+这是最简报告：单表列出最多 200 台已控主机，包含：
+
+- Hostname
+- User
+- Operating system
+- Internal IP
+- External IP
+- NukeRat 植入体的 PID
+
+## 入侵指标
+
+IoC 报告是三者中最复杂的一份，按以下章节汇总行动中存储的全部 IoC：
+
+| 章节 | 说明 |
+|---------|-------------|
+| Target scope | 已控主机列表 |
+| IP Addresses | IP 地址列表 |
+| Domains | 域名列表 |
+| Files | 从命令输出中检测到的文件路径 |
+| Hashes | 文件哈希（MD5、SHA1、SHA256） |
+
+NukeRat 会自动填充 IoC 数据库。终端命令通过正则规则扫描 IPv4、域名与已知文件扩展名。经文件服务器传输的文件也会记录 MD5、SHA1、SHA256。后台没有 AI 等动态处理输出的机制，因此可能出现误报或捕获错误，但不算常见。
+
+<Callout type="info">
+  提示：若需修正指标捕获问题，NukeRat 提供 IoC 编辑器，可审阅并删除已捕获指标。从 **NukeRat** > **IOCs** 打开。
+</Callout>
+
+## 报告示例
+
+下方为报告样式示例：
+<ImageZoom src={activityReport} alt="Activity report" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+打开报告请当心——浅色主题可能会「闪瞎眼」 ¯\\_(ツ)_/¯
+
+## 限制
+
+所有报告在所选团队服务器上生成，因此每份报告仅涵盖连接到该服务器的主机。
+
+若使用多台团队服务器，需分别为每台服务器生成报告。
+
+## 反馈
+
+报告生成仍处于实验阶段，变更频率可能高于 NukeRat 大多数功能——主要因为我们仍在摸索操作员真正需要从报告中得到什么。
+
+如有反馈或建议，请在 GitHub 提交 issue。

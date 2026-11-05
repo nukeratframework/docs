@@ -1,0 +1,53 @@
+---
+title: キーロガー
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { Keyboard, RefreshCw } from 'lucide-react';
+import keylogger from '@/assets/img/tutorial/keylogger.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+キーロガータブはスクリーンショットタブと同様、受動的な機能です。ホストからすでにキャプチャされたキーの読み取りと編集のみを行います。
+
+上部バーの <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle"><Keyboard size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> アイコン</span>から **Keylogger** タブを開くか、**Tabs** > **Keylogger** から開けます。
+
+<ImageZoom src={keylogger} alt="Keylogger" className="tutorial_img" />
+
+## 使い方
+
+キーロガータブを使うには、次の手順に従ってください。
+
+  <Steps>
+    <Step>
+      ### キーロガーを開始
+      ターミナルで `keylogger start` を実行してキーロガーを開始します。Windows では `--method [keystate|boardstate]` フラグでキャプチャ方法を変更できます。
+    </Step>
+    <Step>
+      ### キーロガータブを更新
+      キーロガータブは自動更新されないため、<RefreshCw size={18.5} className="w-4 ml-1.5 inline-flex items-center gap-1 whitespace-nowrap align-middle" /> をクリックして手動で更新してください。
+    </Step>
+  </Steps>
+
+キーロガータブではホストやサーバーの選択は不要です。設定済みのすべてのチームサーバーにリクエストがすでに送信されます。
+
+## 仕組み
+
+キーロガーは別のバックグラウンドスレッドで動作し、キャプチャしたキーをバッチでサーバーに送信します。
+
+### Windows
+
+前述のとおり、Windows のキーロガーには 2 つのキャプチャ方法があります。一方は OPSEC を優先し、もう一方はキャプチャ精度を優先します。
+
+- **keystate** は `SetWindowsHookEx` による低レベルキーボードフックを使用します。フック監視には見えやすいですが、広範なポーリングは避けます。
+
+- **boardstate** は `--method` を省略した場合の既定です。`user32.dll` の `GetAsyncKeyState` を使い、ループでキー状態をポーリングします。フックはインストールされませんが、繰り返しポーリングは目立つ場合があります。
+
+コアロジックは `implants/windows/stageless/capabilities/keylogger.nim` にあります。
+
+### Linux
+
+X11（`libX11.so`）の `XOpenDisplay` と `XQueryKeymap` を使用します。`DISPLAY` が必要です。コアロジックは `implants/linux/stageless/capabilities/keylogger.nim` にあります。
+
+### MacOS
+
+この機能は MacOS ではサポートされていません。

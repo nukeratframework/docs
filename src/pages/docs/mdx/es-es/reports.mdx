@@ -1,0 +1,76 @@
+---
+title: Informes
+---
+
+import { Callout } from '@/ui/custom/callout';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import activityReport from '@/assets/img/tutorial/report.png';
+
+NukeRat te permite generar informes de todo lo ocurrido durante una operación. Puedes exportar cada informe en PDF (predeterminado), HTML o JSON. Los tipos de informe disponibles son:
+
+- **Activity**: comandos de terminal ejecutados y credenciales capturadas
+- **Hosts Report**: detalles de hosts comprometidos
+- **Indicators of Compromise**: lista de indicadores de compromiso
+
+## Informe de actividad
+
+Los informes de actividad ofrecen una visión general de lo ocurrido durante la operación. Su estructura es la siguiente:
+
+| Sección | Descripción |
+|---------|-------------|
+| Target scope | Lista de hosts comprometidos |
+| Queue activity | Hasta 200 comandos de terminal (hora, hostname, usuario, comando) |
+| Captured credentials | Hasta 200 credenciales capturadas |
+
+Al crear un informe de actividad, puedes activar **Hide credentials** para enmascarar el contenido de las credenciales en la exportación.
+
+<Callout type="info">
+  Consejo: las filas de actividad de la cola provienen de entradas de la cola del terminal. Puedes eliminar comandos de la cola yendo a **NukeRat** > **Queue**. Así puedes descartar capturas no deseadas antes de generar el informe.
+</Callout>
+
+## Informe de hosts
+
+Es el informe más sencillo. Lista hasta 200 hosts comprometidos en una sola tabla con:
+
+- Hostname
+- User
+- Operating system
+- Internal IP
+- External IP
+- PID del implant de NukeRat
+
+## Indicators of Compromise
+
+El informe IOC es el más complejo de los tres. Desglosa cada IOC almacenado para la operación en estas secciones:
+
+| Sección | Descripción |
+|---------|-------------|
+| Target scope | Lista de hosts comprometidos |
+| IP Addresses | Lista de direcciones IP |
+| Domains | Lista de dominios |
+| Files | Lista de rutas de archivo detectadas en la salida de comandos |
+| Hashes | Lista de hashes de archivo (MD5, SHA1 y SHA256) |
+
+NukeRat rellena la base de datos de IOC automáticamente. Los comandos de terminal se analizan con reglas regex para direcciones IPv4, dominios y extensiones de archivo conocidas. Los archivos transferidos mediante el file server también registran hashes MD5, SHA1 y SHA256. No hay nada dinámico en segundo plano, como un modelo de IA procesando la salida. Así que puedes obtener indicadores que no coinciden o errores de captura, aunque no es muy habitual.
+
+<Callout type="info">
+  Consejo: para corregir problemas de captura de indicadores, NukeRat incluye un editor de IOC donde puedes revisar los indicadores capturados y eliminarlos. Ábrelo desde **NukeRat** > **IOCs**.
+</Callout>
+
+## Ejemplo de informe
+
+Abajo hay un ejemplo del estilo visual del informe:
+<ImageZoom src={activityReport} alt="Activity report" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+Abre el informe con cuidado. Puede golpearte como un flashbang visual porque está en modo claro ¯\\_(ツ)_/¯
+
+## Limitaciones
+
+Todos los informes se generan en el team server que selecciones. Eso significa que cada informe se limita a los hosts conectados a ese servidor concreto.
+
+Si trabajas con más de un team server, tendrás que generar un informe por servidor por separado.
+
+## Comentarios
+
+La generación de informes sigue siendo experimental. Espera que cambie más a menudo que la mayoría de funciones de NukeRat, sobre todo porque aún estamos definiendo qué necesitan realmente los operadores de los informes.
+
+Si tienes comentarios o sugerencias, abre un issue en GitHub.

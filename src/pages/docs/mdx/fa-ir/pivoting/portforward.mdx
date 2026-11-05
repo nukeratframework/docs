@@ -1,0 +1,37 @@
+---
+title: فوروارد پورت
+---
+
+import socks from '@/assets/img/tutorial/port_fw.png';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+NukeRat امکان راه‌اندازی port forwarding از میزبان‌های به‌خطر‌افتاده را می‌دهد تا بتوانید به پورت مشخصی در شبکهٔ داخلی برسید.
+
+team server پورت listen را باز می‌کند. اتصال‌ها از طریق implant انتخاب‌شده به میزبان و پورت داخلی هدایت می‌شوند.
+
+## پیکربندی
+
+برای ساخت port forward مراحل زیر را انجام دهید:
+
+  <Steps>
+    <Step>
+      ### باز کردن پنجرهٔ Network
+      به **NukeRat** > **Network** بروید و **Add** را بزنید.
+    </Step>
+    <Step>
+      ### پیکربندی port forwarding
+      <ImageZoom src={socks} alt="Port forward add" className="h-[15rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+      - **Team server**: endpoint API listener (میزبان و پورت بالای فرم)
+      - **Type**: `port forwarding`
+      - **Host tag**: implantی که اتصال به هدف داخلی را باز می‌کند
+      - **Listen port**: پورتی که روی team server باز می‌شود
+      - **Protocol**: فقط TCP (آنچه team server فعلاً می‌پذیرد)
+      - **Forward host**: IP یا hostname داخلی برای دسترسی از طریق implant
+      - **Forward port**: پورت داخلی برای دسترسی از طریق implant
+
+      پس از تکمیل فیلدها **Create** را بزنید.
+    </Step>
+  </Steps>
+
+پس از آن، port forward در جدول Network دیده می‌شود. برای رسیدن به `forward_host:forward_port` از طریق implant به `<team_server_host>:<listen_port>` وصل شوید.

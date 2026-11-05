@@ -1,0 +1,56 @@
+---
+title: File browser
+---
+import folderExplorer from '@/assets/img/tutorial/folder_explorer.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import {
+  ArrowDownToLine,
+  ArrowLeft,
+  ArrowRight,
+  Bot,
+  ChevronsRight,
+  Folder,
+  LayoutGrid,
+  List,
+  RefreshCw,
+} from 'lucide-react';
+import { Callout } from '@/ui/custom/callout';
+
+The file browser lets you browse files and directories on a host without relying on terminal commands.
+
+You can open the **File Browser** tab from <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">the <Folder size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> icon</span> in the top bar, or from **Tabs** > **File Browser**.
+
+<Callout type="info">
+  Before using the file browser, select the target host by clicking **Host** next to the tab name.
+</Callout>
+
+Once you select a host, the client requests a directory listing for that host. The response populates the file browser on first load.
+
+<ImageZoom src={folderExplorer} alt="Folder explorer" className="tutorial_img" />
+
+The file and directory tree on the left lets you navigate folders and files on the selected host more quickly, while the search bar
+above the tree filters the tree locally. It does not send new listing commands to the host.
+
+## File download
+
+Click a file to view its raw contents. Use the **Download** button to save it locally.
+
+Image files are displayed inline in the file browser.
+
+When a file is larger than 25 MB, the file browser shows a warning instead of loading the full content. Download the file from the terminal if you need the full payload.
+
+## How it works
+
+For directory listing, the implant reads the directory and converts the result into a custom JSON format for the client to render. For file downloads, the implant returns the raw file bytes.
+
+### Windows
+
+Uses `kernel32.dll` (`FindFirstFileW`, `FindNextFileW`, `GetLogicalDriveStringsW`, `GetFileAttributesW`). The core logic is in `implants/windows/stageless/capabilities/folders.nim`.
+
+### Linux
+
+Uses POSIX `opendir`, `readdir`, and `stat`. The core logic is in `implants/linux/stageless/capabilities/folders.nim`.
+
+### MacOS
+
+Uses the `macapi` module (`ListDirEntries`, `PathExists`, `PathIsDir`). The core logic is in `implants/mac/stageless/capabilities/folders.go`.

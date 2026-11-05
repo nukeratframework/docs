@@ -1,0 +1,34 @@
+---
+title: دستورات
+---
+
+NukeScript مجموعه‌ای از دستورات بومی برای انجام کار روی team server دارد. توجه کنید NukeScript فقط به دستورات بومی محدود نیست؛ چون روی Python اجرا می‌شود، می‌توانید از هر کتابخانه یا تابع Python هم استفاده کنید.
+
+## فهرست دستورات
+
+در زیر فهرست دستورات موجود آمده است:
+
+| دستور | توضیح | آرگومان‌ها |
+| --- | --- | --- |
+| `cmd` | دستور ترمینال هم‌زمان که خروجی را به‌صورت رشته برمی‌گرداند | `host_tag`, `command` |
+| `async_cmd` | دستور را در صف قرار می‌دهد و فوراً برمی‌گردد | `host_tag`, `command` |
+| `process` | درخواست درخت فرایندها | `host_tag` |
+| `folders` | فهرست یک پوشهٔ دور | `host_tag`, `path` |
+| `screenshot` | گرفتن اسکرین‌شات؛ `output` اختیاری (فقط keyword) برای مسیر ذخیرهٔ فایل | `host_tag`, `output` (اختیاری، فقط keyword) |
+| `approve_cmd` | اجازهٔ اجرای task را می‌دهد؛ در اسکریپت `new_queue_line` استفاده کنید | `queue_tag` |
+| `reject_cmd` | task را مسدود می‌کند و خطا ثبت می‌کند | `queue_tag` |
+| `conclude` | task را با پاسخ سفارشی کامل‌شده علامت می‌زند | `queue_tag`, `message` |
+| `credentials` | همهٔ credentialهای ذخیره‌شده را برمی‌گرداند | |
+| `credentials.add` | credential اضافه می‌کند و tag جدید را برمی‌گرداند | `name`, `host`, `description`, `content` |
+| `credentials.remove` | credential را با tag حذف می‌کند | `tag` |
+| `db.<table>` | همهٔ سطرهای جدول، یا یک ستون در همهٔ سطرها | ستون اختیاری. جداول: `users`, `terminal`, `hosts`, `listeners`, `folders`, `process`, `queue`, `agents`, `agents_history`, `credentials`, `keylogger`, `nukescripts`, `nukescripts_output`, `custom_notifications`, `checkins` |
+| `keylogs` | همهٔ ورودی‌های keylogger را برمی‌گرداند | |
+| `network.add_socks` | pivot SOCKS؛ در موفقیت رشتهٔ وضعیت با `session_id` برمی‌گرداند | `host_tag`, `port`, `user` (اختیاری), `password` (اختیاری) |
+| `network.add_forward` | فوروارد پورت TCP | `host_tag`, `local_port`, `target_host`, `target_port` |
+| `network.remove` | SOCKS یا port forward را متوقف می‌کند | `tag` از `db.listeners()` که `type` آن `socks` یا `port_forwarding` است |
+| `network.restart` | SOCKS یا port forward را دوباره راه می‌اندازد | `tag` از `db.listeners()` که `type` آن `socks` یا `port_forwarding` است |
+| `file_server.upload` | فایل محلی را به پوشهٔ محتوای listener کپی می‌کند | `port`, `path` |
+| `file_server.delete` | فایلی را از پوشهٔ محتوای listener حذف می‌کند | `port`, `filename` |
+| `agent` | prompt را به agent هوش مصنوعی پیکربندی‌شده می‌فرستد | `agent_tag`, `prompt` |
+| `echo` | در NS Output می‌نویسد | `content` |
+| `message_box` | اعلان برای اپراتور | `title`, `body`, `type` (`info`, `error`, یا `success`) |

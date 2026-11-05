@@ -1,0 +1,34 @@
+---
+title: Monitorización
+---
+
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import commandQueue from '@/assets/img/tutorial/queue.png';
+
+Durante una operación, siempre resulta útil saber qué está pasando. NukeRat incluye dos funciones para ayudarte, sin tener que acceder al team server y revisar logs a mano.
+
+## Cola de comandos
+
+Ve a **NukeRat** > **Queue** para ver cada comando en la cola de ejecución. La tabla incluye comandos en espera y los que ya se ejecutaron. Eso ayuda para:
+
+- Eliminar comandos añadidos por error (antes de que el implant los reciba)
+- Ver la salida de comandos ejecutados en una pestaña de terminal que cerraste
+- Comprobar qué error provocó el fallo de un comando
+
+<ImageZoom src={commandQueue} alt="Command queue" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+
+Los comandos listados en la tabla no se limitan a la pestaña de terminal. También pueden incluir actividad de las pestañas del explorador de carpetas y de procesos.
+
+Haz doble clic en una fila de la tabla para ver todos los detalles de ese evento en la cola.
+
+También puedes eliminar un comando de la cola. Selecciónalo y haz clic en **Delete**. Eso lo quita de la base de datos para que el implant no lo ejecute si aún no se ha entregado.
+
+## Registros de eventos
+
+Ve a **NukeRat** > **Event Log** para ver los logs de un team server concreto. Los logs se agrupan en:
+
+- **Listeners**: tráfico y acciones en canales HTTP y en el listener del file server (desde `listeners.log`)
+- **Launcher**: mensajes del arranque del servidor y del launcher (desde `server.log`)
+- **Server**: errores y mensajes informativos de la API del team server y del núcleo (desde `server.log`)
+
+La vista Event Log lee `server.log` y `listeners.log` mediante el endpoint del team server [`GET /api/logs/`](/docs/rest-api/team-server).

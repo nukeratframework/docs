@@ -1,0 +1,85 @@
+---
+title: Создание
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import compileServer from '@/assets/img/tutorial/base.png';
+import arch from '@/assets/img/tutorial/arch.png';
+import c2 from '@/assets/img/tutorial/c2.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import urlStage from '@/assets/img/tutorial/url_stage.png';
+import relayImplant from '@/assets/img/tutorial/relay_implant.png';
+
+Здесь — создание имплантов в клиенте NukeRat. Две базы: **Stageless** и **Loader**.
+
+- **Stageless**: полный имплант с подключением к listener по HTTP, HTTPS, custom HTTP, TCP или SMB (SMB только Windows)
+- **Loader**: минимальный имплант, загружающий внешнюю стадию по заданному URL
+- **Relay stageless** (конфигурация): stageless с pivot-каналами (**TCP** везде, **SMB** в Windows), связь через другой имплант, а не напрямую с team server
+
+## Stageless-имплант
+
+Базовый stageless:
+
+  <Steps>
+    <Step>
+      ### Открыть создание импланта
+      **NukeRat > Implants**.
+    </Step>
+    <Step>
+      ### Выбрать базу
+      База **Stageless**.
+    </Step>
+    <Step>
+      ### Сервер сборки
+      Сервер сборки импланта. Он должен быть настроен в **NukeRat** > **Servers**.
+      <ImageZoom src={compileServer} alt="Compile Server" className="h-[4.5rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+      Подробнее — [Servers](/docs/servers).
+    </Step>
+    <Step>
+      ### ОС и архитектура
+      Платформа и архитектура цели. Windows — только **x64**. Linux/macOS: CPU **amd** или **arm**; клиент собирает **x64** для обоих.
+      <ImageZoom src={arch} alt="Architecture" className="h-[12rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+    </Step>
+    <Step>
+      ### C2
+      Укажите каналы из listener. Ниже — пример HTTP.
+      <ImageZoom src={c2} alt="C2" className="h-[11rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+      HTTP-канал: [Создание HTTP-канала](/docs/listeners/channel#creating-an-http-channel). Шифрованный POST — [API listener для имплантов](/docs/rest-api/implants).
+    </Step>
+    <Step>
+      ### Сборка
+      **Build** — компиляция импланта.
+    </Step>
+  </Steps>
+
+
+## Loader-имплант
+
+Как stageless, с отличиями. C2 loader: только **HTTP** и **custom**. Шаги:
+
+  <Steps>
+    <Step>
+      ### База Loader
+      Смените **Stageless** на **Loader**.
+    </Step>
+    <Step>
+      ### Payload
+      Вкладка **Stage** — URL payload.
+
+      Shellcode — stageless-имплант в формате shellcode.
+      <ImageZoom src={urlStage} alt="URL Stage" className="h-[4.5rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+    **Совет:** раздать payload можно через **File server** — [Файловый сервер](/docs/listeners/file-server#creating-a-file-server).
+    </Step>
+  </Steps>
+
+## Relay stageless-имплант
+
+База по-прежнему **Stageless**. В C2 в **Channel** выберите pivot (**TCP** или **SMB** в Windows). В **Relay implant** укажите upstream (хост, порт или SMB pipe) для трафика к team server.
+
+Удобно, когда у цели нет исходящего доступа в интернет.
+
+Шаги как у stageless, меняется только C2.
+
+<ImageZoom src={relayImplant} alt="Relay Implant" className="h-[18rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+
+**TCP** — все поддерживаемые ОС. **SMB** — только Windows. На цели relay уже должен быть на upstream. Подробнее — [Relay](/docs/pivoting/relay#how-to-use).

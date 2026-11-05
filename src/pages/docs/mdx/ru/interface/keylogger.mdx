@@ -1,0 +1,51 @@
+---
+title: Кейлоггер
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { Keyboard, RefreshCw } from 'lucide-react';
+import keylogger from '@/assets/img/tutorial/keylogger.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+Вкладка **Keylogger**, как и вкладка **Screenshot**, работает пассивно: она только просматривает и редактирует уже захваченные с хоста нажатия клавиш.
+
+Вкладку можно открыть через значок <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle"><Keyboard size={18.5} className="shrink-0 ml-1.5 mr-1.5" /></span> на верхней панели или **Tabs** > **Keylogger**.
+
+<ImageZoom src={keylogger} alt="Keylogger" className="tutorial_img" />
+
+## Как пользоваться
+
+  <Steps>
+    <Step>
+      ### Запустите keylogger
+      В терминале выполните `keylogger start`. В Windows флаг `--method [keystate|boardstate]` задаёт способ захвата.
+    </Step>
+    <Step>
+      ### Обновите вкладку
+      Вкладка не обновляется сама — нажмите <RefreshCw size={18.5} className="w-4 ml-1.5 inline-flex items-center gap-1 whitespace-nowrap align-middle" /> вручную.
+    </Step>
+  </Steps>
+
+Выбирать хост или сервер не нужно: запрос уходит на все настроенные team server.
+
+## Как это устроено
+
+Keylogger работает в отдельном фоновом потоке и отправляет захваченные нажатия на сервер пакетами.
+
+### Windows
+
+Как указано выше, в Windows доступны два метода: один с упором на OPSEC, другой — на полноту захвата.
+
+- **keystate** — низкоуровневый перехват клавиатуры через `SetWindowsHookEx`. Заметнее для мониторинга хуков, но без широкого опроса.
+
+- **boardstate** — по умолчанию, если `--method` не задан. Использует `GetAsyncKeyState` из `user32.dll` и опрашивает состояние клавиш в цикле. Хук не ставится, но частый опрос может бросаться в глаза.
+
+Основная логика: `implants/windows/stageless/capabilities/keylogger.nim`.
+
+### Linux
+
+X11 (`libX11.so`), `XOpenDisplay` и `XQueryKeymap`. Нужна переменная `DISPLAY`. Логика: `implants/linux/stageless/capabilities/keylogger.nim`.
+
+### MacOS
+
+На MacOS функция не поддерживается.

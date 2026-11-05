@@ -1,0 +1,338 @@
+---
+title: Импланты
+---
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from 'fumadocs-ui/components/ui/collapsible';
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Callout } from '@/ui/custom/callout';
+
+Implant API доступен через процесс HTTP/HTTPS **listener**. Это не [REST API управления team server](/docs/rest-api/team-server), которым пользуются клиент и автоматизация.
+
+У импланта один путь на канал: `endpointPath` из профиля listener (сервер нормализует его так, чтобы путь начинался с `/`, без завершающего слэша, кроме `/`). На этом пути регистрируются **GET** и **POST**.
+
+<Callout type="info" title="Пишете свой имплант?">
+  Рекомендуем прочитать расширенное руководство [Пользовательские импланты](/docs/custom-implants) — там разобран Implant API. Это сэкономит много времени.
+</Callout>
+
+---
+
+## Шифрование обмена
+
+Каждый запрос от импланта должен быть зашифрован. Это обязательно. Team server всегда ожидает зашифрованное тело.
+
+Шифрование использует ключ AES-256, общий для импланта и team server. Ключ создаётся при сборке импланта и сохраняется в базе, чтобы team server мог расшифровывать входящие запросы.
+
+**Важно**: тело каждого запроса импланта должно содержать две части:
+
+1. **Challenge** — 9 случайных байт, зашифрованных ключом AES-256 (всегда ровно 9 байт)
+2. **Payload** — JSON запроса, зашифрованный тем же ключом AES-256
+
+Оба блока склеиваются и отправляются вместе. Например:
+
+```
+abcdef = 000000
+{"output": "123"} = 111111
+```
+
+- **abcdef** — challenge
+- `{"output": "123"}` — payload
+
+Зашифрованный результат:
+
+```
+000000111111
+```
+
+Challenge нужен, чтобы listener подобрал ключ для расшифровки payload. Как указано выше, challenge всегда 9 байт — проверка быстрая и не затрагивает основной payload, который часто намного больше.
+
+Если ни один ключ не подошёл, listener возвращает HTTP `200` с пустым телом.
+
+В канале каждый зашифрованный сегмент — **nonce 12 байт**, затем **шифротекст AES-GCM с 16-байтовым auth tag**. Listener считает первые **37 байт** (`12 + 9 + 16`) пробным блоком и расшифровывает остаток как payload. Оба сегмента должны расшифроваться одной записью из таблицы `AesKeys`.
+
+Минимальный размер тела POST — **65 байт** (пробный сегмент плюс хотя бы один байт payload). Более короткие тела получают HTTP `200` с пустым ответом.
+
+### Шаблон тела запроса (`implantBody`)
+
+Если у канала задан `implantBody` (или устаревший `beaconBody`), сырое HTTP-тело должно соответствовать шаблону. Маркер `§content§` — место для зашифрованных байт. Listener извлекает подстроку по `§content§` и расшифровывает только её.
+
+Если `implantBody` пуст или равен `§content§`, расшифровывается всё тело.
+
+При непустом шаблоне, если тело не совпало, listener отвечает HTTP `200` с пустым телом (без расшифровки).
+
+### Шаблон тела ответа (`listenerResponse`)
+
+JSON обработчика шифруется одним блоком так же, как запросы импланта. По умолчанию этот блок — всё тело ответа. Если задан `listenerResponse`, зашифрованные байты подставляются вместо `§content§` в шаблон.
+
+Успешные зашифрованные ответы используют `Content-Type: application/octet-stream`. HTTP-статус **200**, если ниже не указано иное.
+
+### «Тихий» HTTP `200` (пустое тело)
+
+В этих случаях возвращается HTTP **200** с **пустым** телом и без зашифрованного JSON:
+
+- **GET** на путь listener
+- **POST** с пустым телом
+- Тело короче минимальной длины на проводе
+- Ни один AES-ключ из БД не расшифровал пробный блок и payload
+- Несовпадение шаблона `implantBody`
+- Ошибка разбора JSON после расшифровки
+- Ошибка валидации payload импланта (отсутствует или неверный `option`, обязательные поля и т. д.)
+
+### Проверка хоста
+
+После расшифровки, если payload — **один JSON-объект** с полем `host`, listener проверяет, что такой tag есть в реестре хостов. Если нет — HTTP **400** и зашифрованный JSON:
+
+```json
+{ "status": "failure", "error": "Missing host" }
+```
+
+JSON-**массивы** (пакетный `output`) эту предварительную проверку пропускают. `last_seen` по-прежнему обновляется из первого элемента массива, если в нём есть `host`.
+
+## Основной endpoint
+
+<Collapsible className="mb-4" defaultOpen={true}>
+  <CollapsibleTrigger className="flex w-full items-center gap-3 rounded-[11px] border border-fd-border bg-fd-card px-[15px] py-[10px] text-left text-sm font-medium">
+    <span className="rounded-[6px] bg-emerald-500/15 px-2 py-1 font-semibold text-emerald-400">POST</span>
+    <span className="font-[400] text-[16px]">{`{endpointPath}`}</span>
+  </CollapsibleTrigger>
+  <CollapsibleContent className="mt-3 rounded-lg border border-fd-border bg-fd-card p-4 text-sm text-fd-muted-foreground">
+    <h2 className="api-section-title api-section-title--explanation">Пояснение</h2>
+    
+    Это основной путь listener (`endpointPath`). **GET** всегда возвращает HTTP `200` с пустым телом. **POST** передаёт зашифрованный трафик импланта, как описано выше.
+
+    Порядок обработки **POST**: чтение сырого тела → при необходимости извлечение по `implantBody` → расшифровка → разбор JSON → `parse_implant_payload` → при необходимости проверка реестра хостов → обработчик (`main_core` → `main_actions`).
+
+    Запросы делятся на три основных режима:
+
+    1. `new` — отправляет отпечаток и регистрирует хост при первом контакте
+    2. `input` — опрашивает очередь на ожидающие команды
+    3. `output` — отправляет результаты команд
+
+    Есть и необязательные вспомогательные режимы:
+
+    1. `kill_task` — отменяет задачу в очереди
+    2. `error` — сообщает об ошибке задачи без поля `option`
+
+    <h2 className="api-section-title api-section-title--primary">Запрос</h2>
+
+    <Tabs className="api-tabs" items={['new', 'input', 'output', 'kill_task', 'error']}>
+      <Tab value="new">
+        ```json
+        {
+          "option": "new",
+          "tag": "600d4",
+          "ip": "",
+          "hostname": "DESKTOP-B08TFNF",
+          "user": "Lab",
+          "arch": "x64",
+          "pid": 4212,
+          "os": "Windows 10 Pro",
+          "listener": "http",
+          "delay": 2,
+          "implant_config": {
+            "channel": "http",
+            "host": "192.168.15.10",
+            "port": "9090",
+            "host_tag": "600d4",
+            "delay": 2
+          },
+          "metadata": {
+            "relays": [],
+            "privilege": "default",
+            "internal_ip": "192.168.15.7",
+            "host": "192.168.15.10",
+            "port": "9090"
+          }
+        }
+        ```
+      </Tab>
+      <Tab value="input">
+        ```json
+        {
+          "option": "input",
+          "host": "600d4",
+          "metadata": {
+            "relays": [],
+            "privilege": "default",
+            "internal_ip": "192.168.15.7",
+            "host": "192.168.15.10",
+            "port": "9090"
+          }
+        }
+        ```
+      </Tab>
+      <Tab value="output">
+        ```json
+        [
+          {
+            "option": "output",
+            "type": "terminal",
+            "task_tag": "Z7upre",
+            "host": "600d4",
+            "output": " Volume in drive C has no label.\n Directory of C:/Users/Lab/Desktop\n"
+          },
+          {
+            "option": "output",
+            "type": "folders",
+            "task_tag": "ArBYCq",
+            "host": "600d4",
+            "content": [
+              { "name": "desktop.ini", "type": "file", "size": "552", "modified": "2026-06-25 13:05:59" }
+            ]
+          }
+        ]
+        ```
+      </Tab>
+      <Tab value="kill_task">
+        ```json
+        {
+          "option": "kill_task",
+          "task_tag": "Z7upre"
+        }
+        ```
+      </Tab>
+      <Tab value="error">
+        ```json
+        {
+          "error": "command failed",
+          "task_tag": "Z7upre"
+        }
+        ```
+      </Tab>
+    </Tabs>
+
+
+    <h2 className="api-section-title api-section-title--compact">Ответ</h2>
+
+    <Tabs className="api-tabs" items={['new', 'input', 'output', 'task error', 'Failure']}>
+      <Tab value="new">
+        ```json
+        {
+          "status": "success",
+          "message": "host included"
+        }
+        ```
+
+        Дубликат `tag` (уникальное ограничение): `"message": "host already exists"` при `"status": "success"`.
+      </Tab>
+      <Tab value="input">
+        ```json
+        {
+          "commands": [
+            {
+              "status": "success",
+              "type": "terminal",
+              "task_tag": "Z7upre",
+              "host": "600d4",
+              "input": "shell",
+              "parameters": {
+                "args": "dir",
+                "mode": "shell",
+                "raw": "shell"
+              }
+            }
+          ]
+        }
+        ```
+      </Tab>
+      <Tab value="output">
+        ```json
+        {
+          "status": "success",
+          "message": "output received successfully"
+        }
+        ```
+      </Tab>
+      <Tab value="task error">
+        Отдельный payload с `error` + `task_tag` без `option` (имплант сообщает об ошибке задачи):
+
+        ```json
+        {
+          "status": "success",
+          "message": "output received successfully"
+        }
+        ```
+      </Tab>
+      <Tab value="Failure">
+        Зашифрованный JSON (HTTP **200**, если не указано иное):
+
+        ```json
+        {
+          "status": "failure",
+          "error": "<msg>"
+        }
+        ```
+
+        Примеры: `"Missing host"` (**HTTP 400**), `"internal error"`, `"Task processing error"`, сообщения об отмене задачи из `kill_task` / неверного `option` / сбоя обработки output.
+
+        Необработанные ошибки внутри `main_core` возвращают `{ "status": "failure", "error": "internal error" }` с HTTP **200**.
+      </Tab>
+    </Tabs>
+
+    ---
+
+    <h2 className="api-section-title api-section-title--compact">Схема</h2>
+
+    <table className="api-schema-table" style={{ borderCollapse: 'collapse', width: '100%' }}>
+      <thead>
+        <tr>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>Поле</th>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>Тип</th>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>Обязательность</th>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>Описание</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style={{ padding: '8px 12px' }}><code>option</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Режим запроса: <code>new</code>, <code>input</code>, <code>output</code> или <code>kill_task</code>. Пропускается только в отдельных payload об ошибке задачи.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>tag</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Только <code>new</code>. Tag хоста, назначенный импланту.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>host</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>В <code>input</code> и <code>output</code>. Tag хоста из реестра.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>task_tag</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Tag события очереди из ответа <code>input</code>. Обязателен в <code>output</code>, <code>kill_task</code> и payload об ошибке задачи.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>body (output)</code></td><td style={{ padding: '8px 12px' }}>array</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>При <code>output</code> имплант отправляет JSON-массив результатов. Каждый элемент — по схеме ниже.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>type</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>В каждом элементе массива <code>output</code>. Одно из: <code>terminal</code>, <code>folders</code>, <code>process</code>, <code>keylogger</code>, <code>screenshot</code>, <code>socks</code>, <code>proxychains</code>, <code>port_forwarding</code>.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>output</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Текст команды для <code>terminal</code> и туннельных режимов.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>content</code></td><td style={{ padding: '8px 12px' }}>array | string</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Структурированный результат для <code>folders</code>, <code>keylogger</code> и <code>screenshot</code>.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>tree</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Дерево процессов в выводе <code>process</code>.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>error</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Текст ошибки задачи. Может быть внутри <code>output</code> или в отдельном error payload.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>metadata</code></td><td style={{ padding: '8px 12px' }}>object</td><td style={{ padding: '8px 12px' }}>нет</td><td style={{ padding: '8px 12px' }}>Метаданные хоста в <code>new</code> и <code>input</code>. Можно не передавать.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>metadata.relays</code></td><td style={{ padding: '8px 12px' }}>array</td><td style={{ padding: '8px 12px' }}>нет</td><td style={{ padding: '8px 12px' }}>Список relay хоста.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>metadata.privilege</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>нет</td><td style={{ padding: '8px 12px' }}>Уровень привилегий процесса импланта.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>metadata.internal_ip</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>нет</td><td style={{ padding: '8px 12px' }}>Внутренний IP скомпрометированного хоста.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>metadata.host</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>нет</td><td style={{ padding: '8px 12px' }}>Адрес listener, который использует имплант.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>metadata.port</code></td><td style={{ padding: '8px 12px' }}>string | integer</td><td style={{ padding: '8px 12px' }}>нет</td><td style={{ padding: '8px 12px' }}>Порт listener, который использует имплант.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>hostname</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Только <code>new</code>.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>user</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Только <code>new</code>.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>arch</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Только <code>new</code>.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>pid</code></td><td style={{ padding: '8px 12px' }}>integer</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Только <code>new</code>.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>os</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Только <code>new</code>.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>listener</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Только <code>new</code>. Имя канала, например <code>http</code>.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>delay</code></td><td style={{ padding: '8px 12px' }}>integer</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Только <code>new</code>. Интервал маяка импланта в секундах.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>implant_config</code></td><td style={{ padding: '8px 12px' }}>object | string</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Только <code>new</code>. Runtime-конфиг импланта в записи хоста.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[]</code></td><td style={{ padding: '8px 12px' }}>array</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Ответ <code>input</code>. Ожидающие события очереди для хоста.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].status</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>да</td><td style={{ padding: '8px 12px' }}>Всегда <code>success</code>, когда команда доставлена.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].type</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>да</td><td style={{ padding: '8px 12px' }}>Тип события очереди, например <code>terminal</code> или <code>port_forwarding</code>.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].input</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>да</td><td style={{ padding: '8px 12px' }}>Имя команды для импланта. Для BOF, shellcode и DLL может содержать разрешённое бинарное содержимое.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters</code></td><td style={{ padding: '8px 12px' }}>object</td><td style={{ padding: '8px 12px' }}>да</td><td style={{ padding: '8px 12px' }}>Аргументы команды из ввода оператора. Поля зависят от <code>type</code> и команды.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.mode</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Команды <code>terminal</code>. Режим выполнения: <code>shell</code>, <code>bof</code>, <code>tasks kill</code> и т. п.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.args</code></td><td style={{ padding: '8px 12px' }}>string | object</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Команды <code>terminal</code>. Аргументы: строка для большинства режимов, объект JSON для части BOF.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.raw</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Команды <code>terminal</code>. Исходный глагол команды из таблицы соответствий.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.file</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Из <code>-f</code> / <code>--file</code>. Имя или путь BOF до разрешения на сервере.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.delay</code></td><td style={{ padding: '8px 12px' }}>string | integer</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Из <code>-d</code> / <code>--delay</code>. Для команд вроде <code>tokens-find</code> и скриншотов.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.pid</code></td><td style={{ padding: '8px 12px' }}>string | integer</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Из <code>-p</code> / <code>--pid</code>. PID целевого процесса.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.ppid</code></td><td style={{ padding: '8px 12px' }}>string | integer</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Из <code>--ppid</code>. PID родителя для spawn и injection.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.inject</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Из <code>--inject</code>. Цель или техника инъекции.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.inline</code></td><td style={{ padding: '8px 12px' }}>boolean</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Из <code>-i</code> / <code>--inline</code>. Только флаг, без значения.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.target</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Из <code>-t</code> / <code>--target</code> / <code>--destination</code>.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.flag</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Из <code>--flag</code>.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.status</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Из <code>--status</code> / <code>-st</code>.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.method</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Из <code>--method</code>. Для <code>keylogger</code> (<code>keystate</code> или <code>boardstate</code>).</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.host</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Из <code>--host</code>. Команды relay и туннелей.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.port</code></td><td style={{ padding: '8px 12px' }}>string | integer</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Из <code>--port</code>. Relay, туннели и SOCKS.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.user</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Из <code>-u</code> / <code>--user</code>.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.pass</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Из <code>--pass</code>.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.listen</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Из <code>-l</code> / <code>--listen</code>.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.channel</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Из <code>-c</code> / <code>--channel</code>. Транспорт relay: <code>http</code>, <code>tcp</code>, <code>smb</code> и т. п.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.pipe</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Из <code>--pipe</code>. Путь SMB pipe для relay.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.id</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Из <code>--id</code>. Идентификатор relay или задачи.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.getContent</code></td><td style={{ padding: '8px 12px' }}>boolean</td><td style={{ padding: '8px 12px' }}>условно</td><td style={{ padding: '8px 12px' }}>Команды <code>folders</code>. При <code>true</code> — скачать содержимое файла вместо листинга каталога.</td></tr>
+      </tbody>
+    </table>
+  </CollapsibleContent>
+</Collapsible>

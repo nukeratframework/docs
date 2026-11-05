@@ -1,0 +1,85 @@
+---
+title: Creación
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import compileServer from '@/assets/img/tutorial/base.png';
+import arch from '@/assets/img/tutorial/arch.png';
+import c2 from '@/assets/img/tutorial/c2.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import urlStage from '@/assets/img/tutorial/url_stage.png';
+import relayImplant from '@/assets/img/tutorial/relay_implant.png';
+
+Este tema cubre la creación de implants en el cliente NukeRat. El cliente expone dos bases de implant: **Stageless** y **Loader**.
+
+- **Stageless**: implant completo que se conecta a listeners por HTTP, HTTPS, custom HTTP, TCP o SMB (SMB solo en Windows)
+- **Loader**: implant mínimo que descarga un stage externo desde una URL que configures
+- **Relay stageless** (configuración): un implant stageless que usa canales de pivoting (**TCP** en todas partes, **SMB** en Windows) y habla con otro implant en lugar del team server directamente
+
+## Implant stageless
+
+Para crear un implant stageless básico, sigue los pasos siguientes:
+
+  <Steps>
+    <Step>
+      ### Abrir la pestaña de creación de implant
+      Ve a **NukeRat > Implants**.
+    </Step>
+    <Step>
+      ### Seleccionar la base del implant
+      Selecciona la base **Stageless**.
+    </Step>
+    <Step>
+      ### Seleccionar el compile server
+      El compile server es el servidor usado para compilar el implant. Ya debes tener un servidor configurado en **NukeRat** > **Servers**.
+      <ImageZoom src={compileServer} alt="Compile Server" className="h-[4.5rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+      Para leer más sobre la configuración del servidor, consulta [Servers](/docs/servers).
+    </Step>
+    <Step>
+      ### Elegir SO y arquitectura
+      Selecciona la plataforma y arquitectura en la que se ejecutará el implant. Las compilaciones de Windows apuntan solo a **x64**. En Linux y macOS, elige CPU **amd** o **arm**; el cliente compila implants **x64** (64 bits) para cualquiera de las CPU.
+      <ImageZoom src={arch} alt="Arquitectura" className="h-[12rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+    </Step>
+    <Step>
+      ### Configurar C2
+      Apunta la comunicación a los canales creados en listeners. En el ejemplo siguiente, usamos un canal HTTP.
+      <ImageZoom src={c2} alt="C2" className="h-[11rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+      Lee [Creating an HTTP channel](/docs/listeners/channel#creating-an-http-channel) para aprender a crear un canal HTTP. Para el protocolo POST cifrado (path, plantilla del body, códigos de estado), consulta [Implant listener API](/docs/rest-api/implants).
+    </Step>
+    <Step>
+      ### Compilar el implant
+      Haz clic en **Build** para compilar el implant.
+    </Step>
+  </Steps>
+
+
+## Implant Loader
+
+La creación es similar al implant stageless, con algunas diferencias. El C2 del Loader admite solo canales **HTTP** y **custom**. Consulta los pasos siguientes:
+
+  <Steps>
+    <Step>
+      ### Seleccionar la base Loader
+      Cambia la base de **Stageless** a **Loader**.
+    </Step>
+    <Step>
+      ### Configurar el payload
+      En la pestaña **Stage**, establece la URL del payload.
+
+      El shellcode será el implant stageless creado en formato shellcode.
+      <ImageZoom src={urlStage} alt="URL Stage" className="h-[4.5rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+    **Consejo**: Puedes usar la función **File server** de NukeRat para alojar el payload rápidamente. Lee más en [File server](/docs/listeners/file-server#creating-a-file-server).
+    </Step>
+  </Steps>
+
+## Implant relay stageless
+
+Un implant relay stageless sigue siendo una compilación con base **Stageless**. La diferencia es el C2: bajo **Channel**, elige un protocolo de pivoting (**TCP**, o **SMB** en Windows). En el campo **Relay implant**, apunta al implant upstream (host, puerto o pipe SMB) que reenviará el tráfico hacia el team server.
+
+Es útil cuando el host objetivo no tiene ruta saliente a internet.
+
+Crear uno sigue los mismos pasos que un implant stageless, cambiando solo la configuración de C2.
+
+<ImageZoom src={relayImplant} alt="Relay Implant" className="h-[18rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+
+Usa **TCP** en cada SO admitido. Usa **SMB** solo para implants de Windows. El host objetivo debe tener ya un relay configurado en el implant upstream. Para leer más sobre relay, consulta [Relay](/docs/pivoting/relay#how-to-use).

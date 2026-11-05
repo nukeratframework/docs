@@ -1,0 +1,36 @@
+---
+title: Граф атаки
+---
+
+import { Share2 } from 'lucide-react';
+import attackGraphs from '@/assets/img/tutorial/graphs.png';
+import attackGraphsInfo from '@/assets/img/tutorial/graphs_01.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+Вкладка **Attack Graph** — графическое представление подключённых и активных сессий. Главная задача — наглядно показать pivoting в сети и цепочки relay.
+
+Вкладку можно открыть через значок <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle"><Share2 size={18.5} className="shrink-0 ml-1.5 mr-1.5" /></span> на верхней панели или **Tabs** > **Attack Graph**.
+
+При открытии клиент запрашивает данные у каждого настроенного team server и строит отдельный граф для каждого.
+
+<ImageZoom src={attackGraphs} alt="Attack Graph" className="tutorial_img" />
+
+Графы обновляются автоматически при подключении сессии или смене уровня привилегий — например, с user на admin.
+
+## Сведения о сессии
+
+Каждая сессия отображается значком монитора с иконкой ОС внутри. Если у сессии уже повышенные привилегии, монитор показывается красным.
+
+Дважды щёлкните по сессии, чтобы открыть боковую панель с дополнительной информацией.
+
+<ImageZoom src={attackGraphsInfo} alt="Attack Graph Info" className="tutorial_img" />
+
+## Связи relay
+
+Если две сессии связаны через relay, между ними рисуется стрелка с подписью типа relay — **TCP** или **SMB**.
+
+Иногда сессия пропадает с графа. Так бывает по двум причинам:
+
+1. У родительской сессии больше нет активного relay
+2. Дочерняя сессия подключилась без relay
+

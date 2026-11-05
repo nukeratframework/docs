@@ -1,0 +1,49 @@
+---
+title: File server
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import fileServerForm from '@/assets/img/tutorial/file_server_form.png';
+import { Globe } from 'lucide-react';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+The file server listener, as the name suggests, is a file server. You can use it for different purposes, such as hosting payloads, serving stages for loaders, hosting a simple phishing application, and so on.
+
+Each listener gets its own content folder on the team server. Files are served over HTTP or HTTPS from the listener address using normal URL paths (for example `http://host:port/payload.bin`).
+
+## Creating a file server
+
+To create a file server, follow the steps below:
+
+
+  <Steps>
+    <Step>
+      ### Open the listeners tab
+      Open **NukeRat** > **Listeners** > **Add**.
+    </Step>
+    <Step>
+      ### Fill in the fields
+      <ImageZoom src={fileServerForm} alt="File Server Form" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+      - **Name**: Choose a name so you can recognize the listener easily.
+      - **Type**: Select **File server**
+      - **Server**: Choose the team server where the listener will be created (must be configured beforehand)
+      - **Port to open**: The port that will be used
+    </Step>
+    <Step>
+      ### Click **Create**
+      Once it is created, open the **File Server** workspace from the top bar <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">(<Globe size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> icon)</span> or **Tabs** > **File Server**. Select the listener, then use **Upload** to add files.
+    </Step>
+  </Steps>
+
+
+## SSL and certificates
+
+The file server supports HTTPS. Check **SSL** on the creation form, then configure the certificate in the **Certificate** section.
+
+Under **Source**, choose self signed or manual. Self signed certificates are generated automatically by NukeRat using the `openssl` command, with the same subject and key options as channel listeners.
+
+For manual certificates, paste or upload your certificate and private key PEM.
+
+## Custom response headers
+
+You can also configure response headers using **Advanced** > **Response headers**.

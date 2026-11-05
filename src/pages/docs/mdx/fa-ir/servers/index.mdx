@@ -1,0 +1,22 @@
+---
+title: سرورها
+---
+
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import keyAdd from '@/assets/img/tutorial/key_2.png';
+
+کلاینت NukeRat می‌تواند هم‌زمان چند team server را مدیریت کند. بدون باز کردن نمونهٔ دیگری از کلاینت، می‌توانید برای ایمپلنت‌های روی سرورهای مختلف دستور اجرا کنید.
+
+## افزودن team server
+
+برای پیکربندی سرور در کلاینت NukeRat، ابتدا به کلید اپراتور نیاز دارید. برای ساخت آن [کلید اپراتور](/docs/operator-key) را ببینید.
+
+**NukeRat** > **Servers** را باز کنید، **Add** را بزنید و پنل **New Server** را پر کنید. کلید اپراتور را در **Key (.key)** بچسبانید یا با **Upload .key** فایل را از پوشهٔ team server بارگذاری کنید. **Protocol** (http یا https)، **Host** و **Port** را تنظیم کنید، سپس **Auth** را بزنید.
+
+<ImageZoom src={keyAdd} alt="افزودن کلید" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+
+پس از احراز هویت موفق، JWT برای آن ورودی سرور ذخیره می‌شود. به‌طور پیش‌فرض توکن ۷ روز معتبر است. team server مدت دقیق را با `server.keys.jwt.duration` کنترل می‌کند. بخش «مدت session» را در [کلید اپراتور](/docs/operator-key) ببینید.
+
+وقتی نشست منقضی شود، قابلیت‌هایی که به احراز هویت نیاز دارند toast خطا نشان می‌دهند. سرور را انتخاب کنید، **Edit** را باز کنید و **Auth** را بزنید تا نشست جدیدی شروع شود. در حالت ویرایش می‌توانید **Clear Session** را بزنید تا توکن ذخیره‌شده حذف شود بدون اینکه ورودی سرور پاک شود.
+
+برای میزبان، پورت، TLS، مدت JWT و بقیهٔ `server.conf` روی ماشین team server، از دستورات launcher در [پیکربندی](/docs/servers/configuration) استفاده کنید.

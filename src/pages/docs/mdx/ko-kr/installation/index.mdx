@@ -1,0 +1,49 @@
+---
+title: 설치
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Callout } from '@/ui/custom/callout';
+
+아래는 NukeRat 클라이언트와 서버를 설치하는 명령입니다. 서버는 **Linux**에서만 실행됩니다. 클라이언트는 **Windows**, **Linux**, **macOS**에서 실행됩니다.
+
+<Callout
+  type="info"
+  title="팁"
+  className="rounded-[6px] border-blue-500/25 bg-blue-500/5 shadow-none [&_svg]:text-blue-600/70 dark:[&_svg]:text-blue-400/60 [&_.text-fd-muted-foreground]:text-fd-muted-foreground [&_p.font-medium]:text-fd-foreground"
+>
+  NukeRat를 처음 사용한다면 [빠른 설정](/docs/fast-setup)을 열어 몇 단계만에 첫 임플란트를 동작시키는 방법을 확인하세요.
+</Callout>
+
+## 명령
+
+  <Tabs items={['Linux', 'Windows', 'macOS']} groupId="installation-os" persist>
+    <Tab value="Linux">
+      **Server:**
+      ```bash
+      git clone https://github.com/nukeratframework/nukerat && cd nukerat && sudo bash install.sh server
+      ```
+
+      **Client:**
+      ```bash
+      git clone https://github.com/nukeratframework/nukerat && cd nukerat && sudo bash install.sh client
+      ```
+
+      **Both:**
+      ```bash
+      git clone https://github.com/nukeratframework/nukerat && cd nukerat && sudo bash install.sh all
+      ```
+    </Tab>
+    <Tab value="Windows">
+      **Client:**
+      ```bash
+      git clone https://github.com/nukeratframework/nukerat && cd nukerat && install\windows.bat client
+      ```
+    </Tab>
+    <Tab value="macOS">
+      **Client:**
+      ```bash
+      git clone https://github.com/nukeratframework/nukerat && cd nukerat && bash install/mac.sh client
+      ```
+    </Tab>
+  </Tabs>

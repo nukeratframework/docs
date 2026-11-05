@@ -1,0 +1,69 @@
+---
+title: Скрипты
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import debuggerImage from '@/assets/img/tutorial/debugger.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+NukeScript — система сценариев NukeRat. Она решает три задачи:
+
+1. Автоматизация действий
+2. Новая функциональность
+3. Взаимодействие с клиентом NukeRat
+
+По сути NukeScript — это Python-скрипты с дополнительным слоем **событий**.
+
+Пока сервер работает, worker следит за базой NukeRat: при срабатывании событий запускаются соответствующие скрипты.
+
+## Создание скрипта
+
+Пример: скрипт, который при подключении нового хоста выполняет `whoami`:
+
+  <Steps>
+    <Step>
+      ### Открыть вкладку NukeScript
+      **NukeRat** > **NukeScripts** → **Add**.
+    </Step>
+    <Step>
+      ### Выбрать сервер
+      Задайте имя и team server, на котором будет выполняться скрипт.
+    </Step>
+    <Step>
+      ### Написать скрипт
+      Вставьте в поле скрипта:
+      ```python
+def on_new_host(row):
+        host = row["tag"]
+        output = cmd(host, "whoami")
+        echo(f"Output: {output}")
+
+event.new_host:on_new_host()
+      ```
+    </Step>
+    <Step>
+      ### Включить скрипт
+      После создания выберите скрипт и нажмите **Enable** — иначе он не выполнится.
+    </Step>
+    <Step>
+      ### Проверить
+      Откройте **NS Debugger**: **Tabs** > **NS Debugger**.
+
+      При корректной настройке при новом хосте в **NS Debugger** появится вывод `whoami`.
+
+      <ImageZoom src={debuggerImage} alt="NS Debugger" className="h-[6rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+
+    </Step>
+  </Steps>
+
+
+## События и команды
+
+Подробнее:
+
+- [Events](/docs/nukescripts/events)
+- [Commands](/docs/nukescripts/commands)
+
+## Примеры
+
+Примеры скриптов — [Examples](/docs/nukescripts/examples).

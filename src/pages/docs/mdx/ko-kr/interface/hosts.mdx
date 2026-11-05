@@ -1,0 +1,32 @@
+---
+title: 세션
+---
+
+import { MonitorIcon } from 'lucide-react';
+import hosts from '@/assets/img/tutorial/hosts.png';
+import hostsInfo from '@/assets/img/tutorial/hosts_01.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+세션 탭은 구성된 모든 팀 서버에 연결된 세션을 모니터링하는 주요 방법입니다.
+
+상단 바의 <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle"><MonitorIcon size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> 아이콘</span>에서 **Sessions** 탭을 열거나, **Tabs** > **Sessions**에서 열 수 있습니다.
+
+<ImageZoom src={hosts} alt="Sessions" className="tutorial_img" />
+
+탭을 열면 구성된 모든 팀 서버의 세션이 자동으로 나열되므로 팀 서버를 선택할 필요가 없습니다.
+
+더 쉽게 검색하려면 탭 상단의 **Filter sessions...** 필드로 세션 정보에 포함된 문자열로 필터링하세요.
+
+## 세션 정보
+
+모든 세션 정보를 보려면 세션 행을 더블 클릭하여 자세한 내용이 있는 사이드 패널을 여세요.
+
+<ImageZoom src={hostsInfo} alt="Sessions Info" className="tutorial_img" />
+
+같은 사이드 패널에는 세션에 관한 메모를 추가할 수 있는 메모 필드가 있습니다. **Save**를 클릭하면 메모가 저장됩니다. 팀 서버에 액세스할 수 있는 모든 운영자가 해당 메모를 읽을 수 있습니다.
+
+## 세션 제거
+
+세션을 제거하려면 세션 행을 선택하고 **Remove**를 클릭하세요.
+
+**중요**: 세션을 제거하기 전에 해당 임플란트가 더 이상 실행 중이 아닌지 확인하세요. 그렇지 않으면 세션이 다시 추가됩니다. 팁: 터미널에서 `kill` 명령으로 호스트 임플란트를 중지하세요.

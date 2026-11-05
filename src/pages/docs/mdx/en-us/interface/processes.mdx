@@ -1,0 +1,42 @@
+---
+title: Processes
+---
+
+import processes from '@/assets/img/tutorial/processes.png';
+import {
+  Bot,
+  ChevronsUpDown,
+  Cpu,
+  RefreshCw,
+  X,
+} from 'lucide-react';
+import { Callout } from '@/ui/custom/callout';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+The processes tab lets you analyze and monitor running processes on the host more easily.
+
+You can open the **Processes** tab from <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">the <Cpu size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> icon</span> in the top bar, or from **Tabs** > **Processes**.
+
+<Callout type="info">
+  Before using the processes tab, select the target host by clicking **Host** next to the tab name.
+</Callout>
+
+Like the file browser, once you select a host, the client requests a process list for that host. The response populates the processes tab on first load.
+
+<ImageZoom src={processes} alt="Processes" className="tutorial_img" />
+
+## How it works
+
+The implant enumerates running processes and converts the result into a custom JSON format for the client to render.
+
+### Windows
+
+Uses `kernel32.dll` (`CreateToolhelp32Snapshot`, `Process32FirstW`, `Process32NextW`, `OpenProcess`, `QueryFullProcessImageNameW`) and `iphlpapi.dll` (`GetExtendedTcpTable`). The core logic is in `implants/windows/stageless/capabilities/process.nim`.
+
+### Linux
+
+Reads `/proc` (`stat`, `status`, `exe`) and `/proc/net/tcp`. The core logic is in `implants/linux/stageless/capabilities/process.nim`.
+
+### MacOS
+
+Uses the `macapi` module (`ListProcessIDs`, `ReadProcessStat`, `ReadProcessStatus`, `GetTcpPidMap`). The core logic is in `implants/mac/stageless/capabilities/process.go`.

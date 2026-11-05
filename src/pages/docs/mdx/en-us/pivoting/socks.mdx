@@ -1,0 +1,35 @@
+---
+title: SOCKS
+---
+
+import socks from '@/assets/img/tutorial/socks.png';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+NukeRat has native support for SOCKS, so you can route your traffic through a specific host. The supported version is SOCKS5.
+
+The team server opens the listener port. Traffic is relayed through the implant you select as the exit point.
+
+## How to configure
+
+To create a SOCKS5 proxy, follow the steps below:
+
+  <Steps>
+    <Step>
+      ### Open the Network window
+      Go to **NukeRat** > **Network**, then click **Add**.
+    </Step>
+    <Step>
+      ### Configure the proxy
+      <ImageZoom src={socks} alt="Socks Add" className="h-[15rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+      - **Team server**: listener API endpoint (host and port at the top of the form)
+      - **Type**: `socks`
+      - **Host tag**: implant that will proxy outbound connections
+      - **Port target**: port opened on the team server for the SOCKS listener
+      - **User** / **Password**: optional credentials for operator proxy authentication
+
+      Click **Create** when the fields are set.
+    </Step>
+  </Steps>
+
+Once done, your proxy should appear in the Network table. Point your tools at `socks5://<team_server_host>:<port_target>/`, including the user and password in the URI when you configured auth.

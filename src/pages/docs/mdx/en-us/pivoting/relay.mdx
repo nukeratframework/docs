@@ -1,0 +1,118 @@
+---
+title: Relay
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+Relay is an implant feature that lets implants talk to each other inside a network. That comes in handy when a host has no internet access, or when the network is locked down.
+
+Relays support **SMB** and **TCP**. SMB is Windows only.
+
+## How to use
+
+To make this clearer, here's an example scenario:
+
+You have host A, and on the same network there's host B with no path to the outside world, so it can't reach the team server directly.
+
+In that case, follow these steps:
+
+  <Steps>
+    <Step>
+      ### Preconfigured implant
+      First, make sure host B is already running an implant preconfigured for relay communication.
+
+      To learn how to build a relay implant, see [Relay stageless implant](/docs/client/implants/creation#relay-stageless-implant)
+    </Step>
+    <Step>
+      ### Set up the relay on host A
+
+      TCP relay:
+        ```
+        relay create --listen 8888 --target implant://192.168.15.10:9090 --channel tcp
+        ```
+      SMB relay (Windows only):
+        ```
+        relay create -l 445 --target server://192.168.15.10:9090 -c smb --pipe test --tls
+        ```
+    Parameters:
+        - `--listen` / `-l`: port the implant opens and listens on (also used as the default relay id)
+        - `--target` / `-t`: downstream endpoint as `implant://host:port` or `server://host:port`
+        - `--channel` / `-c`: `tcp` or `smb`
+        - `--pipe`: SMB named pipe. Use a short name such as `test` or a full `\\pipe\\name` path on Windows
+        - `--tls`: when the target uses `server://`, POST to the team server over HTTPS instead of HTTP
+        - `--id`: relay id for `relay delete` or to override the default listen port id
+    </Step>
+    <Step>
+      ### Manage relays
+      Run `relay` with no arguments to list active relays (listen port, target, mode, status).
+
+      Stop a relay with:
+        ```
+        relay delete --id 8888
+        ```
+    </Step>
+    <Step>
+      ### Test the relay
+      After that, implant B should be fully operational.
+    </Step>
+  </Steps>
+
+
+### Target prefix
+
+The `target` parameter always takes an `implant://` or `server://` prefix. That tells the implant when to convert traffic to HTTP so it can reach the team server.
+
+Which one to use is simple. If the next hop is the team server, use `server://`, that is your exit point. If you are passing traffic to another implant, use `implant://`.
+
+### Cumulative delay
+
+Relays always forward traffic respecting each implant's configured delay. If traffic hops through several hosts, those delays stack and response times can get noticeably slower.
+
+## How it works
+
+Once a relay is created, it starts listening on the configured port.
+
+When traffic comes in, the implant decrypts the payload, appends its own host tag to the `chain`, encrypts again, and forwards it to the target.
+
+The forwarded JSON follows this structure:
+
+```json
+{
+  "source": "hostB",
+  "content": [
+    {
+      "option": "output",
+      "type": "terminal",
+      "task_tag": "k7F2a9",
+      "output": "desktop\\user\r\n"
+    }
+  ],
+  "chain": ["hostB", "hostA"]
+}
+```
+
+When the target is another implant, the payload is forwarded as is. When the target is the team server, the implant converts the traffic to HTTP and sends it upstream.
+
+### Communication encryption
+
+All relay traffic is encrypted with a master AES key embedded in each implant at compile time. All implants built for the same team server share the same key.
+
+This way implants do not need a prior handshake just to exchange keys, which also reduces that kind of traffic signature.
+
+To change the master AES key, edit `server.conf` under the `[implants]` section and set `relay_aes_key`. The value must decode to at least 32 bytes (base64 or hexadecimal). Rebuild implants after changing it.
+
+**Note:** changing the master AES key will break communication with any implant still using the old key.
+
+### Windows
+
+- **TCP** uses `WSAStartup`, `socket`, `bind`, `listen`, `accept`, `connect`, `send`, `recv`, `closesocket`, `getaddrinfo` and `freeaddrinfo` from `ws2_32.dll`.
+
+- **SMB** uses `CreateNamedPipeA`, `ConnectNamedPipe`, `CreateFileA`, `WaitNamedPipeA`, `PeekNamedPipe`, `ReadFile`, `WriteFile`, `DisconnectNamedPipe` and `CloseHandle` from `kernel32.dll`.
+
+### Linux
+
+Uses POSIX sockets (`sys/socket.h`) with `socket`, `bind`, `listen`, `accept`, `connect`, `send`, `recv`, `setsockopt` and `getaddrinfo` / `freeaddrinfo`. SMB is not supported.
+
+### macOS
+
+Uses `net.Listen`, `net.Accept`, `net.Dial` and `io.Copy` from the Go stdlib. SMB is not supported.

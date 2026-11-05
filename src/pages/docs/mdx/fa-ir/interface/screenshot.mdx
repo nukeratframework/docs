@@ -1,0 +1,54 @@
+---
+title: اسکرین‌شات
+---
+
+import screenshot from '@/assets/img/tutorial/screenshot.png';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { Camera } from 'lucide-react';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+تب **Screenshot** فقط نمایش می‌دهد. آخرین اسکرین‌شات گرفته‌شده از میزبان انتخاب‌شده را نشان می‌دهد؛ بنابراین پیش از نمایش چیزی باید اسکرین‌شات گرفته شود.
+
+هدف اصلی آن مشاهدهٔ پویاست. در ترکیب با حالت حلقه می‌تواند شبیه پخش زندهٔ تصویر باشد.
+
+می‌توانید تب **Screenshot** را از <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">آیکون <Camera size={20} className="shrink-0 ml-1.5 mr-1.5" /></span> در نوار بالا، یا از **Tabs** > **Screenshot** باز کنید.
+
+<ImageZoom src={screenshot} alt="اسکرین‌شات" className="tutorial_img" />
+
+## نحوهٔ استفاده
+
+برای استفاده از تب اسکرین‌شات این مراحل را دنبال کنید:
+
+  <Steps>
+    <Step>
+      ### انتخاب میزبان
+      ابتدا میزبانی را که می‌خواهید اسکرین‌شات‌هایش را ببینید انتخاب کنید. روی **Host** کنار نام تب کلیک کنید.
+    </Step>
+    <Step>
+      ### شروع حلقهٔ اسکرین‌شات
+      در ترمینال `screenshot start` را اجرا کنید تا حلقهٔ اسکرین‌شات شروع شود. برای فاصلهٔ بین عکس‌ها از آرگومان `--delay <interval>` به ثانیه استفاده کنید.
+    </Step>
+    <Step>
+      ### منتظر به‌روزرسانی تصویر بمانید
+      به‌طور پیش‌فرض تب **Screenshot** team server را بررسی می‌کند و با رسیدن اسکرین‌شات جدید به‌روز می‌شود؛ نیازی به به‌روزرسانی دستی نیست.
+    </Step>
+  </Steps>
+
+## نحوهٔ کار
+
+گرفتن اسکرین‌شات به دو روش انجام می‌شود:
+
+1. یک‌بار
+2. حلقه‌ای، که task در thread جدا در هر فاصلهٔ مشخص‌شده اسکرین‌شات می‌گیرد.
+
+### Windows
+
+صفحه را با GDI (`user32.dll` و `gdi32.dll`) با `GetDC`, `BitBlt` و `CreateDIBSection` می‌گیرد. منطق اصلی در `implants/windows/stageless/capabilities/screenshots.nim` است.
+
+### Linux
+
+از طریق X11 (`libX11.so`) با `XOpenDisplay` و `XGetImage` روی پنجرهٔ root می‌گیرد. نیاز به تنظیم `DISPLAY` دارد. منطق اصلی در `implants/linux/stageless/capabilities/screenshots.nim` است.
+
+### MacOS
+
+این قابلیت روی MacOS پشتیبانی نمی‌شود.

@@ -1,0 +1,49 @@
+---
+title: Servidor de archivos
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import fileServerForm from '@/assets/img/tutorial/file_server_form.png';
+import { Globe } from 'lucide-react';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+El listener de tipo file server, como indica el nombre, es un servidor de archivos. Puedes usarlo para distintos fines: alojar payloads, servir stages para loaders, alojar una aplicación sencilla de phishing, etc.
+
+Cada listener tiene su propia carpeta de contenido en el team server. Los archivos se sirven por HTTP o HTTPS desde la dirección del listener con rutas URL normales (por ejemplo `http://host:port/payload.bin`).
+
+## Crear un file server
+
+Para crear un file server, sigue estos pasos:
+
+
+  <Steps>
+    <Step>
+      ### Abrir la pestaña de listeners
+      Abre **NukeRat** > **Listeners** > **Add**.
+    </Step>
+    <Step>
+      ### Rellenar los campos
+      <ImageZoom src={fileServerForm} alt="File Server Form" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+      - **Name**: Elige un nombre para reconocer el listener fácilmente.
+      - **Type**: Selecciona **File server**
+      - **Server**: Elige el team server donde se creará el listener (debe estar configurado antes)
+      - **Port to open**: El puerto que se usará
+    </Step>
+    <Step>
+      ### Haz clic en **Create**
+      Una vez creado, abre el espacio de trabajo **File Server** desde la barra superior <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">(icono <Globe size={18.5} className="shrink-0 ml-1.5 mr-1.5" />)</span> o **Tabs** > **File Server**. Selecciona el listener y usa **Upload** para añadir archivos.
+    </Step>
+  </Steps>
+
+
+## SSL y certificados
+
+El file server admite HTTPS. Marca **SSL** en el formulario de creación y configura el certificado en la sección **Certificate**.
+
+En **Source**, elige self signed o manual. Los certificados self signed los genera NukeRat automáticamente con el comando `openssl`, con las mismas opciones de subject y clave que en los listeners de canal.
+
+Para certificados manuales, pega o sube el PEM del certificado y de la clave privada.
+
+## Cabeceras de respuesta personalizadas
+
+También puedes configurar cabeceras de respuesta en **Advanced** > **Response headers**.

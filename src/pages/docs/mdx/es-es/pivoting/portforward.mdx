@@ -1,0 +1,37 @@
+---
+title: Reenvío de puertos
+---
+
+import socks from '@/assets/img/tutorial/port_fw.png';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+NukeRat permite configurar reenvío de puertos a través de hosts comprometidos para alcanzar un puerto concreto en la red interna.
+
+El team server abre el puerto de escucha. Las conexiones se reenvían al host y puerto internos a través del implant que elijas.
+
+## Cómo configurarlo
+
+Para crear un port forward, sigue estos pasos:
+
+  <Steps>
+    <Step>
+      ### Abrir la ventana Network
+      Ve a **NukeRat** > **Network** y haz clic en **Add**.
+    </Step>
+    <Step>
+      ### Configurar el reenvío de puertos
+      <ImageZoom src={socks} alt="Port forward add" className="h-[15rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+      - **Team server**: endpoint de la API del listener (host y puerto arriba del formulario)
+      - **Type**: `port forwarding`
+      - **Host tag**: implant que abrirá conexiones hacia el destino interno
+      - **Listen port**: puerto abierto en el team server
+      - **Protocol**: solo TCP (es lo que acepta el team server hoy)
+      - **Forward host**: IP o nombre de host interno al que llegar a través del implant
+      - **Forward port**: puerto interno al que llegar a través del implant
+
+      Haz clic en **Create** cuando los campos estén listos.
+    </Step>
+  </Steps>
+
+Cuando termines, el port forward debería aparecer en la tabla Network. Conéctate a `<team_server_host>:<listen_port>` para alcanzar `forward_host:forward_port` a través del implant.

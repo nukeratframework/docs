@@ -1,0 +1,119 @@
+---
+title: AI エージェント
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import agentBodyForm from '@/assets/img/tutorial/agent_body.png';
+import agentResponseKeys from '@/assets/img/tutorial/agent_body_keys.png';
+import { Bot } from 'lucide-react';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+NukeRat は API 経由の外部 AI モデルとの統合をサポートしており、NukeRat インターフェースから直接やり取りできます。
+
+
+## 互換性
+
+リクエスト（ボディ、ヘッダーなど）をカスタマイズできるため、ほとんどのモデルは NukeRat の統合モデルと互換性があります。
+
+ただし NukeRat がサポートするのは、次の例のように system、user、assistant ロールを持つメッセージ形式を使うモデルのみです。
+
+```json
+{
+    "model": "deepseek-flash",
+    "messages": [
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Hello!"}
+    ]
+}
+```
+
+モデによっては命名規則が異なる必要があり、統合時に問題が起きることがあります。
+
+
+## エージェントプリセット
+
+モデルを使うために必ずしもリクエストを手動で組み立てる必要はありません。NukeRat には **DeepSeek** プリセットが含まれています。エージェント作成時に種類 **DeepSeek** を選び、API キーを指定します。チームサーバーは `deepseek-v4-pro` モデルで `https://api.deepseek.com/chat/completions` を呼び出します。
+
+OpenAI や Anthropic のようにサイバーセキュリティ周りの利用ポリシーが厳しいプロバイダーでは、統合ごとに調整が異なるため、プリセットをさらに追加する予定はありません。
+
+## エージェントの作成
+
+エージェントを作成するには、以下の手順に従います。
+
+  <Steps>
+    <Step>
+      ### AI エージェントタブを開く
+      **NukeRat** > **Agents** を開き、**New** をクリックします。
+    </Step>
+    <Step>
+      ### フィールドを入力
+      名前と、エージェントを保存するチームサーバーを選びます。手動 HTTP マッピングには種類 **Custom**、組み込みプリセットには **DeepSeek** を設定します。
+    </Step>
+    <Step>
+      ### リクエストの調整
+      この例では Grok モデルを使います。
+
+      まず Grok のドキュメントからベースの curl コマンドを取ります。
+
+      ```bash
+      curl https://api.x.ai/v1/chat/completions \
+        -H "Authorization: Bearer $XAI_API_KEY" \
+        -H "Content-Type: application/json" \
+        -d '{
+            "model": "grok-4.6",
+            "messages": [
+            {"role": "user", "content": "Hello, Grok!"}
+            ]
+        }
+      ```
+
+      次に URL、ボディ、ヘッダーをエージェントフィールドにマッピングします。見た目は次のとおりです。
+      <ImageZoom src={agentBodyForm} alt="Agent Body Form" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+
+      2 点に注目してください。
+
+      1. ボディテンプレートに `system` メッセージがない
+      2. ボディテンプレートにすでに `user` メッセージがある
+
+      この 2 点がエージェント作成を壊すことはありません。理由は次のとおりです。
+
+      1. ボディテンプレートに `system` メッセージがない場合、NukeRat はセッションのシステムプロンプトを `messages` 配列の先頭に挿入します
+      2. ボディテンプレートにすでにあるメッセージは保持され、UI からのチャットターンはその後に追加されます
+    </Step>
+    <Step>
+      ### レスポンスの取得
+      リクエストのレスポンスを取得するには、レスポンスのどの JSON キーを使うかを知る必要があります。
+
+      最も簡単な方法は curl を実行し、モデルのレスポンス形式を確認することです。
+
+      Grok の例では、レスポンスは次のようになります。
+
+      ```json
+       {
+        [... rest of the JSON ...]
+        "choices": [{
+            "index": 0,
+            "message": {
+                "role": "assistant",
+                "content": "Hello! How can I help you today?",
+                "reasoning_content": "The user said: \"Hello, Grok!\"\n",
+                "refusal": null
+            },
+            "finish_reason": "stop"
+        }]
+        [... rest of the JSON ...]
+      }
+      ```
+
+      レスポンスに基づき、回答を保持する値まで JSON パスを辿ります。セグメントごとにドット区切りパスと、任意の角括弧インデックスを使います。この例では `choices[0].message.content` で、**Response field** に入力します。
+
+      <ImageZoom src={agentResponseKeys} alt="Agent Response Keys" className="h-[5rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+    </Step>
+    <Step>
+      ### エージェントのテスト
+      エージェントを使うには、トップバーの <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle"><Bot size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> アイコン</span> から、または **Tabs** > **AI Agent** 経由で **AI Agent** タブを開きます。
+
+      **AI Agent** タブの詳細は [AI Agent](/docs/interface/ai-agent) を参照してください。
+
+    </Step>
+  </Steps>

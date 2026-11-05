@@ -1,0 +1,132 @@
+---
+title: Channel
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import listenerForm from '@/assets/img/tutorial/listener_form.png';
+import listenerOk from '@/assets/img/tutorial/listener_ok.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+For an implant to communicate with the team server, you need a channel already configured for it.
+
+Currently, there are two channel categories:
+- HTTP/HTTPS
+- Custom
+
+## HTTP/HTTPS channel
+
+This is the simplest and most common channel to set up. Beyond a URL for the implant to reach, it does not require any extra configuration.
+
+When creating this channel, you can also tweak more advanced settings, such as:
+
+- Changing the URL path (example: `https://example.com/path` -> `https://example.com/path/custom`)
+- Response headers
+- Custom body templates for implant requests and listener responses
+
+## Custom channel
+
+This is the most complex channel type, but also the most flexible. A custom channel is essential when you need highly specific communication, for example:
+
+- Telegram
+- Discord
+- Dropbox
+
+It has no presets, so you will need to configure everything manually. That includes the implant creation step, where you must write a custom code snippet for communication with the channel.
+
+You will not find a "custom channel" option in the creation interface, since it has to be set up manually. To learn more, see [Custom C2](/docs/custom-channels).
+
+## What about other channel types?
+
+Some frameworks still support alternative channels like DNS, DoH, mTLS, and others. We chose these two channel types specifically to match current trends, especially the demand for integration with external communication services like Telegram, Google Drive, and so on.
+
+There are no plans to officially add more channel types in the future.
+
+If you still need a specific channel type, such as DNS, you will need to use **Custom Channel** to build that communication yourself.
+
+## Creating an HTTP channel
+
+The HTTP channel (without SSL) is the simplest one to create. Follow the steps below:
+
+  <Steps>
+    <Step>
+      ### Open the listeners tab
+      Open **NukeRat** > **Listeners** > **Add**.
+    </Step>
+    <Step>
+      ### Fill in the fields
+      <ImageZoom src={listenerForm} alt="Listener Form" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+      - **Name**: Choose a name so you can recognize the listener easily.
+      - **Type**: Select `Channel`
+      - **Channel**: Choose `http` or `https`
+      - **Server**: Choose the team server where the listener will be created (must be configured beforehand)
+      - **Port to open**: The port that will be used
+    </Step>
+    <Step>
+      ### Click **Create**
+      If everything is correct, the listener will be created and listed in the listeners tab.
+      <ImageZoom src={listenerOk} alt="Listener Ok" className="h-[6.5rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+    </Step>
+  </Steps>
+
+Once you finish creating it, you can use the implant to communicate with the channel you just set up.
+
+The HTTP channel (without SSL) encrypts implant requests and listener responses with the shared AES 256 key from implant build time. Even if someone captures the HTTP session, the bodies stay unreadable without that key. See [Communication encryption](/docs/rest-api/implants#communication-encryption) for how payloads look on the wire.
+
+## HTTPS and certificates
+
+To use SSL, choose `https` in the **Channel** field when you create the listener. A **Certificate** section appears below the port field. Under **Source**, pick self signed or manual.
+
+Self signed certificates are generated automatically by NukeRat using `openssl`, and you can customize the generation settings, including days, CN, SAN, key type, and more.
+
+Some of these fields show example values in the placeholder. Obviously, you should not use those values exactly, as that can lead to detection through certificate signature matching.
+
+For manual certificates, paste or upload your certificate and private key PEM (for example from a provider such as Namecheap).
+
+Like the HTTP channel (without SSL), the HTTPS channel uses the same AES 256 encryption for implant bodies. TLS protects the transport, and the bodies stay encrypted even under SSL/TLS inspection.
+
+## Advanced customizations
+
+HTTP/HTTPS channels include a few fields under **Advanced**:
+
+- **Endpoint path**: The URL path the implant will use to communicate
+- **Response headers**: Response headers for the channel
+- **Custom body**: Preset (`off`, `custom`, or the built in `json` and `xml` examples) plus optional **Listener response** and **Implant request** templates when custom body is not `off`
+
+## Custom body
+
+By default, communication between the implant and the server is straightforward: a string is encrypted and attached to the body, for example:
+
+```http
+POST /api HTTP/1.1
+Host: example.com
+
+U2FsdGVkX1/Z8mN3kL9qP2vX7dQ4jK1mR5sT8uW2xY3aB6cD9e...
+```
+
+Notice that the body is just a blob of encrypted data, with no specific structure. With a custom body, you can define a shared structure between implant and server, for example:
+
+**Server response:**
+```http
+{
+  "status": "ok",
+  "data": "§content§"
+}
+```
+
+**Implant request:**
+```http
+{
+  "type": "telemetry",
+  "event": "sync",
+  "payload": "§content§",
+}
+```
+
+In the example above, once configured, the channel will send responses in the defined format and expect the same format in implant requests.
+
+We added some custom body examples in the channel creation interface itself, but it is not recommended to use them exactly as shown, since they can trigger detection through body signature matching.
+
+### Notes
+
+1. For the implant to communicate correctly, replicate the same **Listener response** and **Implant request** templates during implant creation. The listener reads `implantBody` and wraps replies with `listenerResponse` at runtime (see [Implant listener API](/docs/rest-api/implants#request-body-template-implantbody)).
+2. On HTTP/HTTPS channels, when `implantBody` is empty or exactly `§content§`, the entire raw request body is encrypted. With a custom structure, only the `§content§` slice is encrypted. The listener extracts that slice before decryption.

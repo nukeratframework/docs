@@ -1,0 +1,42 @@
+---
+title: プロセス
+---
+
+import processes from '@/assets/img/tutorial/processes.png';
+import {
+  Bot,
+  ChevronsUpDown,
+  Cpu,
+  RefreshCw,
+  X,
+} from 'lucide-react';
+import { Callout } from '@/ui/custom/callout';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+プロセスタブでは、ホスト上で実行中のプロセスをより簡単に分析・監視できます。
+
+上部バーの <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle"><Cpu size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> アイコン</span>から **Processes** タブを開くか、**Tabs** > **Processes** から開けます。
+
+<Callout type="info">
+  プロセスタブを使う前に、タブ名の横にある **Host** をクリックして対象ホストを選択してください。
+</Callout>
+
+ファイルブラウザと同様、ホストを選択するとクライアントはそのホストのプロセス一覧を要求します。初回読み込み時に応答がプロセスタブに反映されます。
+
+<ImageZoom src={processes} alt="Processes" className="tutorial_img" />
+
+## 仕組み
+
+インプラントは実行中のプロセスを列挙し、結果をクライアントが描画するためのカスタム JSON 形式に変換します。
+
+### Windows
+
+`kernel32.dll`（`CreateToolhelp32Snapshot`、`Process32FirstW`、`Process32NextW`、`OpenProcess`、`QueryFullProcessImageNameW`）と `iphlpapi.dll`（`GetExtendedTcpTable`）を使用します。コアロジックは `implants/windows/stageless/capabilities/process.nim` にあります。
+
+### Linux
+
+`/proc`（`stat`、`status`、`exe`）と `/proc/net/tcp` を読み取ります。コアロジックは `implants/linux/stageless/capabilities/process.nim` にあります。
+
+### MacOS
+
+`macapi` モジュール（`ListProcessIDs`、`ReadProcessStat`、`ReadProcessStatus`、`GetTcpPidMap`）を使用します。コアロジックは `implants/mac/stageless/capabilities/process.go` にあります。

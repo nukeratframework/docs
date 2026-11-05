@@ -1,0 +1,37 @@
+---
+title: ファイルサーバー
+---
+
+import { Globe } from 'lucide-react';
+import fileServer from '@/assets/img/tutorial/file_server.png';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+ファイルサーバータブでは、NukeRat にすでに設定されているファイルサーバーを管理できます。ペイロードなど、ファイルを素早く効率的にホストするのに役立ちます。
+
+上部バーの <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle"><Globe size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> アイコン</span>から **File Server** タブを開くか、**Tabs** > **File Server** から開けます。
+
+<ImageZoom src={fileServer} alt="File Server" className="tutorial_img" />
+
+## 使い方
+
+ファイルサーバータブを使うには、次の手順に従ってください。
+
+  <Steps>
+    <Step>
+      ### ファイルサーバーリスナーを作成
+      まず、種類 **File server** のリスナーを作成します。詳細は [リスナー](/docs/listeners) セクションを参照してください。
+    </Step>
+    <Step>
+      ### ファイルサーバーを選択
+      タブ上部でサーバーセレクターを開き、管理したいファイルサーバーリスナーを選びます。
+    </Step>
+    <Step>
+      ### ファイルをアップロード
+      最後に、ホストしたいファイルをアップロードします。
+    </Step>
+  </Steps>
+
+## 補足
+
+NukeRat のファイルサーバーはファイルのホストに限られません。偽ログインページなど、ソーシャルエンジニアリング用のアプリケーションをホストする用途にも使えます。

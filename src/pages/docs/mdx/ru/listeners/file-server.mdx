@@ -1,0 +1,48 @@
+---
+title: Файловый сервер
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import fileServerForm from '@/assets/img/tutorial/file_server_form.png';
+import { Globe } from 'lucide-react';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+Listener типа file server — это файловый сервер. Его используют для размещения полезной нагрузки, отдачи стадий для загрузчиков, простых фишинговых приложений и т. п.
+
+У каждого listener свой каталог с содержимым на сервере команды. Файлы отдаются по HTTP или HTTPS с адреса listener обычными URL-путями (например, `http://host:port/payload.bin`).
+
+## Создание файлового сервера
+
+Выполните шаги ниже:
+
+  <Steps>
+    <Step>
+      ### Открыть вкладку listeners
+      Откройте **NukeRat** > **Listeners** > **Add**.
+    </Step>
+    <Step>
+      ### Заполнить поля
+      <ImageZoom src={fileServerForm} alt="File Server Form" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+      - **Name**: имя, по которому listener легко узнать.
+      - **Type**: выберите **File server**
+      - **Server**: сервер команды, на котором будет создан listener (его нужно настроить заранее)
+      - **Port to open**: порт, который будет использоваться
+    </Step>
+    <Step>
+      ### Нажать **Create**
+      После создания откройте рабочую область **File Server** с верхней панели — <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">иконка <Globe size={18.5} className="shrink-0 ml-1.5 mr-1.5" /></span> — или **Tabs** > **File Server**. Выберите listener и нажмите **Upload**, чтобы добавить файлы.
+    </Step>
+  </Steps>
+
+
+## SSL и сертификаты
+
+Файловый сервер поддерживает HTTPS. В форме создания включите **SSL**, затем настройте сертификат в секции **Certificate**.
+
+В **Source** выберите self signed или manual. Самоподписанные сертификаты NukeRat создаёт через команду `openssl`, с теми же параметрами субъекта и ключа, что и у channel listener.
+
+Для ручной загрузки вставьте или загрузите PEM сертификата и закрытого ключа.
+
+## Пользовательские заголовки ответа
+
+Заголовки ответа настраиваются в **Advanced** > **Response headers**.

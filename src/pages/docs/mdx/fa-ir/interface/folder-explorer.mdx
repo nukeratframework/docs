@@ -1,0 +1,55 @@
+---
+title: مرورگر فایل
+---
+import folderExplorer from '@/assets/img/tutorial/folder_explorer.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import {
+  ArrowDownToLine,
+  ArrowLeft,
+  ArrowRight,
+  Bot,
+  ChevronsRight,
+  Folder,
+  LayoutGrid,
+  List,
+  RefreshCw,
+} from 'lucide-react';
+import { Callout } from '@/ui/custom/callout';
+
+مرورگر فایل به شما امکان می‌دهد فایل‌ها و پوشه‌های میزبان را بدون اتکا به دستورهای ترمینال مرور کنید.
+
+می‌توانید تب **File Browser** را از <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">آیکون <Folder size={18.5} className="shrink-0 ml-1.5 mr-1.5" /></span> در نوار بالا، یا از **Tabs** > **File Browser** باز کنید.
+
+<Callout type="info">
+  پیش از استفاده از مرورگر فایل، با کلیک روی **Host** کنار نام تب، میزبان هدف را انتخاب کنید.
+</Callout>
+
+پس از انتخاب میزبان، کلاینت فهرست پوشهٔ آن میزبان را درخواست می‌کند. پاسخ در بار اول مرورگر فایل را پر می‌کند.
+
+<ImageZoom src={folderExplorer} alt="مرورگر پوشه" className="tutorial_img" />
+
+درخت فایل و پوشه در سمت چپ برای پیمایش سریع‌تر پوشه‌ها و فایل‌های میزبان انتخاب‌شده است؛ نوار جست‌وجوی بالای درخت درخت را به‌صورت محلی فیلتر می‌کند و دستور listing جدیدی به میزبان نمی‌فرستد.
+
+## دانلود فایل
+
+روی یک فایل کلیک کنید تا محتوای خام آن را ببینید. با دکمهٔ **Download** آن را به‌صورت محلی ذخیره کنید.
+
+فایل‌های تصویری به‌صورت inline در مرورگر فایل نمایش داده می‌شوند.
+
+وقتی فایل بزرگ‌تر از 25 MB باشد، مرورگر فایل به‌جای بارگذاری کل محتوا هشدار نشان می‌دهد. اگر به payload کامل نیاز دارید، فایل را از ترمینال دانلود کنید.
+
+## نحوهٔ کار
+
+برای فهرست پوشه، implant پوشه را می‌خواند و نتیجه را به قالب JSON سفارشی برای رندر در کلاینت تبدیل می‌کند. برای دانلود فایل، implant بایت‌های خام فایل را برمی‌گرداند.
+
+### Windows
+
+از `kernel32.dll` (`FindFirstFileW`, `FindNextFileW`, `GetLogicalDriveStringsW`, `GetFileAttributesW`) استفاده می‌کند. منطق اصلی در `implants/windows/stageless/capabilities/folders.nim` است.
+
+### Linux
+
+از POSIX `opendir`, `readdir` و `stat` استفاده می‌کند. منطق اصلی در `implants/linux/stageless/capabilities/folders.nim` است.
+
+### MacOS
+
+از ماژول `macapi` (`ListDirEntries`, `PathExists`, `PathIsDir`) استفاده می‌کند. منطق اصلی در `implants/mac/stageless/capabilities/folders.go` است.

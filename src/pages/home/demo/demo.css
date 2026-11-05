@@ -1,0 +1,387 @@
+.nukerat-demo-root {
+  text-align: left !important;
+}
+
+.nukerat-demo-root .dv-tab,
+.nukerat-demo-root .dv-tab * {
+  text-align: left !important;
+}
+
+.nukerat-demo-root label {
+  text-align: left !important;
+}
+
+.nukerat-demo-root .demo_dv-bg-window {
+  background-color: #171717 !important;
+}
+
+.nukerat-demo-root .demo_primary-text {
+  color: #cecece !important;
+}
+
+.nukerat-demo-root .demo_button-default {
+  height: 30px !important;
+  border-radius: 5px !important;
+  padding-top: 3.2px !important;
+  padding-bottom: 3.2px !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+
+.nukerat-demo-root .demo_tHa7k {
+  height: 100% !important;
+  color: #d4d4d4 !important;
+  overflow: hidden !important;
+  cursor: text !important;
+  user-select: text !important;
+  text-align: left !important;
+}
+
+.nukerat-demo-root .demo_tHa7k * {
+  font-family: "Mona Sans Mono", system-ui, -apple-system, sans-serif !important;
+  font-size: 13.5px !important;
+  font-weight: 400 !important;
+  font-variant-ligatures: none !important;
+  font-feature-settings: "liga" 0, "calt" 0 !important;
+  text-align: left !important;
+}
+
+.nukerat-demo-root .demo_mK2vP {
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  padding: 8px !important;
+  line-height: 1.6 !important;
+  overflow-x: hidden !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+}
+
+.nukerat-demo-root .demo_terminal-output {
+  display: flex !important;
+  flex: 1 1 auto !important;
+  flex-direction: column !important;
+  min-height: 0 !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+
+.nukerat-demo-root .demo_terminal-list {
+  display: flex !important;
+  flex: 1 1 auto !important;
+  flex-direction: column !important;
+  min-height: 0 !important;
+  min-width: 0 !important;
+}
+
+.nukerat-demo-root .demo_terminal-output [data-virtuoso-scroller] {
+  cursor: default !important;
+}
+
+.nukerat-demo-root .demo_qX9lW {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  border: 1px solid #373737 !important;
+  border-radius: 5px !important;
+  min-height: 29px !important;
+  height: auto !important;
+  padding: 4px 8px !important;
+  background-color: #1e1e1e !important;
+  overflow-x: auto !important;
+  min-width: 10rem !important;
+  cursor: default !important;
+}
+
+.nukerat-demo-root .demo_bZ5cQ {
+  margin-right: 8px !important;
+  user-select: none !important;
+  cursor: text !important;
+  color: #41be5c !important;
+  white-space: nowrap !important;
+}
+
+.nukerat-demo-root .demo_bZ5cQ-muted {
+  opacity: 0.6 !important;
+}
+
+.nukerat-demo-root .demo_terminal-input {
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+}
+
+.nukerat-demo-root .demo_pL8mF {
+  flex: 1 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  border-radius: 0 !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: #d4d4d4 !important;
+  outline: none !important;
+  width: 100% !important;
+  cursor: text !important;
+}
+
+.nukerat-demo-root .demo_pL8mF-disabled {
+  cursor: not-allowed !important;
+  opacity: 0.6 !important;
+}
+
+.nukerat-demo-root .demo_sT2hJ {
+  color: #cecece !important;
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
+  overflow-wrap: anywhere !important;
+  cursor: text !important;
+}
+
+.nukerat-demo-root .demo_terminal-line {
+  margin: 0 !important;
+  cursor: text !important;
+  user-select: text !important;
+}
+
+.nukerat-demo-root .demo_oKD1s {
+  color: #9b9b9b !important;
+  margin-right: 0.2rem !important;
+  cursor: text !important;
+}
+
+.nukerat-demo-root .demo_terminal-virtuoso {
+  margin-bottom: 0.75rem !important;
+  min-height: 0 !important;
+  flex: 1 1 auto !important;
+  cursor: default !important;
+}
+
+.nukerat-demo-root .demo_terminal-cancel {
+  display: inline-flex !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+  height: auto !important;
+  width: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  cursor: pointer !important;
+}
+
+.nukerat-demo-root .demo_terminal-send {
+  display: flex !important;
+  flex-shrink: 0 !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: auto !important;
+  width: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #888 !important;
+  cursor: pointer !important;
+}
+
+.nukerat-demo-root .demo_terminal-send:hover:not(:disabled) {
+  background: transparent !important;
+  color: #cecece !important;
+}
+
+.nukerat-demo-root .demo_terminal-send:disabled {
+  cursor: not-allowed !important;
+  opacity: 0.5 !important;
+}
+
+.nukerat-demo-root .demo_terminal-spin {
+  min-width: 12px !important;
+  flex-shrink: 0 !important;
+  animation: demo_terminal-spin 1s linear infinite !important;
+}
+
+@keyframes demo_terminal-spin {
+  from {
+    transform: rotate(0deg) !important;
+  }
+  to {
+    transform: rotate(360deg) !important;
+  }
+}
+
+.nukerat-demo-root .demo_terminal-full {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.nukerat-demo-root .demo_nano-editor-container {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  background-color: #1e1e1e !important;
+  color: #ffffff !important;
+  font-family: ui-monospace, monospace !important;
+  font-size: 0.875rem !important;
+  line-height: 1.25rem !important;
+  overflow: hidden !important;
+  user-select: none !important;
+  outline: none !important;
+  text-align: left !important;
+}
+
+.nukerat-demo-root .demo_nano-editor-container * {
+  text-align: left !important;
+}
+
+.nukerat-demo-root .demo_nano-header {
+  background-color: #535353 !important;
+  padding-left: 0.25rem !important;
+  padding-right: 0.25rem !important;
+  display: flex !important;
+  justify-content: space-between !important;
+}
+
+.nukerat-demo-root .demo_nano-textarea {
+  flex-grow: 1 !important;
+  color: #ffffff !important;
+  padding: 0.25rem !important;
+  background-color: transparent !important;
+  outline: none !important;
+  resize: none !important;
+  overflow: auto !important;
+  border: none !important;
+}
+
+.nukerat-demo-root .demo_nano-footer {
+  background-color: #535353 !important;
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  column-gap: 1rem !important;
+  padding: 0.25rem !important;
+}
+
+.nukerat-demo-root .demo_nano-key {
+  font-weight: 700 !important;
+}
+
+.demo_nk-tooltip,
+.nukerat-demo-root .demo_nk-tooltip {
+  --demo-tooltip-radius: 5px;
+  background-color: #525252 !important;
+  color: #f0f0f0 !important;
+  border-radius: var(--demo-tooltip-radius) !important;
+  font-family: "Mona Sans", system-ui, -apple-system, sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  text-align: left !important;
+  line-height: 1.4 !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+}
+
+.demo_nk-tooltip *,
+.nukerat-demo-root .demo_nk-tooltip * {
+  text-align: left !important;
+  color: inherit !important;
+  font-family: inherit !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+}
+
+.demo_nk-tooltip .font-semibold,
+.nukerat-demo-root .demo_nk-tooltip .font-semibold {
+  font-weight: 600 !important;
+  color: #ffffff !important;
+}
+
+.demo_nk-tooltip.topbar-nav-tooltip,
+.nukerat-demo-root .demo_nk-tooltip.topbar-nav-tooltip {
+  background-color: #3a3a3a !important;
+  border-radius: 7px !important;
+}
+
+.demo_nk-tooltip.topbar-nav-tooltip svg,
+.nukerat-demo-root .demo_nk-tooltip.topbar-nav-tooltip svg {
+  background-color: #3a3a3a !important;
+  fill: #3a3a3a !important;
+}
+
+[data-slot="dropdown-menu-content"].topbar-menu-dropdown,
+[data-slot="dropdown-menu-sub-content"].topbar-menu-dropdown {
+  width: fit-content;
+  min-width: 13rem;
+  border: 1px solid #292929 !important;
+  border-radius: 5.5px !important;
+  margin-top: 0 !important;
+}
+
+[data-slot="dropdown-menu-content"].topbar-menu-dropdown [data-slot="dropdown-menu-item"],
+[data-slot="dropdown-menu-content"].topbar-menu-dropdown [data-slot="dropdown-menu-sub-trigger"],
+[data-slot="dropdown-menu-sub-content"].topbar-menu-dropdown [data-slot="dropdown-menu-item"] {
+  border-radius: 4px !important;
+}
+
+.canva-shortcut-hint {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: rgba(206, 206, 206, 0.289);
+  user-select: none;
+  flex-shrink: 0;
+  margin-top: 0px;
+}
+
+[data-slot="dropdown-menu-item"] .canva-shortcut-hint {
+  margin-left: auto;
+  text-align: right;
+}
+
+[data-slot="popover-content"].downloads-popover {
+  font-size: 12px !important;
+  color: #d4d4d4 !important;
+  background: #292929 !important;
+  background-color: #292929 !important;
+  border: 1px solid #292929 !important;
+  border-radius: 5.5px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5) !important;
+  padding: 0 !important;
+  gap: 0 !important;
+  margin-top: 0 !important;
+  width: 13rem !important;
+  --tw-ring-shadow: 0 0 #0000 !important;
+  --tw-ring-offset-shadow: 0 0 #0000 !important;
+  --tw-ring-color: transparent !important;
+  outline: none !important;
+}
+
+[data-slot="popover-content"].downloads-popover > div {
+  background-color: #292929 !important;
+}
+
+.downloads-popover-list {
+  scrollbar-width: thin;
+  scrollbar-color: #404040 #292929;
+}
+
+.downloads-popover-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.downloads-popover-list::-webkit-scrollbar-track {
+  background: #292929;
+}
+
+.downloads-popover-list::-webkit-scrollbar-thumb {
+  background: #404040;
+  border-radius: 4px;
+}

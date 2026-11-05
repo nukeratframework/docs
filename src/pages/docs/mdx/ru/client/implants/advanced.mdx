@@ -1,0 +1,62 @@
+---
+title: Расширенные настройки
+---
+
+import preface from '@/assets/img/tutorial/preface.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+При создании импланта NukeRat доступны расширенные параметры: preface, runtime и артефакты PE. Они позволяют сильно настроить имплант без правки исходного кода импланта.
+
+## Preface
+
+В разделе **Preface** задаётся код preface — он выполняется до запуска основной логики импланта.
+
+На Windows и Linux пользовательский код preface вставляется в `custom.nim` и вызывается из `preface()` до `main_init()`. Точка входа выглядит так:
+
+```nim
+import custom
+import routine/start
+
+proc main(): void =
+  custom.preface()
+  start.main_init()
+main()
+```
+
+На macOS preface — код на Go, который вставляется в `custom.go`. При сборке вызывается `Custom()` до `routine.MainInit()`.
+
+Preface можно использовать для разных целей:
+
+- обнаружение песочницы;
+- вставка «мусорного» кода;
+- увеличение размера импланта.
+
+Для имплантов Windows и Linux preface пишется на Nim, для macOS — на Go.
+
+## PE Artifacts
+
+Этот раздел доступен для имплантов **Windows** и предназначен для изменения PE (Portable Executable).
+
+Доступные изменения:
+
+- **EXE icon**: смена иконки исполняемого файла (только формат EXE);
+- **PE strings**: встраивание «приманочных» значений в секции PE (EXE и DLL);
+- **TimeDateStamp**: изменение поля временной метки PE;
+- **Version fields**: major/minor для linker, OS, image и subsystem.
+
+Цель — улучшить статическое уклонение или сделать имплант правдоподобнее при статическом анализе.
+
+## Runtime
+
+В разделе **Runtime** настраиваются опции уклонения и обфускации.
+
+Для **Windows** доступны:
+
+- **API resolution**: динамическая загрузка (фиксировано);
+- **Win API method**: indirect syscalls со stack spoofing (фиксировано);
+- **ETW patch** и **AMSI patch**;
+- **Sleep mask**: Off, Ekko или Zilean;
+- **String obfuscation**: Off, Xor или RC4;
+- **Wipe PE headers in memory**.
+
+На **Linux** и **macOS** в runtime доступна только **string obfuscation** (Off, Xor или RC4). Sleep mask, ETW, AMSI и очистка заголовков PE относятся только к имплантам Windows.

@@ -1,0 +1,34 @@
+---
+title: Commands
+---
+
+NukeScript ships with a set of native commands for performing actions on the team server. Keep in mind that NukeScript is not limited to native commands only. Since it runs on Python, you can still use any library or function from Python itself.
+
+## Commands catalog
+
+Below is the list of available commands:
+
+| Command | Description | Args |
+| --- | --- | --- |
+| `cmd` | Synchronous terminal command that returns the output as a string | `host_tag`, `command` |
+| `async_cmd` | Queues a command and returns immediately | `host_tag`, `command` |
+| `process` | Requests the process tree | `host_tag` |
+| `folders` | Lists a remote directory | `host_tag`, `path` |
+| `screenshot` | Captures a screenshot with optional keyword only `output` path to save the file | `host_tag`, `output` (optional, keyword only) |
+| `approve_cmd` | Allows the task to run. Use inside a `new_queue_line` script | `queue_tag` |
+| `reject_cmd` | Blocks the task and records an error | `queue_tag` |
+| `conclude` | Marks the task as complete with a custom response | `queue_tag`, `message` |
+| `credentials` | Returns all stored credentials | |
+| `credentials.add` | Adds a credential and returns the new tag | `name`, `host`, `description`, `content` |
+| `credentials.remove` | Removes a credential by tag | `tag` |
+| `db.<table>` | All rows from the table, or one column across all rows | optional column. Tables: `users`, `terminal`, `hosts`, `listeners`, `folders`, `process`, `queue`, `agents`, `agents_history`, `credentials`, `keylogger`, `nukescripts`, `nukescripts_output`, `custom_notifications`, `checkins` |
+| `keylogs` | Returns all keylogger entries | |
+| `network.add_socks` | SOCKS pivot that returns a status string with `session_id` on success | `host_tag`, `port`, `user` (optional), `password` (optional) |
+| `network.add_forward` | TCP port forward | `host_tag`, `local_port`, `target_host`, `target_port` |
+| `network.remove` | Stops SOCKS or port forward | `tag` from `db.listeners()` where `type` is `socks` or `port_forwarding` |
+| `network.restart` | Restarts SOCKS or port forward | `tag` from `db.listeners()` where `type` is `socks` or `port_forwarding` |
+| `file_server.upload` | Copies a local file to the listener content directory | `port`, `path` |
+| `file_server.delete` | Removes a file from the listener content directory | `port`, `filename` |
+| `agent` | Sends a prompt to a configured AI agent | `agent_tag`, `prompt` |
+| `echo` | Writes to NS Output | `content` |
+| `message_box` | Notification for the operator | `title`, `body`, `type` (`info`, `error`, or `success`) |

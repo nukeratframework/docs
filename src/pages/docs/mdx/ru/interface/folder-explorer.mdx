@@ -1,0 +1,45 @@
+---
+title: Файловый обозреватель
+---
+import folderExplorer from '@/assets/img/tutorial/folder_explorer.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import { Folder } from 'lucide-react';
+import { Callout } from '@/ui/custom/callout';
+
+Файловый обозреватель позволяет просматривать файлы и каталоги на хосте без команд в терминале.
+
+Вкладку **File Browser** можно открыть через <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">иконку <Folder size={18.5} className="shrink-0 ml-1.5 mr-1.5" /></span> на верхней панели или через **Tabs** > **File Browser**.
+
+<Callout type="info">
+  Перед использованием обозревателя выберите целевой хост, нажав **Host** рядом с названием вкладки.
+</Callout>
+
+После выбора хоста клиент запрашивает список каталога; ответ заполняет обозреватель при первой загрузке.
+
+<ImageZoom src={folderExplorer} alt="Folder explorer" className="tutorial_img" />
+
+Дерево файлов и каталогов слева ускоряет навигацию по выбранному хосту. Строка поиска над деревом фильтрует его локально и не отправляет на хост новые команды листинга.
+
+## Скачивание файлов
+
+Щёлкните по файлу, чтобы увидеть его содержимое в исходном виде. Кнопка **Download** сохраняет файл локально.
+
+Изображения отображаются прямо в обозревателе.
+
+Если файл больше 25 МБ, обозреватель показывает предупреждение вместо полной загрузки содержимого. Файл целиком можно скачать через терминал.
+
+## Как это устроено
+
+Для листинга каталога имплант читает каталог и преобразует результат в пользовательский JSON для отображения в клиенте. При скачивании файла имплант возвращает сырые байты файла.
+
+### Windows
+
+Используются функции `kernel32.dll` (`FindFirstFileW`, `FindNextFileW`, `GetLogicalDriveStringsW`, `GetFileAttributesW`). Основная логика — в `implants/windows/stageless/capabilities/folders.nim`.
+
+### Linux
+
+Используются POSIX `opendir`, `readdir` и `stat`. Основная логика — в `implants/linux/stageless/capabilities/folders.nim`.
+
+### MacOS
+
+Используется модуль `macapi` (`ListDirEntries`, `PathExists`, `PathIsDir`). Основная логика — в `implants/mac/stageless/capabilities/folders.go`.

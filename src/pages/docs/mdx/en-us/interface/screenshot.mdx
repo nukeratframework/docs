@@ -1,0 +1,54 @@
+---
+title: Screenshot
+---
+
+import screenshot from '@/assets/img/tutorial/screenshot.png';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { Camera } from 'lucide-react';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+The screenshot tab is a passive viewer. It renders the latest capture from a selected host, so a screenshot must be taken before anything can appear.
+
+Its main purpose is dynamic viewing. Combined with loop mode, it can approximate a live video feed.
+
+You can open the **Screenshot** tab from <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">the <Camera size={20} className="shrink-0 ml-1.5 mr-1.5" /> icon</span> in the top bar, or from **Tabs** > **Screenshot**.
+
+<ImageZoom src={screenshot} alt="Screenshot" className="tutorial_img" />
+
+## How to use
+
+To use the screenshot tab, follow these steps:
+
+  <Steps>
+    <Step>
+      ### Select a host
+      First, select the host whose screenshots you want to view. Click **Host** next to the tab name.
+    </Step>
+    <Step>
+      ### Start the screenshot loop
+      In the terminal, run `screenshot start` to start the screenshot loop. To set the interval between captures, use the `--delay <interval>` argument in seconds.
+    </Step>
+    <Step>
+      ### Wait for the image to update
+      By default, the screenshot tab polls the team server and updates whenever a new capture arrives, so you do not need to refresh manually.
+    </Step>
+  </Steps>
+
+## How it works
+
+Screenshot capture works in two ways:
+
+1. Single capture
+2. Loop capture, where a task in a separate thread takes a screenshot at each specified interval.
+
+### Windows
+
+Captures the screen with GDI (`user32.dll` and `gdi32.dll`) using `GetDC`, `BitBlt`, and `CreateDIBSection`. The core logic is in `implants/windows/stageless/capabilities/screenshots.nim`.
+
+### Linux
+
+Captures through X11 (`libX11.so`) with `XOpenDisplay` and `XGetImage` on the root window. Requires `DISPLAY` to be set. The core logic is in `implants/linux/stageless/capabilities/screenshots.nim`.
+
+### MacOS
+
+This feature is not supported on MacOS.

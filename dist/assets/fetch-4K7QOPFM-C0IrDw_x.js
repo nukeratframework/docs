@@ -1,0 +1,1 @@
+async function n(s,e,r,i){const t=new URLSearchParams;t.set("query",s),e&&t.set("locale",e),r&&t.set("tag",r);const a=await fetch(`${i.api??"/api/search"}?${t.toString()}`);if(!a.ok)throw new Error(await a.text());return await a.json()}export{n as fetchDocs};

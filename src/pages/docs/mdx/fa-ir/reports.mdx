@@ -1,0 +1,76 @@
+---
+title: گزارش‌ها
+---
+
+import { Callout } from '@/ui/custom/callout';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import activityReport from '@/assets/img/tutorial/report.png';
+
+NukeRat می‌تواند گزارشی از همهٔ آنچه در عملیات رخ داده تولید کند. هر گزارش را می‌توانید به PDF (پیش‌فرض)، HTML یا JSON export کنید. انواع گزارش موجود:
+
+- **Activity**: دستورات ترمینال اجراشده و credentialهای ضبط‌شده
+- **Hosts Report**: جزئیات میزبان‌های compromise‌شده
+- **Indicators of Compromise**: فهرست Indicators of Compromise
+
+## گزارش Activity
+
+گزارش‌های Activity نمای کلی از آنچه در عملیات اتفاق افتاد می‌دهند. ساختارشان این‌طور است:
+
+| بخش | توضیح |
+|---------|-------------|
+| Target scope | فهرست میزبان‌های compromise‌شده |
+| Queue activity | تا ۲۰۰ دستور ترمینال (زمان، hostname، user، دستور) |
+| Captured credentials | تا ۲۰۰ credential ضبط‌شده |
+
+هنگام ساخت گزارش activity می‌توانید **Hide credentials** را فعال کنید تا محتوای credential در export ماسک شود.
+
+<Callout type="info">
+  نکته: ردیف‌های queue activity از ورودی‌های صف ترمینال می‌آیند. می‌توانید دستورها را از صف حذف کنید با رفتن به **NukeRat** > **Queue**. قبل از تولید گزارش captureهای ناخواسته را دور بیندازید.
+</Callout>
+
+## گزارش Hosts
+
+ساده‌ترین گزارش است. تا ۲۰۰ میزبان compromise‌شده را در یک جدول فهرست می‌کند:
+
+- Hostname
+- User
+- Operating system
+- Internal IP
+- External IP
+- PID ایمپلنت NukeRat
+
+## Indicators of Compromise
+
+گزارش IOC پیچیده‌ترینِ سه‌تاست. هر IOC ذخیره‌شده برای عملیات را در این بخش‌ها می‌شکند:
+
+| بخش | توضیح |
+|---------|-------------|
+| Target scope | فهرست میزبان‌های compromise‌شده |
+| IP Addresses | فهرست آدرس IP |
+| Domains | فهرست دامنه |
+| Files | فهرست مسیر فایل‌های تشخیص‌داده‌شده از خروجی دستور |
+| Hashes | فهرست hash فایل (MD5، SHA1 و SHA256) |
+
+NukeRat پایگاه IOC را خودکار پر می‌کند. دستورات ترمینال با قواعد regex برای IPv4، دامنه و پسوندهای فایل شناخته‌شده اسکن می‌شوند. فایل‌های منتقل‌شده از file server هم hashهای MD5، SHA1 و SHA256 ثبت می‌گیرند. چیز پویا پشت صحنه اجرا نمی‌شود، مثل پردازش خروجی با مدل AI. پس ممکن است indicator ناهماهنگ یا خطای capture ساده ببینید، هرچند خیلی رایج نیست.
+
+<Callout type="info">
+    نکته: برای رفع مشکل capture indicator، NukeRat ویرایشگر IOC دارد که indicatorهای ضبط‌شده را مرور و حذف کنید. از **NukeRat** > **IOCs** بازش کنید.
+</Callout>
+
+## نمونهٔ گزارش
+
+در زیر نمونه‌ای از ظاهر استایل گزارش:
+<ImageZoom src={activityReport} alt="Activity report" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+مواظب باز کردن گزارش باشید. ممکن است با flashbang بصری white mode بخورید ¯\\_(ツ)_/¯
+
+## محدودیت‌ها
+
+همهٔ گزارش‌ها روی team server انتخاب‌شده تولید می‌شوند. یعنی هر گزارش به میزبان‌های متصل به همان سرور محدود است.
+
+اگر با بیش از یک team server کار می‌کنید، برای هر سرور جدا گزارش بسازید.
+
+## بازخورد
+
+تولید گزارش هنوز آزمایشی است. انتظار داشته باشید بیشتر از بیشتر قابلیت‌های NukeRat عوض شود؛ بیشتر چون هنوز داریم کشف می‌کنیم اپراتورها واقعاً از گزارش چه می‌خواهند.
+
+اگر بازخورد یا پیشنهاد دارید، issue روی GitHub باز کنید.

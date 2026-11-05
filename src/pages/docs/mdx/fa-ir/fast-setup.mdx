@@ -1,0 +1,87 @@
+---
+title: راه‌اندازی سریع
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import keyAdd from '@/assets/img/tutorial/key_2.png';
+import listenerForm from '@/assets/img/tutorial/listener_form.png';
+
+راهنمای سریع از نصب تا ساخت اولین ایمپلنت (سرور لینوکس).
+
+  <Steps>
+    <Step>
+      ### نصب سرور
+      مخزن را clone کنید و نصب‌کننده را اجرا کنید.
+
+      ```bash
+      git clone https://github.com/nukeratframework/nukerat && cd nukerat && sudo bash install.sh
+      ```
+    </Step>
+    <Step>
+      ### ایجاد کلید اپراتور
+      برای استفاده از سرور به کلید اپراتور نیاز دارید. از ریشهٔ مخزن اجرا کنید:
+
+      ```bash
+      ./nukerat.py server key add test
+      ```
+
+      خروجی چیزی شبیه این خواهد بود:
+      ```html
+      test:z6MIe3MbZQL57Hx3fOthGZJ:oxcWICLu9Tnu7GyvwDiwVCRoER4ybKv...
+
+      Operator created successfully: test
+      ```
+
+      کلید تولیدشده را کپی کنید تا در کلاینت جای‌گذاری کنید.
+    </Step>
+    <Step>
+      ### راه‌اندازی سرور
+      با دستور زیر سرور را روی 0.0.0.0:9000 (پیش‌فرض) بالا بیاورید:
+
+      ```bash
+      ./nukerat.py server start
+      ```
+    </Step>
+    <Step>
+      ### باز کردن کلاینت
+      برای باز کردن کلاینت این دستور را بزنید:
+
+      ```bash
+      ./nukerat.py client start
+      ```
+    </Step>
+    <Step>
+      ### پیکربندی سرور
+      در نوار بالا بروید به **NukeRat** > **Servers** > **Add**. کلید اپراتور را جای‌گذاری کنید، پورت 9000 (پیش‌فرض) و IP سرور را تنظیم کنید، سپس **Auth** را بزنید.
+
+      <ImageZoom src={keyAdd} alt="Add server" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+
+    </Step>
+    <Step>
+      ### پیکربندی listener
+      این پورتی است که ایمپلنت برای ارتباط استفاده می‌کند. بروید به **NukeRat** > **Listeners** > **Add**
+
+      1. یک نام شناسایی انتخاب کنید
+      2. در فیلد TYPE گزینه «Channel» را انتخاب کنید
+      3. در فیلد channel مقدار «http» را نگه دارید
+      4. سروری که قبلاً ساختید را انتخاب کنید
+      5. پورتی غیر از پورت سرور وارد کنید
+      6. **Create** را بزنید
+
+      <ImageZoom src={listenerForm} alt="Listener form" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+    </Step>
+    <Step>
+      ### ساخت ایمپلنت
+      بروید به **NukeRat** > **Implants** > **Add**، سپس:
+
+      1. در COMPILE SERVER سروری که قبلاً ساختید را انتخاب کنید
+      2. سیستم‌عامل هدف را انتخاب کنید
+      3. در سمت چپ **Command and control** را بزنید و C2 را به listener ساخته‌شده اشاره دهید، مثلاً: http://192.168.1.100:9000
+    </Step>
+    <Step>
+      ### اجرا و happy hacking!
+
+      ایمپلنت را روی ماشین هدف اجرا کنید؛ اگر همه‌چیز درست تنظیم شده باشد session جدیدی ظاهر می‌شود. برای تعامل، زیر **Tabs** > **Terminal** یک ترمینال باز کنید و در dropdown «Host» کنار نام تب، session را انتخاب کنید و لذت ببرید!
+    </Step>
+  </Steps>

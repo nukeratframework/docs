@@ -1,0 +1,75 @@
+---
+title: Терминал
+---
+import hostSelect from '@/assets/img/tutorial/terminal.png';
+import terminalSearch from '@/assets/img/tutorial/terminal_search.png';
+import { SquareChevronRight } from 'lucide-react';
+import { Callout } from '@/ui/custom/callout';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+Терминал — основное рабочее место для команд на скомпрометированном хосте.
+
+Вкладку **Terminal** откройте через значок <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle"><SquareChevronRight size={18.5} className="shrink-0 ml-1.5 mr-1.5" /></span> на верхней панели или через **Tabs** > **Terminal**.
+
+<Callout type="info">
+  Перед выполнением команд выберите целевой хост: нажмите **Host** рядом с названием вкладки.
+</Callout>
+
+<Callout type="info">
+  Клиент NukeRat передаёт с каждым запросом поле `source_terminal` — идентификатор вкладки терминала, откуда отправлена команда. Оно только справочное и на выполнение не влияет.
+</Callout>
+
+Введите команду и нажмите **Enter**, чтобы отправить её на выбранный хост.
+<ImageZoom src={hostSelect} alt="Host select" className="tutorial_img" />
+
+**Ctrl + F** включает и выключает поиск по выводу терминала.
+
+<ImageZoom src={terminalSearch} alt="Terminal search" className="tutorial_img" />
+
+## Команды
+
+Команда `help` показывает все доступные команды. Для справки по одной команде: `help <command>`.
+
+| Команда | Описание |
+| --- | --- |
+| `help` | Список команд и синтаксис |
+| `config` | Конфигурация импланта |
+| `delay` | Интервал обратного вызова импланта (секунды) |
+| `kill` | Завершить процесс импланта |
+| `tasks` | ID выполняющихся задач |
+| `pwd` | Текущий каталог |
+| `cd` | Сменить каталог |
+| `ls` | Список файлов и каталогов |
+| `cat` | Содержимое файла |
+| `echo` | Вывести текст |
+| `cp` | Копировать файл |
+| `mv` | Переместить или переименовать файл |
+| `rm` | Удалить файл |
+| `mkdir` | Создать каталог |
+| `rmdir` | Удалить каталог |
+| `echo $` | Переменная окружения |
+| `whoami` | Текущий пользователь |
+| `systeminfo` | ОС и оборудование (подробно) |
+| `env` | Переменные окружения |
+| `tasklist` | Процессы через WMI |
+| `enumdrives` | Буквы дисков |
+| `ifconfig` | Сетевые адаптеры |
+| `route` | Таблица маршрутизации |
+| `arp` | Кэш ARP |
+| `netstat` | Активные подключения |
+| `portscan` | Сканирование портов удалённого хоста |
+| `shell` | Команда оболочки |
+| `powershell` | Скрипт PowerShell |
+| `shellcode` | Raw shellcode |
+| `bof` | Встроенный BOF |
+| `dotnet` | .NET-сборка |
+| `spawn` | Новый процесс |
+| `inj` | Внедрение shellcode, reflective DLL или donut-payload |
+| `tokens` | Токены доступа |
+| `relay` | Pivot-реле |
+| `keylogger start` | Запуск фонового keylogger |
+| `keylogger stop` | Остановка keylogger |
+| `screenshot` | Один снимок экрана |
+| `screenshot start` | Цикл захвата экрана |
+| `screenshot stop` | Остановка цикла |
+| `armory` | Утилиты armory |

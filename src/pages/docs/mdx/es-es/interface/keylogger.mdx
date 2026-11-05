@@ -1,0 +1,53 @@
+---
+title: Registro de teclas
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { Keyboard, RefreshCw } from 'lucide-react';
+import keylogger from '@/assets/img/tutorial/keylogger.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+La pestaña del keylogger, como la de captura de pantalla, es una función pasiva. Solo lee y edita teclas ya capturadas de un host.
+
+Puedes abrir la pestaña **Keylogger** desde el icono <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle"><Keyboard size={18.5} className="shrink-0 ml-1.5 mr-1.5" /></span> en la barra superior, o desde **Tabs** > **Keylogger**.
+
+<ImageZoom src={keylogger} alt="Registro de teclas" className="tutorial_img" />
+
+## Cómo usarlo
+
+Para usar la pestaña del keylogger, sigue estos pasos:
+
+  <Steps>
+    <Step>
+      ### Inicia el keylogger
+      En la terminal, ejecuta `keylogger start` para iniciar el keylogger. En Windows, usa la opción `--method [keystate|boardstate]` para cambiar el método de captura.
+    </Step>
+    <Step>
+      ### Actualiza la pestaña del keylogger
+      La pestaña del keylogger no se actualiza sola, así que actualízala manualmente haciendo clic en <RefreshCw size={18.5} className="w-4 ml-1.5 inline-flex items-center gap-1 whitespace-nowrap align-middle" />.
+    </Step>
+  </Steps>
+
+La pestaña del keylogger no requiere seleccionar un host ni un servidor. Ya se envía una solicitud a todos los team servers configurados.
+
+## Cómo funciona
+
+El keylogger se ejecuta en un hilo en segundo plano aparte y envía las teclas capturadas al servidor por lotes.
+
+### Windows
+
+Como se indicó arriba, el keylogger de Windows admite dos métodos de captura: uno prioriza OPSEC y el otro la precisión de la captura.
+
+- **keystate** usa un hook de teclado de bajo nivel mediante `SetWindowsHookEx`. Más visible para la monitorización de hooks, pero evita un sondeo amplio.
+
+- **boardstate** es el valor por defecto si omites `--method`. Usa `GetAsyncKeyState` de `user32.dll` y sondea el estado de las teclas en un bucle. No se instala ningún hook, pero el sondeo repetido puede destacar.
+
+La lógica principal está en `implants/windows/stageless/capabilities/keylogger.nim`.
+
+### Linux
+
+Usa X11 (`libX11.so`) con `XOpenDisplay` y `XQueryKeymap`. Requiere `DISPLAY`. La lógica principal está en `implants/linux/stageless/capabilities/keylogger.nim`.
+
+### MacOS
+
+Esta función no está disponible en macOS.

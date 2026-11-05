@@ -1,0 +1,32 @@
+---
+title: Sesiones
+---
+
+import { MonitorIcon } from 'lucide-react';
+import hosts from '@/assets/img/tutorial/hosts.png';
+import hostsInfo from '@/assets/img/tutorial/hosts_01.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+La pestaña de sesiones es la forma principal de supervisar las sesiones conectadas a cada team server configurado.
+
+Puedes abrir la pestaña **Sessions** desde el icono <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle"><MonitorIcon size={18.5} className="shrink-0 ml-1.5 mr-1.5" /></span> en la barra superior, o desde **Tabs** > **Sessions**.
+
+<ImageZoom src={hosts} alt="Sessions" className="tutorial_img" />
+
+Al abrir la pestaña, las sesiones de cada team server configurado se listan automáticamente, así que no hace falta seleccionar un team server.
+
+Para buscar con más facilidad, usa el campo **Filter sessions...** en la parte superior de la pestaña para filtrar por cualquier cadena en la información de la sesión.
+
+## Información de la sesión
+
+Para ver toda la información de una sesión, haz doble clic en la fila de la sesión para abrir un panel lateral con más detalles.
+
+<ImageZoom src={hostsInfo} alt="Sessions Info" className="tutorial_img" />
+
+El mismo panel lateral incluye un campo de notas donde puedes añadir apuntes relevantes sobre la sesión. Haz clic en **Save** para guardar la nota. Cualquier operador con acceso al team server puede leer esas notas.
+
+## Eliminar una sesión
+
+Para eliminar una sesión, selecciona la fila de la sesión y haz clic en **Remove**.
+
+**Importante**: Antes de eliminar una sesión, asegúrate de que su implante ya no esté en ejecución. Si no, la sesión se volverá a añadir. Consejo: usa el comando `kill` en la terminal para detener el implante del host.

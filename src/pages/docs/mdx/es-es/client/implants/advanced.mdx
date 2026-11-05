@@ -1,0 +1,62 @@
+---
+title: Avanzado
+---
+
+import preface from '@/assets/img/tutorial/preface.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+La creación de implants en NukeRat incluye opciones avanzadas como preface, runtime y artefactos PE. Estos ajustes permiten personalizar mucho los implants sin editar el código fuente del implant.
+
+## Preface
+
+La sección **Preface** es donde configuras el código preface. Se ejecuta antes de que arranque la rutina principal del implant.
+
+En Windows y Linux, el código preface del usuario se inyecta en `custom.nim` y se ejecuta desde `preface()` antes de `main_init()`. El punto de entrada se ve así:
+
+```nim
+import custom
+import routine/start
+
+proc main(): void =
+  custom.preface()
+  start.main_init()
+main()
+```
+
+En macOS, el preface es código Go inyectado en `custom.go`. La compilación llama a `Custom()` antes de `routine.MainInit()`.
+
+El código preface puede usarse para varios propósitos:
+
+- Detección de sandbox
+- Inserción de código basura
+- Inflado del tamaño del implant
+
+Para implants de Windows y Linux, el preface se escribe en Nim. Para implants de macOS, se escribe en Go.
+
+## PE Artifacts
+
+Esta sección está disponible para implants de **Windows**. Está dedicada a modificar archivos PE (Portable Executable).
+
+Modificaciones disponibles:
+
+- **EXE icon**: cambiar el icono del ejecutable (solo formato EXE)
+- **PE strings**: incrustar valores señuelo en secciones PE (formatos EXE y DLL)
+- **TimeDateStamp**: cambiar el campo de marca temporal del PE
+- **Version fields**: valores major y minor de linker, OS, image y subsystem
+
+El propósito de estos cambios es mejorar la evasión estática o hacer que el implant parezca más legítimo ante análisis estático.
+
+## Runtime
+
+La sección **Runtime** configura opciones de evasión y ofuscación.
+
+En **Windows**, puedes establecer:
+
+- **API resolution**: carga dinámica (fijo)
+- **Win API method**: indirect syscalls con stack spoofing (fijo)
+- **ETW patch** y **AMSI patch**
+- **Sleep mask**: Off, Ekko o Zilean
+- **String obfuscation**: Off, Xor o RC4
+- **Wipe PE headers in memory**
+
+En **Linux** y **macOS**, la sección runtime expone **string obfuscation** (Off, Xor o RC4). Sleep masking, ETW, AMSI y borrado de cabeceras PE aplican solo a implants de Windows.

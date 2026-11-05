@@ -1,0 +1,338 @@
+---
+title: インプラント
+---
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from 'fumadocs-ui/components/ui/collapsible';
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Callout } from '@/ui/custom/callout';
+
+HTTP/HTTPS **リスナー** プロセス経由で公開されるインプラント API です。クライアントと自動化が使う [チームサーバー管理 REST API](/docs/rest-api/team-server) ではありません。
+
+インプラントはチャネルごとに 1 パスを使います。リスナープロファイルの `endpointPath`（サーバー側で `/` 始まり、末尾スラッシュなし `/` を除いて正規化）です。そのパスに **GET** と **POST** が登録されます。
+
+<Callout type="info" title="カスタムインプラントを構築しますか？">
+  インプラント API を解説する [カスタムインプラント](/docs/custom-implants) の高度なガイドを読むことをおすすめします。多くの手間を省けます。
+</Callout>
+
+---
+
+## 通信の暗号化
+
+インプラントからのすべてのリクエストは暗号化必須です。省略できません。チームサーバーは常に暗号化されたボディを期待します。
+
+暗号化には、インプラントとチームサーバーが共有する AES-256 キーを使います。キーはインプラントビルド時に作成されデータベースに保存され、チームサーバーが受信リクエストを復号できます。
+
+**重要**: すべてのインプラントリクエストボディには次の 2 部分が含まれます。
+
+1. **チャレンジ** — AES-256 キーで暗号化した 9 バイトの乱数（常に正確に 9 バイト）
+2. **ペイロード** — 同じ AES-256 キーで暗号化したリクエスト JSON
+
+2 つの暗号化ブロックを連結して一緒に送ります。例:
+
+```
+abcdef = 000000
+{"output": "123"} = 111111
+```
+
+- **abcdef** がチャレンジ
+- `{"output": "123"}` がペイロード
+
+暗号化結果は次のとおりです。
+
+```
+000000111111
+```
+
+チャレンジは、リスナーがペイロードを復号する正しいキーを見つけるために存在します。上記のとおりチャレンジは常に 9 バイトです。実際のペイロードははるかに大きいことが多いため、ペイロードに触れずに検証を高速に保てます。
+
+どのキーでも復号できない場合、リスナーは HTTP `200` と空ボディを返します。
+
+ワイヤ上では、各暗号化セグメントは **12 バイト nonce** の後に **16 バイト認証タグを含む AES-GCM 暗号文** が続きます。リスナーは先頭 **37 バイト**（`12 + 9 + 16`）をプローブ用ブロックとして扱い、残りをペイロード用ブロックとして復号します。両方とも `AesKeys` テーブルの同一キー行で復号する必要があります。
+
+POST ボディの最小サイズは **65 バイト**（プローブセグメント + ペイロード最低 1 バイト）です。それより短いボディは HTTP `200` と空レスポンスになります。
+
+### リクエストボディテンプレート（`implantBody`）
+
+チャネルが `implantBody`（またはレガシーの `beaconBody`）を設定している場合、生 HTTP ボディはそのテンプレートと一致する必要があります。マーカー `§content§` が暗号化バイトを置く位置です。リスナーは `§content§` でマッチした部分文字列だけを抽出し、そのスライスのみ復号します。
+
+`implantBody` が空、または正確に `§content§` の場合、生ボディ全体を復号します。
+
+空でないテンプレートが設定されていてボディが一致しない場合、リスナーは復号せず HTTP `200` と空ボディを返します。
+
+### レスポンスボディテンプレート（`listenerResponse`）
+
+ハンドラー JSON はインプラントリクエストと同じ方法で 1 つの暗号化ブロックに暗号化されます。デフォルトではそのブロックがレスポンスボディ全体です。`listenerResponse` が設定されている場合、暗号化バイトがテンプレート内の `§content§` を置き換えます。
+
+暗号化された成功レスポンスは `Content-Type: application/octet-stream` を使います。特記がない限り HTTP ステータスは **200** です。
+
+### サイレント HTTP `200`（空ボディ）
+
+次の場合は HTTP **200** と **空** ボディ、暗号化 JSON なしで応答します。
+
+- リスナーパスへの **GET**
+- 空ボディの **POST**
+- 最小ワイヤ長より短いボディ
+- データベース AES キーがプローブ + ペイロードを復号できない
+- `implantBody` テンプレート不一致
+- 復号後の JSON パースエラー
+- インプラントペイロード検証エラー（`option` 欠落/無効、必須フィールドなど）
+
+### ホスト検証
+
+復号後、パースしたペイロードが `host` フィールドを持つ **単一 JSON オブジェクト** の場合、リスナーはその `tag` がホストレジストリに存在するか確認します。存在しなければ HTTP **400** と暗号化 JSON で応答します。
+
+```json
+{ "status": "failure", "error": "Missing host" }
+```
+
+JSON **配列**（バッチ `output`）はこの事前チェックをスキップします。`last_seen` は、最初の配列要素に `host` が含まれる場合、その値から更新されます。
+
+## メインエンドポイント
+
+<Collapsible className="mb-4" defaultOpen={true}>
+  <CollapsibleTrigger className="flex w-full items-center gap-3 rounded-[11px] border border-fd-border bg-fd-card px-[15px] py-[10px] text-left text-sm font-medium">
+    <span className="rounded-[6px] bg-emerald-500/15 px-2 py-1 font-semibold text-emerald-400">POST</span>
+    <span className="font-[400] text-[16px]">{`{endpointPath}`}</span>
+  </CollapsibleTrigger>
+  <CollapsibleContent className="mt-3 rounded-lg border border-fd-border bg-fd-card p-4 text-sm text-fd-muted-foreground">
+    <h2 className="api-section-title api-section-title--explanation">説明</h2>
+    
+    メインリスナーパス（`endpointPath`）です。**GET** は常に HTTP `200` と空ボディを返します。**POST** は上記の暗号化インプラントトラフィックを運びます。
+
+    **POST** の処理順: 生ボディ読み取り → 任意の `implantBody` 抽出 → 復号 → JSON パース → `parse_implant_payload` → 任意のホストレジストリチェック → ハンドラー（`main_core` → `main_actions`）。
+
+    リクエストは主に 3 モードに分かれます。
+
+    1. `new` — フィンガープリントを送り、初回接触でホストを登録
+    2. `input` — 保留コマンドのためにキューをポーリング
+    3. `output` — コマンド結果を送信
+
+    任意の補助モードもあります。
+
+    1. `kill_task` — キュータスクをキャンセル
+    2. `error` — `option` なしでタスク失敗を報告
+
+    <h2 className="api-section-title api-section-title--primary">リクエスト</h2>
+
+    <Tabs className="api-tabs" items={['new', 'input', 'output', 'kill_task', 'error']}>
+      <Tab value="new">
+        ```json
+        {
+          "option": "new",
+          "tag": "600d4",
+          "ip": "",
+          "hostname": "DESKTOP-B08TFNF",
+          "user": "Lab",
+          "arch": "x64",
+          "pid": 4212,
+          "os": "Windows 10 Pro",
+          "listener": "http",
+          "delay": 2,
+          "implant_config": {
+            "channel": "http",
+            "host": "192.168.15.10",
+            "port": "9090",
+            "host_tag": "600d4",
+            "delay": 2
+          },
+          "metadata": {
+            "relays": [],
+            "privilege": "default",
+            "internal_ip": "192.168.15.7",
+            "host": "192.168.15.10",
+            "port": "9090"
+          }
+        }
+        ```
+      </Tab>
+      <Tab value="input">
+        ```json
+        {
+          "option": "input",
+          "host": "600d4",
+          "metadata": {
+            "relays": [],
+            "privilege": "default",
+            "internal_ip": "192.168.15.7",
+            "host": "192.168.15.10",
+            "port": "9090"
+          }
+        }
+        ```
+      </Tab>
+      <Tab value="output">
+        ```json
+        [
+          {
+            "option": "output",
+            "type": "terminal",
+            "task_tag": "Z7upre",
+            "host": "600d4",
+            "output": " Volume in drive C has no label.\n Directory of C:/Users/Lab/Desktop\n"
+          },
+          {
+            "option": "output",
+            "type": "folders",
+            "task_tag": "ArBYCq",
+            "host": "600d4",
+            "content": [
+              { "name": "desktop.ini", "type": "file", "size": "552", "modified": "2026-06-25 13:05:59" }
+            ]
+          }
+        ]
+        ```
+      </Tab>
+      <Tab value="kill_task">
+        ```json
+        {
+          "option": "kill_task",
+          "task_tag": "Z7upre"
+        }
+        ```
+      </Tab>
+      <Tab value="error">
+        ```json
+        {
+          "error": "command failed",
+          "task_tag": "Z7upre"
+        }
+        ```
+      </Tab>
+    </Tabs>
+
+
+    <h2 className="api-section-title api-section-title--compact">レスポンス</h2>
+
+    <Tabs className="api-tabs" items={['new', 'input', 'output', 'タスクエラー', '失敗']}>
+      <Tab value="new">
+        ```json
+        {
+          "status": "success",
+          "message": "host included"
+        }
+        ```
+
+        重複 `tag`（一意制約）: `"message": "host already exists"` と `"status": "success"`。
+      </Tab>
+      <Tab value="input">
+        ```json
+        {
+          "commands": [
+            {
+              "status": "success",
+              "type": "terminal",
+              "task_tag": "Z7upre",
+              "host": "600d4",
+              "input": "shell",
+              "parameters": {
+                "args": "dir",
+                "mode": "shell",
+                "raw": "shell"
+              }
+            }
+          ]
+        }
+        ```
+      </Tab>
+      <Tab value="output">
+        ```json
+        {
+          "status": "success",
+          "message": "output received successfully"
+        }
+        ```
+      </Tab>
+      <Tab value="タスクエラー">
+        `error` + `task_tag` のみで `option` のない単独ペイロード（インプラントが報告したタスク失敗）:
+
+        ```json
+        {
+          "status": "success",
+          "message": "output received successfully"
+        }
+        ```
+      </Tab>
+      <Tab value="失敗">
+        暗号化 JSON（特記がない限り HTTP **200**）:
+
+        ```json
+        {
+          "status": "failure",
+          "error": "<msg>"
+        }
+        ```
+
+        例: `"Missing host"`（**HTTP 400**）、`"internal error"`、`"Task processing error"`、`kill_task` / 無効な `option` / 出力処理失敗からのタスク中止メッセージ。
+
+        `main_core` 内の未処理エラーは HTTP **200** で `{ "status": "failure", "error": "internal error" }` を返します。
+      </Tab>
+    </Tabs>
+
+    ---
+
+    <h2 className="api-section-title api-section-title--compact">スキーマ</h2>
+
+    <table className="api-schema-table" style={{ borderCollapse: 'collapse', width: '100%' }}>
+      <thead>
+        <tr>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>フィールド</th>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>型</th>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>必須</th>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>説明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style={{ padding: '8px 12px' }}><code>option</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}>リクエストモード。<code>new</code>、<code>input</code>、<code>output</code>、<code>kill_task</code> のいずれか。単独タスクエラーペイロード でのみ省略。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>tag</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>new</code> のみ。インプラントに割り当てるホスト `tag`。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>host</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>input</code> と <code>output</code> で使用。レジストリのホスト `tag`。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>task_tag</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>input</code> レスポンスのキューイベント `tag`。<code>output</code>、<code>kill_task</code>、タスクエラーペイロードで必須。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>body (output)</code></td><td style={{ padding: '8px 12px' }}>array</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>output</code> ではインプラントが結果の JSON 配列を送る。各要素は下記スキーマに従う。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>type</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}>各 <code>output</code> 配列要素。<code>terminal</code>、<code>folders</code>、<code>process</code>、<code>keylogger</code>、<code>screenshot</code>、<code>socks</code>、<code>proxychains</code>、<code>port_forwarding</code> のいずれか。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>output</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>terminal</code> とトンネルモードのコマンドテキスト。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>content</code></td><td style={{ padding: '8px 12px' }}>array | string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>folders</code>、<code>keylogger</code>、<code>screenshot</code> の構造化結果。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>tree</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>process</code> 出力のプロセスツリー。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>error</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}>タスクエラーテキスト。<code>output</code> 内または単独エラーペイロード に出現。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>metadata</code></td><td style={{ padding: '8px 12px' }}>object</td><td style={{ padding: '8px 12px' }}>no</td><td style={{ padding: '8px 12px' }}><code>new</code> と <code>input</code> のホストメタデータ。完全省略可。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>metadata.relays</code></td><td style={{ padding: '8px 12px' }}>array</td><td style={{ padding: '8px 12px' }}>no</td><td style={{ padding: '8px 12px' }}>ホストリレー一覧。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>metadata.privilege</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>no</td><td style={{ padding: '8px 12px' }}>インプラントプロセスの権限レベル。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>metadata.internal_ip</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>no</td><td style={{ padding: '8px 12px' }}>侵害ホストの内部 IP。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>metadata.host</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>no</td><td style={{ padding: '8px 12px' }}>インプラントが使うリスナーアドレス。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>metadata.port</code></td><td style={{ padding: '8px 12px' }}>string | integer</td><td style={{ padding: '8px 12px' }}>no</td><td style={{ padding: '8px 12px' }}>インプラントが使うリスナーポート。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>hostname</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>new</code> のみ。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>user</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>new</code> のみ。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>arch</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>new</code> のみ。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>pid</code></td><td style={{ padding: '8px 12px' }}>integer</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>new</code> のみ。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>os</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>new</code> のみ。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>listener</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>new</code> のみ。チャネル名（例: <code>http</code>）。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>delay</code></td><td style={{ padding: '8px 12px' }}>integer</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>new</code> のみ。インプラントビーコン遅延（秒）。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>implant_config</code></td><td style={{ padding: '8px 12px' }}>object | string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>new</code> のみ。ホスト行に保存される実行時インプラント設定。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[]</code></td><td style={{ padding: '8px 12px' }}>array</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>input</code> レスポンス。ホスト向け保留キューイベント。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].status</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>yes</td><td style={{ padding: '8px 12px' }}>コマンド配信時は常に <code>success</code>。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].type</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>yes</td><td style={{ padding: '8px 12px' }}>キューイベント種別（例: <code>terminal</code>、<code>port_forwarding</code>）。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].input</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>yes</td><td style={{ padding: '8px 12px' }}>インプラントへ送るコマンド名。BOF、シェルコード、DLL ペイロード では解決済みバイナリ内容を含む場合あり。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters</code></td><td style={{ padding: '8px 12px' }}>object</td><td style={{ padding: '8px 12px' }}>yes</td><td style={{ padding: '8px 12px' }}>オペレーター入力からパースしたコマンド引数。フィールドは <code>type</code> とコマンドに依存。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.mode</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>terminal</code> コマンド。実行モード（例: <code>shell</code>、<code>bof</code>、<code>tasks kill</code>）。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.args</code></td><td style={{ padding: '8px 12px' }}>string | object</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>terminal</code> コマンド。コマンド引数。多くのモードでは文字列、一部 BOF ペイロード ではオブジェクト。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.raw</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>terminal</code> コマンド。マッピング上の元コマンド動詞。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.file</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>-f</code> / <code>--file</code> 由来。サーバー側解決前の BOF ファイル名またはパス。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.delay</code></td><td style={{ padding: '8px 12px' }}>string | integer</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>-d</code> / <code>--delay</code> 由来。<code>tokens-find</code> やスクリーンショットなどで使用。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.pid</code></td><td style={{ padding: '8px 12px' }}>string | integer</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>-p</code> / <code>--pid</code> 由来。対象プロセス ID。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.ppid</code></td><td style={{ padding: '8px 12px' }}>string | integer</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>--ppid</code> 由来。spawn / 注入コマンドの親プロセス ID。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.inject</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>--inject</code> 由来。注入対象または手法。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.inline</code></td><td style={{ padding: '8px 12px' }}>boolean</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>-i</code> / <code>--inline</code> 由来。フラグのみ、値なし。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.target</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>-t</code> / <code>--target</code> / <code>--destination</code> 由来。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.flag</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>--flag</code> 由来。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.status</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>--status</code> / <code>-st</code> 由来。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.method</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>--method</code> 由来。<code>keylogger</code> で使用（<code>keystate</code> または <code>boardstate</code>）。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.host</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>--host</code> 由来。リレーとトンネルコマンド。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.port</code></td><td style={{ padding: '8px 12px' }}>string | integer</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>--port</code> 由来。リレー、トンネル、SOCKS コマンド。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.user</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>-u</code> / <code>--user</code> 由来。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.pass</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>--pass</code> 由来。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.listen</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>-l</code> / <code>--listen</code> 由来。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.channel</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>-c</code> / <code>--channel</code> 由来。リレートランスポート（例: <code>http</code>、<code>tcp</code>、<code>smb</code>）。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.pipe</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>--pipe</code> 由来。SMB リレーパイプパス。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.id</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>--id</code> 由来。リレーまたはタスク識別子。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.getContent</code></td><td style={{ padding: '8px 12px' }}>boolean</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>folders</code> コマンド。<code>true</code> のときディレクトリ一覧ではなくファイル内容をダウンロード。</td></tr>
+      </tbody>
+    </table>
+  </CollapsibleContent>
+</Collapsible>

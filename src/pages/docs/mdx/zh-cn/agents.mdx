@@ -1,0 +1,119 @@
+---
+title: AI 智能体
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import agentBodyForm from '@/assets/img/tutorial/agent_body.png';
+import agentResponseKeys from '@/assets/img/tutorial/agent_body_keys.png';
+import { Bot } from 'lucide-react';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+NukeRat 支持通过 API 接入外部 AI 模型，你可以直接在 NukeRat 界面中与它们交互。
+
+
+## 兼容性
+
+大多数模型都能适配 NukeRat 的集成方式，因为你可以自定义请求，包括请求体、请求头等。
+
+不过，NukeRat 仅支持采用 system、user、assistant 角色消息格式的模型，如下例：
+
+```json
+{
+    "model": "deepseek-flash",
+    "messages": [
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Hello!"}
+    ]
+}
+```
+
+部分模型可能使用不同的字段命名约定，这会在集成时造成问题。
+
+
+## 智能体预设
+
+你不必手动拼装完整请求才能使用某个模型。NukeRat 内置 **DeepSeek** 预设：创建智能体时选择类型 **DeepSeek** 并填写 API 密钥即可。团队服务器会调用 `https://api.deepseek.com/chat/completions`，使用 `deepseek-v4-pro` 模型。
+
+我们暂无计划增加更多预设，因为每种接入场景都需要单独调整，尤其是 OpenAI、Anthropic 等对网络安全相关用途策略较严的提供商。
+
+## 创建智能体
+
+按以下步骤创建智能体：
+
+  <Steps>
+    <Step>
+      ### 进入智能体配置
+      打开 **NukeRat** > **Agents（智能体）**，点击 **New（新建）**。
+    </Step>
+    <Step>
+      ### 填写字段
+      设置名称，以及保存该智能体的团队服务器。类型选 **Custom（自定义）** 表示手动映射 HTTP 请求；选 **DeepSeek** 则使用内置预设。
+    </Step>
+    <Step>
+      ### 调整请求
+      本例使用 Grok 模型。
+
+      首先从 Grok 文档中复制基础 curl 命令：
+
+      ```bash
+      curl https://api.x.ai/v1/chat/completions \
+        -H "Authorization: Bearer $XAI_API_KEY" \
+        -H "Content-Type: application/json" \
+        -d '{
+            "model": "grok-4.6",
+            "messages": [
+            {"role": "user", "content": "Hello, Grok!"}
+            ]
+        }
+      ```
+
+      然后将 URL、请求体与请求头映射到智能体表单字段。效果如下：
+      <ImageZoom src={agentBodyForm} alt="Agent Body Form" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+
+      请注意两点：
+
+      1. 请求体模板中没有 `system` 消息
+      2. 请求体模板里已经有一条 `user` 消息
+
+      这两点不会导致无法创建智能体，原因是：
+
+      1. 若请求体模板没有 `system` 消息，NukeRat 会在 `messages` 数组开头插入会话的系统提示词
+      2. 模板中已有的消息会保留，界面中的对话内容会追加在其后
+    </Step>
+    <Step>
+      ### 解析响应
+      要正确展示模型回复，需要指定响应 JSON 中用于取值的键路径。
+
+      最简单的做法是执行上述 curl，查看该模型的响应格式。
+
+      以 Grok 为例，响应类似：
+
+      ```json
+       {
+        [... rest of the JSON ...]
+        "choices": [{
+            "index": 0,
+            "message": {
+                "role": "assistant",
+                "content": "Hello! How can I help you today?",
+                "reasoning_content": "The user said: \"Hello, Grok!\"\n",
+                "refusal": null
+            },
+            "finish_reason": "stop"
+        }]
+        [... rest of the JSON ...]
+      }
+      ```
+
+      根据响应结构，沿 JSON 路径定位到存放回答内容的字段。路径用点号分隔，各段可选用方括号索引。本例为 `choices[0].message.content`，填入 **Response field（响应字段）**。
+
+      <ImageZoom src={agentResponseKeys} alt="Agent Response Keys" className="h-[5rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+    </Step>
+    <Step>
+      ### 测试智能体
+      使用智能体时，可从顶部栏<span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">的 <Bot size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> 图标</span>打开 **AI Agent（AI 智能体）** 标签页，或从 **Tabs（标签页）** > **AI Agent（AI 智能体）** 进入。
+
+      关于 **AI Agent（AI 智能体）** 标签页的更多说明，请参阅 [AI 智能体](/docs/interface/ai-agent)。
+
+    </Step>
+  </Steps>

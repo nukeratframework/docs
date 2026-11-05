@@ -1,0 +1,68 @@
+---
+title: NukeScript
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import debuggerImage from '@/assets/img/tutorial/debugger.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+NukeScript es el sistema de scripting de NukeRat y cumple tres propósitos principales:
+
+1. Automatizar acciones
+2. Crear nueva funcionalidad
+3. Interactuar con el cliente NukeRat
+
+En resumen, NukeScript no es más que scripts de Python con una capa adicional llamada **eventos**.
+
+Mientras el servidor está en ejecución, un worker monitoriza la base de datos de NukeRat para comprobar si se han disparado eventos y, según ellos, ejecuta los scripts correspondientes.
+
+## Crear un script
+
+Como demostración, crearemos un script que ejecute `whoami` cuando se conecte un host nuevo:
+
+  <Steps>
+    <Step>
+      ### Abrir la pestaña NukeScript
+      Ve a **NukeRat** > **NukeScripts** y haz clic en **Add**.
+    </Step>
+    <Step>
+      ### Seleccionar un servidor
+      Elige un nombre y selecciona el team server que ejecutará el script.
+    </Step>
+    <Step>
+      ### Crear el script
+      Pega el código siguiente en el campo del script:
+      ```python
+def on_new_host(row):
+        host = row["tag"]
+        output = cmd(host, "whoami")
+        echo(f"Output: {output}")
+
+event.new_host:on_new_host()
+      ```
+    </Step>
+    <Step>
+      ### Habilitar el script
+      Tras crear el script, debes habilitarlo para que se ejecute. Selecciona el script y haz clic en **Enable**.
+    </Step>
+    <Step>
+      ### Probar el script
+      Para probarlo, abre el **NS Debugger** haciendo clic en **Tabs** > **NS Debugger**.
+
+      Si todo está configurado correctamente, deberías ver la salida de `whoami` en el **NS Debugger** cuando se conecte un host nuevo.
+
+      <ImageZoom src={debuggerImage} alt="NS Debugger" className="h-[6rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+
+    </Step>
+  </Steps>
+
+
+## Eventos y comandos
+
+Para más información sobre eventos y comandos, consulta:
+- [Eventos](/docs/nukescripts/events)
+- [Comandos](/docs/nukescripts/commands)
+
+## Ejemplos
+
+Consulta algunos ejemplos de scripts en [Ejemplos](/docs/nukescripts/examples).

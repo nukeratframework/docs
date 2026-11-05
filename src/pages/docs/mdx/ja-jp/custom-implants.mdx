@@ -1,0 +1,102 @@
+---
+title: カスタムインプラント
+---
+
+特定用途向けにインプラントを一からビルドする必要がある場合、NukeRat のインプラント API を利用できます。
+
+## 動作の仕組み
+
+整理のため: デフォルトでは HTTP チャネル上で、インプラントはリスナーが管理する REST API と通信します。インプラントがコマンドを取得し、出力を返す API です。
+
+カスタムインプラントの通信層を構築するには [Implant API](/docs/rest-api/implants) ドキュメントを参照してください。
+
+## 例
+
+以下は NukeRat のインプラント API と通信する簡略化した例です。元のサンプルは [nukeratframework/api](https://github.com/nukeratframework/api/blob/main/example/implant_example.py) リポジトリにあります。
+
+```python
+import json
+import requests
+import urllib3
+from implant.aes import build_implant_body
+
+operator_key = ''
+aes_key = ''
+team_server_url = 'http://192.168.15.21:9000'
+implant_listener_url = 'http://192.168.15.21:9090'
+listener_response_template = ''
+
+urllib3.disable_warnings()
+
+def implant_example(command):
+    """
+    例: サーバー通信用 AES 鍵を作成し、フィンガープリント情報をサーバーへ送信します。
+    インプラントと同じ処理で、違いは AES 鍵がコンパイル時に生成される点です。
+    """
+    global aes_key
+    user, password, secret = operator_key.split(':', 2)
+    base = team_server_url.rstrip('/')
+    token = requests.post(
+        f'{base}/auth/login',
+        json={'user': user, 'pass': password, 'secret': secret},
+        verify=False,
+    ).json()['access_token']
+
+    headers = {'Authorization': f'Bearer {token}'}
+
+    if not aes_key:
+        aes_key = requests.post(
+            f'{base}/api/aes/create',
+            json={},
+            headers=headers,
+            verify=False,
+        ).json()['aesKey']
+
+    body = build_implant_body(
+        aes_key,
+        {
+            'option': 'new',
+            'tag': 'demo01',
+            'ip': '',
+            'external_ip': '',
+            'hostname': 'fake-fp',
+            'user': 'lab',
+            'arch': 'x64',
+            'pid': 1,
+            'os': 'windows',
+            'listener': 'http',
+            'delay': 2,
+            'notes': command,
+            'implant_config': {
+                'channel': 'http',
+                'host': '127.0.0.1',
+                'port': '9090',
+                'host_tag': 'demo01',
+                'delay': 2,
+            },
+            'metadata': {
+                'relays': [],
+                'privilege': 'default',
+                'internal_ip': '127.0.0.1',
+                'host': '127.0.0.1',
+                'port': '9090',
+            },
+        },
+    )
+    response = requests.post(
+        implant_listener_url.rstrip('/') + '/',
+        data=body,
+        headers={'Content-Type': 'application/octet-stream'},
+        verify=False,
+    )
+
+    return response.status_code
+
+
+if __name__ == '__main__':
+    print(implant_example('probe'))
+```
+
+## カスタムチャネル
+
+デフォルトの HTTP チャネル以外の通信経路が必要な場合は、カスタムチャネルの設定が必要です。詳細は [カスタムチャネル](/docs/custom-channels) を参照してください。

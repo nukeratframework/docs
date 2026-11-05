@@ -1,0 +1,42 @@
+---
+title: Procesos
+---
+
+import processes from '@/assets/img/tutorial/processes.png';
+import {
+  Bot,
+  ChevronsUpDown,
+  Cpu,
+  RefreshCw,
+  X,
+} from 'lucide-react';
+import { Callout } from '@/ui/custom/callout';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+La pestaña de procesos te permite analizar y supervisar los procesos en ejecución del host con más facilidad.
+
+Puedes abrir la pestaña **Processes** desde el icono <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle"><Cpu size={18.5} className="shrink-0 ml-1.5 mr-1.5" /></span> en la barra superior, o desde **Tabs** > **Processes**.
+
+<Callout type="info">
+  Antes de usar la pestaña de procesos, selecciona el host de destino haciendo clic en **Host** junto al nombre de la pestaña.
+</Callout>
+
+Al igual que el explorador de archivos, cuando seleccionas un host, el cliente solicita una lista de procesos para ese host. La respuesta rellena la pestaña de procesos en la primera carga.
+
+<ImageZoom src={processes} alt="Procesos" className="tutorial_img" />
+
+## Cómo funciona
+
+El implante enumera los procesos en ejecución y convierte el resultado en un formato JSON personalizado para que el cliente lo renderice.
+
+### Windows
+
+Usa `kernel32.dll` (`CreateToolhelp32Snapshot`, `Process32FirstW`, `Process32NextW`, `OpenProcess`, `QueryFullProcessImageNameW`) e `iphlpapi.dll` (`GetExtendedTcpTable`). La lógica principal está en `implants/windows/stageless/capabilities/process.nim`.
+
+### Linux
+
+Lee `/proc` (`stat`, `status`, `exe`) y `/proc/net/tcp`. La lógica principal está en `implants/linux/stageless/capabilities/process.nim`.
+
+### MacOS
+
+Usa el módulo `macapi` (`ListProcessIDs`, `ReadProcessStat`, `ReadProcessStatus`, `GetTcpPidMap`). La lógica principal está en `implants/mac/stageless/capabilities/process.go`.

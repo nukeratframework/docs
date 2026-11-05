@@ -1,0 +1,54 @@
+---
+title: Captura de pantalla
+---
+
+import screenshot from '@/assets/img/tutorial/screenshot.png';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { Camera } from 'lucide-react';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+La pestaña de captura de pantalla es un visor pasivo. Muestra la última captura de un host seleccionado, así que debe tomarse una captura antes de que aparezca algo.
+
+Su propósito principal es la visualización dinámica. Combinada con el modo bucle, puede aproximarse a una transmisión de vídeo en directo.
+
+Puedes abrir la pestaña **Screenshot** desde el icono <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle"><Camera size={20} className="shrink-0 ml-1.5 mr-1.5" /></span> en la barra superior, o desde **Tabs** > **Screenshot**.
+
+<ImageZoom src={screenshot} alt="Captura de pantalla" className="tutorial_img" />
+
+## Cómo usarla
+
+Para usar la pestaña de captura de pantalla, sigue estos pasos:
+
+  <Steps>
+    <Step>
+      ### Selecciona un host
+      Primero, selecciona el host cuyas capturas quieres ver. Haz clic en **Host** junto al nombre de la pestaña.
+    </Step>
+    <Step>
+      ### Inicia el bucle de capturas
+      En la terminal, ejecuta `screenshot start` para iniciar el bucle de capturas. Para establecer el intervalo entre capturas, usa el argumento `--delay <interval>` en segundos.
+    </Step>
+    <Step>
+      ### Espera a que se actualice la imagen
+      Por defecto, la pestaña consulta el team server y se actualiza cuando llega una nueva captura, así que no necesitas refrescar manualmente.
+    </Step>
+  </Steps>
+
+## Cómo funciona
+
+La captura de pantalla funciona de dos maneras:
+
+1. Captura única
+2. Captura en bucle, donde una tarea en un hilo aparte toma una captura en cada intervalo indicado.
+
+### Windows
+
+Captura la pantalla con GDI (`user32.dll` y `gdi32.dll`) usando `GetDC`, `BitBlt` y `CreateDIBSection`. La lógica principal está en `implants/windows/stageless/capabilities/screenshots.nim`.
+
+### Linux
+
+Captura mediante X11 (`libX11.so`) con `XOpenDisplay` y `XGetImage` en la ventana raíz. Requiere que `DISPLAY` esté definido. La lógica principal está en `implants/linux/stageless/capabilities/screenshots.nim`.
+
+### MacOS
+
+Esta función no está disponible en macOS.

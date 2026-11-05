@@ -1,0 +1,35 @@
+---
+title: SOCKS-прокси
+---
+
+import socks from '@/assets/img/tutorial/socks.png';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+В NukeRat есть встроенная поддержка SOCKS — можно направлять трафик через выбранный хост. Поддерживается SOCKS5.
+
+Team server открывает порт listener. Трафик ретранслируется через имплант, который вы выбрали как точку выхода.
+
+## Настройка
+
+Чтобы создать SOCKS5-прокси, выполните шаги ниже:
+
+  <Steps>
+    <Step>
+      ### Откройте окно Network
+      Перейдите в **NukeRat** > **Network** и нажмите **Add**.
+    </Step>
+    <Step>
+      ### Настройте прокси
+      <ImageZoom src={socks} alt="Socks Add" className="h-[15rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+      - **Team server**: endpoint API listener (хост и порт в верхней части формы)
+      - **Type**: `socks`
+      - **Host tag**: имплант, который будет проксировать исходящие соединения
+      - **Port target**: порт на team server для SOCKS listener
+      - **User** / **Password**: необязательные учётные данные для аутентификации оператора на прокси
+
+      Когда поля заполнены, нажмите **Create**.
+    </Step>
+  </Steps>
+
+После этого прокси появится в таблице Network. Укажите в инструментах `socks5://<team_server_host>:<port_target>/`; если настроена аутентификация, добавьте user и password в URI.

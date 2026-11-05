@@ -1,0 +1,49 @@
+---
+title: Instalación
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Callout } from '@/ui/custom/callout';
+
+A continuación están los comandos para instalar el cliente y el servidor de NukeRat. El servidor solo se ejecuta en **Linux**. El cliente se ejecuta en **Windows**, **Linux** y **macOS**.
+
+<Callout
+  type="info"
+  title="Consejo"
+  className="rounded-[6px] border-blue-500/25 bg-blue-500/5 shadow-none [&_svg]:text-blue-600/70 dark:[&_svg]:text-blue-400/60 [&_.text-fd-muted-foreground]:text-fd-muted-foreground [&_p.font-medium]:text-fd-foreground"
+>
+  Si es tu primera vez con NukeRat, abre [Configuración rápida](/docs/fast-setup) para aprender a tener tu primer implant funcionando en unos pocos pasos.
+</Callout>
+
+## Comandos
+
+  <Tabs items={['Linux', 'Windows', 'macOS']} groupId="installation-os" persist>
+    <Tab value="Linux">
+      **Server:**
+      ```bash
+      git clone https://github.com/nukeratframework/nukerat && cd nukerat && sudo bash install.sh server
+      ```
+
+      **Client:**
+      ```bash
+      git clone https://github.com/nukeratframework/nukerat && cd nukerat && sudo bash install.sh client
+      ```
+
+      **Both:**
+      ```bash
+      git clone https://github.com/nukeratframework/nukerat && cd nukerat && sudo bash install.sh all
+      ```
+    </Tab>
+    <Tab value="Windows">
+      **Client:**
+      ```bash
+      git clone https://github.com/nukeratframework/nukerat && cd nukerat && install\windows.bat client
+      ```
+    </Tab>
+    <Tab value="macOS">
+      **Client:**
+      ```bash
+      git clone https://github.com/nukeratframework/nukerat && cd nukerat && bash install/mac.sh client
+      ```
+    </Tab>
+  </Tabs>

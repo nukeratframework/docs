@@ -1,0 +1,75 @@
+---
+title: 终端
+---
+import hostSelect from '@/assets/img/tutorial/terminal.png';
+import terminalSearch from '@/assets/img/tutorial/terminal_search.png';
+import { SquareChevronRight, Bot } from 'lucide-react';
+import { Callout } from '@/ui/custom/callout';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+终端是在已控主机上执行命令的主要工作区。
+
+可从顶部栏的 <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle"><SquareChevronRight size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> 图标</span> 打开 **Terminal（终端）** 标签页，或从 **Tabs（标签页）** > **Terminal** 进入。
+
+<Callout type="info">
+  执行任何命令前，请先点击标签名旁的 **Host（主机）** 选择目标主机。
+</Callout>
+
+<Callout type="info">
+  NukeRat 客户端会在每次请求中附带 `source_terminal` 值，用于标识发送该命令的终端标签页。该字段仅供参考，不影响命令执行。
+</Callout>
+
+在输入框中输入命令并按 **Enter** 发送到所选主机。
+<ImageZoom src={hostSelect} alt="Host select" className="tutorial_img" />
+
+按 **Ctrl + F** 可开关终端输出内的搜索。
+
+<ImageZoom src={terminalSearch} alt="Terminal search" className="tutorial_img" />
+
+## 命令
+
+运行 `help` 查看全部可用命令。使用 `help <command>` 查看单个命令的详细用法。
+
+| 命令 | 说明 |
+| --- | --- |
+| `help` | 显示可用命令及用法 |
+| `config` | 查看植入体配置 |
+| `delay` | 设置植入体回连间隔（秒） |
+| `kill` | 终止植入体进程 |
+| `tasks` | 列出正在运行的任务 ID |
+| `pwd` | 打印当前目录 |
+| `cd` | 切换目录 |
+| `ls` | 列出文件和目录 |
+| `cat` | 显示文件内容 |
+| `echo` | 向输出打印文本 |
+| `cp` | 复制文件 |
+| `mv` | 移动或重命名文件 |
+| `rm` | 删除文件 |
+| `mkdir` | 创建目录 |
+| `rmdir` | 删除目录 |
+| `echo $` | 打印环境变量 |
+| `whoami` | 显示当前用户信息 |
+| `systeminfo` | 显示操作系统与硬件详细信息 |
+| `env` | 列出环境变量 |
+| `tasklist` | 通过 WMI 列出运行中的进程 |
+| `enumdrives` | 列出可用盘符 |
+| `ifconfig` | 显示网络适配器配置 |
+| `route` | 显示路由表 |
+| `arp` | 显示 ARP 缓存 |
+| `netstat` | 显示活动网络连接 |
+| `portscan` | 扫描远程主机端口 |
+| `shell` | 运行 shell 命令 |
+| `powershell` | 运行 PowerShell 脚本 |
+| `shellcode` | 执行原始 shellcode |
+| `bof` | 运行内置 BOF |
+| `dotnet` | 运行 .NET 程序集 |
+| `spawn` | 创建新进程 |
+| `inj` | 向进程注入 shellcode、反射 DLL 或 donut 载荷 |
+| `tokens` | 查看与管理访问令牌 |
+| `relay` | 管理 pivot 中继 |
+| `keylogger start` | 启动后台键盘记录 |
+| `keylogger stop` | 停止后台键盘记录 |
+| `screenshot` | 截取单张屏幕截图 |
+| `screenshot start` | 启动截图循环 |
+| `screenshot stop` | 停止截图循环 |
+| `armory` | 列出可用 Armory 工具 |

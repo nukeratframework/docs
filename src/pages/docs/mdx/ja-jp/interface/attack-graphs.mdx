@@ -1,0 +1,35 @@
+---
+title: アタックグラフ
+---
+
+import { Share2 } from 'lucide-react';
+import attackGraphs from '@/assets/img/tutorial/graphs.png';
+import attackGraphsInfo from '@/assets/img/tutorial/graphs_01.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+アタックグラフタブは、接続中かつアクティブなセッションを図で表示します。主な目的は、ネットワークピボットとリレー経路の可視化を支援することです。
+
+上部バーの <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle"><Share2 size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> アイコン</span>から **Attack Graph** タブを開くか、**Tabs** > **Attack Graph** から開けます。
+
+タブを開くと、クライアントは設定済みのすべてのチームサーバーにリクエストを送り、サーバーごとに別々のグラフを構築します。
+
+<ImageZoom src={attackGraphs} alt="Attack Graph" className="tutorial_img" />
+
+セッションが接続されたときや、**user** から **admin** へ権限レベルが変わったときなど、グラフは自動的に更新されます。
+
+## セッション情報
+
+各セッションは、内部に OS 画像が表示されたモニターアイコンとして示されます。セッションの権限がすでに昇格されている場合、モニターは赤で表示されます。
+
+セッションをダブルクリックすると、詳細情報を表示するサイドパネルも開けます。
+
+<ImageZoom src={attackGraphsInfo} alt="Attack Graph Info" className="tutorial_img" />
+
+## リレー接続
+
+2 つのセッションがリレーで接続されている場合、**TCP** または **SMB** のいずれかを示すラベル付きの矢印がその間に描画されます。
+
+場合によっては、セッションがグラフビューから消えることがあります。これは次の 2 つの理由で起こり得ます。
+
+1. 親セッションにアクティブなリレーがなくなった
+2. 子セッションがリレーを使わずに接続した

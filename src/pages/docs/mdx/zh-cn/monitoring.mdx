@@ -1,0 +1,34 @@
+---
+title: 监控
+---
+
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import commandQueue from '@/assets/img/tutorial/queue.png';
+
+行动过程中，随时掌握动态很有用。NukeRat 提供两项功能，无需登录团队服务器手动翻日志。
+
+## 命令队列
+
+打开 **NukeRat** > **Queue** 可查看执行队列中的全部命令。表格包含等待执行与已执行的命令，便于：
+
+- 删除误加的命令（在植入体收到之前）
+- 查看已关闭终端标签页中命令的输出
+- 排查命令失败原因
+
+<ImageZoom src={commandQueue} alt="Command queue" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+
+表格中的命令不限于终端标签页，也可能来自文件浏览器与进程标签页。
+
+双击表格行可查看该队列事件的全部详情。
+
+也可从队列删除命令：选中后点击 **Delete**。这会从数据库移除记录，若尚未下发，植入体不会执行该命令。
+
+## 事件日志
+
+打开 **NukeRat** > **Event Log** 可查看指定团队服务器的日志，分组如下：
+
+- **Listeners**：HTTP 通道与文件服务器 listener 上的流量与操作（来自 `listeners.log`）
+- **Launcher**：服务器启动与 launcher 消息（来自 `server.log`）
+- **Server**：团队服务器 API 与核心的错误与信息消息（来自 `server.log`）
+
+Event Log 视图通过团队服务器 [`GET /api/logs/`](/docs/rest-api/team-server) 端点读取 `server.log` 与 `listeners.log`。

@@ -1,0 +1,118 @@
+---
+title: Relay
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+Relay はインプラント機能で、ネットワーク内のインプラント同士が通信できます。インターネットに出られないホストや、ネットワークが厳しく制限されている環境で有用です。
+
+Relay は **SMB** と **TCP** をサポートします。SMB は Windows のみです。
+
+## 使い方
+
+具体例で説明します。
+
+ホスト A があり、同じネットワーク上にホスト B があります。B には外部への経路がなく、チームサーバーに直接到達できません。
+
+この場合、次の手順に従います。
+
+  <Steps>
+    <Step>
+      ### 事前設定済みインプラント
+      まず、ホスト B で Relay 通信用に事前設定されたインプラントが動作していることを確認します。
+
+      Relay インプラントのビルド方法は [Relay stageless implant](/docs/client/implants/creation#relay-stageless-implant) を参照してください。
+    </Step>
+    <Step>
+      ### ホスト A で Relay を設定する
+
+      TCP relay:
+        ```
+        relay create --listen 8888 --target implant://192.168.15.10:9090 --channel tcp
+        ```
+      SMB relay（Windows のみ）:
+        ```
+        relay create -l 445 --target server://192.168.15.10:9090 -c smb --pipe test --tls
+        ```
+    パラメータ:
+        - `--listen` / `-l`: インプラントが開いてリッスンするポート（既定の relay id としても使用）
+        - `--target` / `-t`: 下流エンドポイント。`implant://host:port` または `server://host:port`
+        - `--channel` / `-c`: `tcp` または `smb`
+        - `--pipe`: SMB 名前付きパイプ。`test` のような短い名前、または Windows では完全な `\\pipe\\name` パス
+        - `--tls`: ターゲットが `server://` の場合、HTTP ではなく HTTPS でチームサーバーへ POST
+        - `--id`: `relay delete` 用の relay id、または既定の listen ポート id の上書き
+    </Step>
+    <Step>
+      ### Relay の管理
+      引数なしで `relay` を実行すると、アクティブな relay（listen ポート、ターゲット、モード、ステータス）を一覧表示します。
+
+      次で relay を停止します:
+        ```
+        relay delete --id 8888
+        ```
+    </Step>
+    <Step>
+      ### Relay のテスト
+      その後、インプラント B が完全に動作するはずです。
+    </Step>
+  </Steps>
+
+
+### ターゲットプレフィックス
+
+`target` パラメータには常に `implant://` または `server://` プレフィックスが必要です。これにより、チームサーバーへ到達するためにインプラントがトラフィックを HTTP に変換するタイミングが決まります。
+
+次ホップがチームサーバーなら `server://`（出口）を使います。別のインプラントへ渡す場合は `implant://` を使います。
+
+### 累積遅延
+
+Relay は各インプラントの設定された delay を尊重してトラフィックを転送します。複数ホストを経由すると delay が積み重なり、応答時間が目に見えて遅くなることがあります。
+
+## 動作の仕組み
+
+Relay 作成後、設定したポートでリッスンを開始します。
+
+トラフィックが入ると、インプラントはペイロードを復号し、自身の host tag を `chain` に追加して再暗号化し、ターゲットへ転送します。
+
+転送される JSON は次の構造です:
+
+```json
+{
+  "source": "hostB",
+  "content": [
+    {
+      "option": "output",
+      "type": "terminal",
+      "task_tag": "k7F2a9",
+      "output": "desktop\\user\r\n"
+    }
+  ],
+  "chain": ["hostB", "hostA"]
+}
+```
+
+ターゲットが別のインプラントの場合、ペイロードはそのまま転送されます。ターゲットがチームサーバーの場合、インプラントはトラフィックを HTTP に変換して上流へ送ります。
+
+### 通信の暗号化
+
+Relay トラフィックはすべて、コンパイル時に各インプラントへ埋め込まれたマスター AES 鍵で暗号化されます。同じチームサーバー向けにビルドしたインプラントは同じ鍵を共有します。
+
+これにより、鍵交換のための事前ハンドシェイクが不要になり、その種のトラフィックシグネチャも減らせます。
+
+マスター AES 鍵を変更するには、`server.conf` の `[implants]` セクションで `relay_aes_key` を設定します。値は少なくとも 32 バイトにデコードできる必要があります（base64 または hexadecimal）。変更後はインプラントを再ビルドしてください。
+
+**注意:** マスター AES 鍵を変更すると、旧鍵のままのインプラントとの通信は失われます。
+
+### Windows
+
+- **TCP** は `ws2_32.dll` の `WSAStartup`、`socket`、`bind`、`listen`、`accept`、`connect`、`send`、`recv`、`closesocket`、`getaddrinfo`、`freeaddrinfo` を使用します。
+
+- **SMB** は `kernel32.dll` の `CreateNamedPipeA`、`ConnectNamedPipe`、`CreateFileA`、`WaitNamedPipeA`、`PeekNamedPipe`、`ReadFile`、`WriteFile`、`DisconnectNamedPipe`、`CloseHandle` を使用します。
+
+### Linux
+
+POSIX ソケット（`sys/socket.h`）で `socket`、`bind`、`listen`、`accept`、`connect`、`send`、`recv`、`setsockopt`、`getaddrinfo` / `freeaddrinfo` を使用します。SMB は非サポートです。
+
+### macOS
+
+Go 標準ライブラリの `net.Listen`、`net.Accept`、`net.Dial`、`io.Copy` を使用します。SMB は非サポートです。

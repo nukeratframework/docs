@@ -1,0 +1,85 @@
+---
+title: ایجاد
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import compileServer from '@/assets/img/tutorial/base.png';
+import arch from '@/assets/img/tutorial/arch.png';
+import c2 from '@/assets/img/tutorial/c2.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import urlStage from '@/assets/img/tutorial/url_stage.png';
+import relayImplant from '@/assets/img/tutorial/relay_implant.png';
+
+این بخش ایجاد ایمپلنت در کلاینت NukeRat را پوشش می‌دهد. کلاینت دو پایهٔ ایمپلنت دارد: **Stageless** و **Loader**.
+
+- **Stageless**: ایمپلنت کامل که از طریق HTTP، HTTPS، custom HTTP، TCP یا SMB (SMB فقط در Windows) به listenerها وصل می‌شود
+- **Loader**: ایمپلنت minimal که stage خارجی را از URLای که پیکربندی می‌کنید دانلود می‌کند
+- **Relay stageless** (پیکربندی): ایمپلنت stageless که از کانال‌های pivoting (**TCP** در همهٔ پلتفرم‌ها، **SMB** در Windows) استفاده می‌کند و به‌جای team server مستقیماً با ایمپلنت دیگری صحبت می‌کند
+
+## ایمپلنت Stageless
+
+برای ایجاد یک ایمپلنت stageless پایه، مراحل زیر را دنبال کنید:
+
+  <Steps>
+    <Step>
+      ### باز کردن تب ایجاد ایمپلنت
+      به **NukeRat > Implants** بروید.
+    </Step>
+    <Step>
+      ### انتخاب پایهٔ ایمپلنت
+      پایهٔ **Stageless** را انتخاب کنید.
+    </Step>
+    <Step>
+      ### انتخاب compile server
+      compile server سروری است که ایمپلنت روی آن کامپایل می‌شود. باید از قبل سروری در **NukeRat** > **Servers** پیکربندی کرده باشید.
+      <ImageZoom src={compileServer} alt="Compile Server" className="h-[4.5rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+      برای پیکربندی سرور بیشتر بخوانید: [سرورها](/docs/servers).
+    </Step>
+    <Step>
+      ### انتخاب OS و معماری
+      پلتفرم و معماری‌ای را انتخاب کنید که ایمپلنت روی آن اجرا می‌شود. buildهای Windows فقط **x64** هدف می‌گیرند. در Linux و macOS، CPU **amd** یا **arm** را انتخاب کنید؛ کلاینت برای هر دو CPU ایمپلنت **x64** (64-bit) می‌سازد.
+      <ImageZoom src={arch} alt="Architecture" className="h-[12rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+    </Step>
+    <Step>
+      ### پیکربندی C2
+      ارتباط را به کانال‌های ایجادشده در listeners اشاره دهید. در مثال زیر از کانال HTTP استفاده می‌کنیم.
+      <ImageZoom src={c2} alt="C2" className="h-[11rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+      برای ایجاد کانال HTTP [ایجاد کانال HTTP](/docs/listeners/channel#creating-an-http-channel) را بخوانید. برای پروتکل POST رمزنگاری‌شده (مسیر، قالب body، کدهای وضعیت)، [API listener ایمپلنت](/docs/rest-api/implants) را ببینید.
+    </Step>
+    <Step>
+      ### ساخت ایمپلنت
+      برای کامپایل ایمپلنت روی **Build** کلیک کنید.
+    </Step>
+  </Steps>
+
+
+## ایمپلنت Loader
+
+ایجاد شبیه ایمپلنت stageless است، با چند تفاوت. C2 در Loader فقط کانال‌های **HTTP** و **custom** را پشتیبانی می‌کند. مراحل زیر را ببینید:
+
+  <Steps>
+    <Step>
+      ### انتخاب پایهٔ Loader
+      پایه را از **Stageless** به **Loader** تغییر دهید.
+    </Step>
+    <Step>
+      ### پیکربندی payload
+      در تب **Stage**، URL payload را تنظیم کنید.
+
+      shellcode همان ایمپلنت stageless است که در قالب shellcode ساخته شده.
+      <ImageZoom src={urlStage} alt="URL Stage" className="h-[4.5rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+    **نکته**: می‌توانید از قابلیت **File server** در NukeRat برای میزبانی سریع payload استفاده کنید. بیشتر بخوانید: [سرور فایل](/docs/listeners/file-server#creating-a-file-server).
+    </Step>
+  </Steps>
+
+## ایمپلنت Relay stageless [#relay-stageless-implant]
+
+ایمپلنت relay stageless همچنان build با پایهٔ **Stageless** است. تفاوت در C2 است: در **Channel**، پروتکل pivoting (**TCP**، یا **SMB** در Windows) را انتخاب کنید. در فیلد **Relay implant**، به ایمپلنت upstream (host، port یا pipe SMB) اشاره کنید که ترافیک را به سمت team server forward می‌کند.
+
+وقتی میزبان هدف مسیر outbound به اینترنت ندارد مفید است.
+
+ایجاد آن همان مراحل ایمپلنت stageless است، فقط پیکربندی C2 عوض می‌شود.
+
+<ImageZoom src={relayImplant} alt="Relay Implant" className="h-[18rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+
+در هر OS پشتیبانی‌شده **TCP** را استفاده کنید. **SMB** فقط برای ایمپلنت‌های Windows. میزبان هدف باید از قبل relay روی ایمپلنت upstream پیکربندی شده باشد. برای relay بیشتر بخوانید: [Relay](/docs/pivoting/relay#how-to-use).

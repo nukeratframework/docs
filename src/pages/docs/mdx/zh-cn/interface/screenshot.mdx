@@ -1,0 +1,54 @@
+---
+title: 截图
+---
+
+import screenshot from '@/assets/img/tutorial/screenshot.png';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { Camera } from 'lucide-react';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+截图标签页是被动查看器，展示所选主机上的最新截图，因此必须先完成一次截图才会有内容显示。
+
+其主要用途是动态查看；配合循环模式，可近似实现实时画面。
+
+可从顶部栏<span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">的 <Camera size={20} className="shrink-0 ml-1.5 mr-1.5" /> 图标</span>打开 **Screenshot（截图）** 标签页，或从 **Tabs（标签页）** > **Screenshot（截图）** 进入。
+
+<ImageZoom src={screenshot} alt="Screenshot" className="tutorial_img" />
+
+## 使用方法
+
+按以下步骤使用截图标签页：
+
+  <Steps>
+    <Step>
+      ### 选择主机
+      首先选择要查看截图的主机，点击标签名旁的 **Host（主机）**。
+    </Step>
+    <Step>
+      ### 启动截图循环
+      在终端执行 `screenshot start` 启动截图循环。可用 `--delay <interval>` 设置捕获间隔（秒）。
+    </Step>
+    <Step>
+      ### 等待画面更新
+      默认情况下，截图标签页会轮询团队服务器，有新截图到达时自动更新，无需手动刷新。
+    </Step>
+  </Steps>
+
+## 工作原理
+
+截图捕获有两种模式：
+
+1. 单次捕获
+2. 循环捕获：在独立线程的任务中按指定间隔重复截图。
+
+### Windows
+
+通过 GDI（`user32.dll` 与 `gdi32.dll`）使用 `GetDC`、`BitBlt`、`CreateDIBSection` 捕获屏幕。核心逻辑位于 `implants/windows/stageless/capabilities/screenshots.nim`。
+
+### Linux
+
+通过 X11（`libX11.so`）对根窗口调用 `XOpenDisplay` 与 `XGetImage`。需设置 `DISPLAY`。核心逻辑位于 `implants/linux/stageless/capabilities/screenshots.nim`。
+
+### MacOS
+
+MacOS 不支持此功能。

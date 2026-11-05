@@ -1,0 +1,87 @@
+---
+title: Быстрая настройка
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import keyAdd from '@/assets/img/tutorial/key_2.png';
+import listenerForm from '@/assets/img/tutorial/listener_form.png';
+
+Краткий путь от установки до первой импланты (сервер на Linux).
+
+  <Steps>
+    <Step>
+      ### Установите сервер
+      Клонируйте репозиторий и запустите установщик.
+
+      ```bash
+      git clone https://github.com/nukeratframework/nukerat && cd nukerat && sudo bash install.sh
+      ```
+    </Step>
+    <Step>
+      ### Создайте ключ оператора
+      Для работы с сервером нужен ключ оператора. Из корня репозитория:
+
+      ```bash
+      ./nukerat.py server key add test
+      ```
+
+      Вывод будет примерно таким:
+      ```html
+      test:z6MIe3MbZQL57Hx3fOthGZJ:oxcWICLu9Tnu7GyvwDiwVCRoER4ybKv...
+
+      Operator created successfully: test
+      ```
+
+      Скопируйте сгенерированный ключ — он понадобится в клиенте.
+    </Step>
+    <Step>
+      ### Запустите сервер
+      Команда ниже поднимает сервер на 0.0.0.0:9000 (порт по умолчанию).
+
+      ```bash
+      ./nukerat.py server start
+      ```
+    </Step>
+    <Step>
+      ### Откройте клиент
+      Запуск клиента:
+
+      ```bash
+      ./nukerat.py client start
+      ```
+    </Step>
+    <Step>
+      ### Настройте сервер в клиенте
+      В верхней панели: **NukeRat** > **Servers** > **Add**. Вставьте ключ оператора, укажите порт 9000 (по умолчанию) и IP сервера, нажмите **Auth**.
+
+      <ImageZoom src={keyAdd} alt="Добавление сервера" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+
+    </Step>
+    <Step>
+      ### Настройте listener
+      Это порт, через который импланта будет общаться с инфраструктурой. **NukeRat** > **Listeners** > **Add**
+
+      1. Задайте имя для идентификации
+      2. В поле TYPE выберите «Channel»
+      3. В channel оставьте «http»
+      4. Выберите созданный ранее сервер
+      5. Укажите порт, отличный от порта management API сервера
+      6. Нажмите **Create**
+
+      <ImageZoom src={listenerForm} alt="Форма listener" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+    </Step>
+    <Step>
+      ### Соберите импланту
+      **NukeRat** > **Implants** > **Add**, затем:
+
+      1. В COMPILE SERVER выберите созданный ранее сервер
+      2. Укажите целевую ОС
+      3. Слева откройте **Command and control** и укажите C2 на listener, например: http://192.168.1.100:9000
+    </Step>
+    <Step>
+      ### Запуск и работа
+
+      Запустите импланту на целевой машине — при корректной настройке появится новая сессия. Для взаимодействия откройте терминал: **Tabs** > **Terminal**, в выпадающем списке «Host» рядом с вкладкой выберите сессию.
+    </Step>
+  </Steps>

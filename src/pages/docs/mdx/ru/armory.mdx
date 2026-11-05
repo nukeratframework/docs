@@ -1,0 +1,576 @@
+---
+title: Арсенал
+---
+
+Armory — готовый набор из 543 утилит (BOF и .NET-исполняемые файлы) для быстрой загрузки и запуска на целевом хосте.
+
+Все утилиты берутся из официального репозитория armory NukeRat: [**github.com/nukeratframework/armory**](https://github.com/nukeratframework/armory)
+
+Предкомпилированные бинарники подтягиваются автоматически, но их можно собрать вручную:
+
+1. Соберите утилиты и положите в каталог `server/infra/bin/armory/`
+2. В `server/server.conf` в секции `[server.armory]` задайте `repository` на свой GitHub release
+
+## Команды
+
+По умолчанию NukeRat не включает предсобранные бинарники armory. Установите их на team server командами armory:
+
+| Команда | Действие |
+| --- | --- |
+| `armory` | Список утилит и кратких описаний |
+| `armory install all` | Загрузить все утилиты из последнего release |
+| `armory install &lt;tool&gt;` | Загрузить файлы одной утилиты |
+| `armory update` | Обновить индекс armory (`armory.json`) из репозитория |
+| `armory update &lt;tool&gt;` | Обновить индекс и перекачать одну утилиту |
+| `armory remove &lt;tool&gt;` | Удалить кэш утилиты |
+| `help &lt;command&gt;` | Справка по команде утилиты |
+
+## Каталог
+
+Ниже полный список всех 543 утилит armory. Имена совпадают с аргументом `armory install`:
+
+| Имя | Категория | Описание |
+| --- | --- | --- |
+| `bof-aadjoininfo` | bof | Сведения о присоединении устройства к Azure AD или Entra ID. |
+| `bof-adnet-enum` | bof | Перечисление служб сертификатов Active Directory (AD CS). |
+| `bof-adnet-enum-com2` | bof | Перечисление ЦС и шаблонов в AD через COM-объект IX509PolicyServerListManager. |
+| `bof-adnet-on-behalf` | bof | Запрос сертификата AD CS от имени другого пользователя с сертификатом агента регистрации (расширение XCN_OID_ENROLLMENT_AGENT). |
+| `bof-add-ace` | bof | Добавление ACE в DACL объекта. Поддерживаются LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-add-attribute` | bof | Добавление или дополнение значения атрибута. Поддерживаются LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-add-computer` | bof | Создание объекта компьютера. Поддерживаются LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-add-defender-excl` | bof | Исключения Windows Defender через класс WMI MSFT_MpPreference (COM). |
+| `bof-add-delegation` | bof | Установка или замена SPN делегирования. Поддерживаются LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-add-exclusion` | bof | Новое исключение Defender для папки, файла, процесса или расширения. |
+| `bof-add-firewall-rule` | bof | Новое входящее или исходящее правило брандмауэра через COM. |
+| `bof-add-group` | bof | Создание группы. Поддерживаются LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-add-groupmember` | bof | Добавление пользователя в группу. Поддерживаются LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-add-local-cert` | bof | Добавление (самоподписанного) сертификата в локальное хранилище компьютера. Например, сертификат для папки «Доверенные корневые центры сертификации» (ROOT). |
+| `bof-add-machine-account` | bof | Злоупотребление квотой ms-DS-MachineAccountQuota для создания rogue machine account. |
+| `bof-add-ou` | bof | Создание организационного подразделения (OU). Поддерживаются LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-add-rbcd` | bof | Настройка RBCD-делегирования. Поддерживаются LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-add-sidhistory` | bof | Добавление SID в sidHistory. Поддерживаются LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-add-spn` | bof | Добавление ServicePrincipalName. Поддерживаются LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-add-uac` | bof | Добавление флага UserAccountControl. Поддерживаются LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-add-user` | bof | Создание пользователя. Поддерживаются LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-add-user-by-samr` | bof | Добавление пользователя в локальную группу через SAMR. Нужны права администратора. Не использовать в Active Directory. |
+| `bof-adduser` | bof | Создание локального или удалённого пользователя. |
+| `bof-adduser-to-group` | bof | Добавление пользователя в группу. |
+| `bof-addusertogroup` | bof | Добавление указанного пользователя в указанную доменную группу. |
+| `bof-adv-audit-policies` | bof | Получение расширенных политик аудита безопасности. |
+| `bof-ai-surface` | bof | Карта AI-инструментов на рабочих станциях разработчиков Windows; артефакты AI-агентов и MCP для triage. |
+| `bof-allow-firewall-rule` | bof | Разрешающее правило брандмауэра (вход/выход). |
+| `bof-amsi-etw-detect` | bof | Проверка AMSI и ETW в текущем процессе по загруженным DLL и экспортам ETW. |
+| `bof-app-count` | bof | Подсчёт установленных приложений через реестр (с дедупликацией). Сравнение по множеству beacon'ов. |
+| `bof-applocker-policy` | bof | Перечисление политик AppLocker, наборов правил и режимов enforcement по ключам реестра. |
+| `bof-arp` | bof | Таблица ARP. |
+| `bof-ask-mfa` | bof | Поддельный диалог подтверждения Microsoft Authenticator с указанным номером (закрывается через 30 с). |
+| `bof-askcreds` | bof | Сбор учётных данных через CredUIPromptForWindowsCredentialsName (до 60 с; beacon не отвечает). |
+| `bof-asktgs` | bof | Запрос служебного билета Kerberos по TGT. |
+| `bof-asktgt` | bof | Запрос TGT по паролю, хешу или без preauth. |
+| `bof-asr-status` | bof | Перечисляет правила Attack Surface Reduction (ASR) Windows Defender по ключам реестра: какие правила настроены, режим enforcement (Block/Audit/Warn/Disabled) и источник политики (Intune/MDM или групповая политика). |
+| `bof-asrenum` | bof | Определяет правила ASR, действия и пути исключений через WMI-класс MSFT_MpPreference. Нужен повышенный контекст. |
+| `bof-asreproasting` | bof | Запрос AS-REP для учётных записей без Kerberos preauthentication. |
+| `bof-authenticate-http` | bof | Принудительный HTTP-запрос с аутентификацией Windows из контекста текущего пользователя на сервер (ntlmrelayx) для аутентифицированной LDAP relay-атаки. |
+| `bof-backup-priv-sam` | bof | Злоупотребление SeBackupPrivilege через удалённый реестр: дамп кустов SAM, SYSTEM и SECURITY с удалённой системы. |
+| `bof-bitlocker-status` | bof | Статус шифрования BitLocker, параметры политик и расположение резервных копий ключей восстановления по ключам реестра. |
+| `bof-c-enumerate-defender` | bof | Исключения Windows Defender через WMI. Нужен повышенный контекст beacon. |
+| `bof-cacls` | bof | Права пользователя на указанный файл; поддерживаются wildcards. |
+| `bof-capture-net-ntlm` | bof | Захват NetNTLMv2-хеша текущего пользователя имитацией NTLM-обмена между клиентом и сервером. |
+| `bof-cdp-enable` | bof | Включает Chrome DevTools Protocol в запущенном x64 Chrome или Edge: разрешение символов браузера в runtime и запуск сервера удалённой отладки в UI-потоке. Только x64. |
+| `bof-cdp-enable-iso` | bof | CDP в x64 Chrome с Windows Process Isolation: ограниченные дескрипторы изолированного процесса и символы из локального chrome.dll. Только x64. |
+| `bof-certstore-loot` | bof | Перечисление локальных хранилищ сертификатов в поисках сертификатов с экспортируемым закрытым ключом и путей экспорта. |
+| `bof-change-pass` | bof | Установка пароля пользователя на локальном или удалённом хосте. |
+| `bof-changepw` | bof | Смена пароля пользователя через kpasswd. |
+| `bof-chrome-key` | bof | Расшифровка base64-ключа Chrome из Local State для офлайн-расшифровки cookie браузера. |
+| `bof-chromium-key-dump` | bof | Дамп master key Chrome/Edge и загрузка файлов Cookie/Login Data из профиля браузера. |
+| `bof-cicd-credential-hunt` | bof | Поиск типичных артефактов CI/CD, облака и разработчика в профиле Windows-пользователя; по умолчанию путь и размер. .gitconfig и .ssh/config считаются конфигурацией, не учётными данными. |
+| `bof-clipboard-grab` | bof | Текст из буфера обмена Windows через Win32 API с возвратом в callback. |
+| `bof-clipboard-monitor` | bof | Асинхронный BOF: мониторинг буфера через GetClipboardSequenceNumber и вывод при изменении. Текст и изображения (base64 BMP в sync). Изображения только в sync. |
+| `bof-clipboard-steal` | bof | Включение, отключение, проверка и дамп истории буфера обмена Windows. |
+| `bof-cloud-metadata-check` | bof | Опрос локальных metadata-сервисов AWS, Azure и GCP из текущего процесса: провайдер, контекст инстанса и ограниченные фрагменты учётных данных при доступности. |
+| `bof-cloudap-bof` | bof | Извлечение SSO-cookie Entra ID, device SSO, AD FS enterprise SSO и статуса облачного провайдера через LsaCallAuthenticationPackage. Нужно устройство в Entra ID/Azure AD с активной облачной сессией входа. |
+| `bof-com-probe` | bof | Проверка возможности создания COM-объекта по CLSID: сначала in-process, затем local server. |
+| `bof-contact-harvester` | bof | Сбор контактов глобальной адресной книги Outlook через COM. |
+| `bof-cookie-graber` | bof | Master-ключи шифрования WebKit из Local State Chrome и Edge через DPAPI; сначала Edge, затем Chrome. Master key используется с CookieProcessor.exe офлайн для cookie из БД на диске. |
+| `bof-cookie-monster` | bof | Кража cookie и логинов Chrome, Edge и Firefox: WebKit master key и App Bound key, дублирование дескрипторов Cookies и Login Data для fileless-загрузки. Режим SYSTEM без инъекции в браузер. Офлайн — decrypt.py для скачанных БД. |
+| `bof-cred-man` | bof | Дамп диспетчера учётных данных Windows через SeTrustedCredManAccess: токен из winlogon.exe. Нужны права администратора. |
+| `bof-cred-prompt` | bof | Запуск диалога учётных данных Windows для перехвата ввода; данные в выводе. Диалог настойчивый — нельзя закрыть или ввести пустой пароль; попытки видны в выводе. Таймер гарантирует возврат beacon. |
+| `bof-credui` | bof | Диалог учётных данных CredUIPromptForWindowsCredentials с проверкой через LogonUser. |
+| `bof-cross-s4u` | bof | Междоменное злоупотребление constrained delegation S4U. |
+| `bof-cryptvortex` | bof | Шифрование или расшифровка файлов в каталоге. |
+| `bof-curl` | bof | HTTP-запросы без SOCKS-прокси. |
+| `bof-cve-2022-26923` | bof | Эскалация привилегий в домене через AD CS (CVE-2022-26923). На базе AddMachineAccount с изменением dNSHostName и servicePrincipalName. |
+| `bof-dcom-local-server32` | bof | Создание DCOM/COM-класса по CLSID на указанном хосте с запуском out-of-process EXE-сервера. При DLL/COM hijacking и записи в каталоги загрузки модулей — (удалённое) выполнение кода и lateral movement. |
+| `bof-dcompotato-notify` | bof | Получение SYSTEM через SeImpersonate: передача вредоносного IUnknown в вызов PrintNotify DCOM. |
+| `bof-defender-exclusions` | bof | Список путей, процессов и расширений в исключениях Windows Defender из реестра. |
+| `bof-del-exclusion` | bof | Удаление исключения Defender для папки, файла, процесса или расширения. |
+| `bof-del-firewall-rule` | bof | Удаление правила брандмауэра через COM. |
+| `bof-del-local-cert` | bof | Удаление сертификата локального компьютера из указанного хранилища по отпечатку. |
+| `bof-del-machine-account` | bof | Удаление rogue machine account в Active Directory. |
+| `bof-del-task-scheduler` | bof | Удаление запланированной задачи на текущей или удалённой системе. |
+| `bof-describe` | bof | Разбор и описание билета Kerberos. |
+| `bof-detect-hooks` | bof | Обнаружение inline-хуков в текущем процессе: сканирование экспортов Nt/Zw в ntdll на неожиданные инструкции. |
+| `bof-dir` | bof | Список файлов в каталоге с wildcards (например «C:\Windows\S*»), в отличие от `ls` в CobaltStrike. |
+| `bof-disableuser` | bof | Отключение указанной учётной записи на целевом компьютере. |
+| `bof-dll-env-hijacking` | bof | Скрытая структура каталогов, перенос proxy DLL в новую папку system32, скрытие DLL, изменение SYSTEMROOT, запуск уязвимого бинарника как spoofed process, восстановление SYSTEMROOT для работы beacon. |
+| `bof-dll-hijack-hunter` | bof | Обход порядка SafeDllSearchMode от заданного пути и имени DLL; опционально проверка записи в найденный файл. |
+| `bof-domaininfo` | bof | Сведения о домене через Active Directory Domain Services. |
+| `bof-draugr` | bof | Stack spoofing Draugr с indirect syscalls: NtAllocateVirtualMemory, User32.dll, MessageBoxA с синтетическими кадрами стека. |
+| `bof-driversigs` | bof | ImagePath установленных служб и проверка подписи сертификата на известные AV/EDR. |
+| `bof-dropspawn` | bof | Новый процесс через proxy DLL на диске и подмену каталога приложения для порядка поиска DLL; x86, x64 и cross-arch. DLL должна удалить себя после загрузки. |
+| `bof-dump` | bof | Извлечение билетов Kerberos из сессий входа. |
+| `bof-dump-procargs` | bof | Аргументы командной строки процесса из PEB. |
+| `bof-edgedump` | bof | Артефакты сохранённых учётных данных Microsoft Edge из памяти msedge.exe; сканирование регионов памяти. Без файлов браузера, SQLite и DPAPI. Тот же пользователь — свой процесс Edge; elevated — процессы Edge других сессий. |
+| `bof-elevate-trusted` | bof | Повышение beacon до SYSTEM и привилегии TrustedInstaller через SetThreadToken. |
+| `bof-enableuser` | bof | Включение и разблокировка указанной учётной записи на целевом компьютере. |
+| `bof-entra-authcode-flow` | bof | Access/refresh-токены Microsoft Entra через браузер с OAuth authorization code flow; обмен на endpoint, обход conditional access. 1) вкладка с OAuth URL 2) мониторинг заголовков окна на redirect с code 3) обмен code на токены. |
+| `bof-enum-active-hosts` | bof | Активные хосты или проверка одного открытого порта; список имён/IP загружается с клиента оператора. |
+| `bof-enum-dll-sideloading` | bof | Один .EXE, папка или рекурсивно все папки — поиск DLL sideloading в исполняемых файлах. |
+| `bof-enum-drives` | bof | Буквы дисков и их тип. |
+| `bof-enum-exclusions` | bof | Исключения Windows Defender: файлы, папки, расширения и процессы. |
+| `bof-enum-files` | bof | Поиск файлов по слову, расширению или ключевому слову в содержимом; wildcards. |
+| `bof-enum-filter-driver` | bof | Перечисление filter drivers. |
+| `bof-enum-handles` | bof | Дескрипторы типов `process` и `thread` между процессами. |
+| `bof-enum-lib` | bof | Поиск модуля во всех процессах или список модулей в указанном процессе. |
+| `bof-enum-local-cert` | bof | Сертификаты локального компьютера из указанного хранилища. Типичные имена: ROOT, MY, TRUST, CA, USERDS, AuthRoot, Disallowed. |
+| `bof-enum-local-sessions` | bof | Подключённые пользовательские сессии локально и по RDP. |
+| `bof-enum-sec-products` | bof | Список AV/EDR на текущем или удалённом хосте: сравнение процессов со списком из ~130 продуктов. |
+| `bof-enum-shares` | bof | Общие ресурсы в домене и уровень доступа по списку имён/IP; быстрая проверка TCP/445 и скрытые проверки атрибутов. |
+| `bof-enum-task-scheduler` | bof | Перечисление и краткая информация о задачах в корневой папке планировщика. |
+| `bof-enum-web-client` | bof | Хосты с запущенной службой WebClient по списку имён/IP со стороны атакующей системы. |
+| `bof-enumprotections` | bof | Системные процессы: уровень защиты, служба, пользователь, ID сессии, путь. Для поиска незащищённых сторонних служб под DLL hijacking. |
+| `bof-env` | bof | Переменные окружения процесса. |
+| `bof-esc1-unpac` | bof | Полная цепочка AD CS ESC1: сертификат с произвольным SAN (и SID для обхода KB5014754), PKINIT и NT-хеш через UnPAC the hash. |
+| `bof-etw` | bof | Патч и откат EtwEventWrite в ntdll.dll для снижения качества ETW-логирования. |
+| `bof-event-log-manage` | bof | Каналы журнала событий, классические логи/источники BOF, запись текстовых/бинарных событий, очистка с опциональным бэкапом. create/clear/destroy — Administrator или SYSTEM. |
+| `bof-execute-cross-session` | bof | Запуск бинарника на диске от имени другого пользователя через cross-session и COM (IStandardActivator, ISpecialSystemProperties, IHxHelpPaneServer) без инъекции процесса. |
+| `bof-find-loaded-module` | bof | В каких процессах загружен *modulepart*; опционально только *procnamepart*. |
+| `bof-find-module` | bof | Поиск модулей (clr.dll, winhttp.dll, amsi.dll и т.д.) через direct syscalls; выбор opsec-safe spawnto. |
+| `bof-find-proc-handle` | bof | Процессы с дескрипторами на целевой процесс (например lsass.exe); поиск существующих дескрипторов LSASS. |
+| `bof-firewall-rule` | bof | Добавление, удаление и запрос правил брандмауэра через COM (INetFwPolicy2) без netsh.exe/cmd.exe; pivot во внутренних сетях. |
+| `bof-force-lock-screen` | bof | Принудительная блокировка экрана текущей сессии. |
+| `bof-functionutil` | bof | Чтение, сравнение и патч API загруженных модулей с копиями DLL на диске; обнаружение и снятие хуков EPP/EDR. |
+| `bof-get-acl` | bof | DACL/ACE объекта. LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-get-attribute` | bof | Чтение атрибута LDAP. LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-get-azure-token` | bof | OAuth authorization code flow к Azure с сохранёнными входами браузера; вывод токенов. |
+| `bof-get-clipboard` | bof | Текст буфера обмена через Win32 API. |
+| `bof-get-computers` | bof | Все компьютеры домена. LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-get-delegation` | bof | Конфигурация делегирования. LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-get-domain-info` | bof | Текущий домен и контроллер: лес, домен, имя и адрес DC, сайт DC. |
+| `bof-get-domaininfo` | bof | Сведения о домене из rootDSE. LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-get-dpapi-system` | bof | Ключ DPAPI_SYSTEM и bootkey. |
+| `bof-get-groupmembers` | bof | Члены группы. LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-get-groups` | bof | Все группы домена. LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-get-machacct-quota` | bof | Значение ms-DS-MachineAccountQuota текущего домена. |
+| `bof-get-maq` | bof | Квота machine account. LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-get-netntlm` | bof | Захват NetNTLMv2 через SSPI. |
+| `bof-get-netsession` | bof | Сессии на локальном или указанном компьютере. |
+| `bof-get-netsession2` | bof | Вариант `netsession` с поддержкой BOFHound. |
+| `bof-get-object` | bof | Все атрибуты объекта. LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-get-password-policy` | bof | Политика паролей и блокировок сервера или домена. |
+| `bof-get-priv` | bof | Активация указанной привилегии токена текущего процесса. |
+| `bof-get-rbcd` | bof | Resource-Based Constrained Delegation. LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-get-session-info` | bof | Сведения о текущей сессии входа пользователя. |
+| `bof-get-spn` | bof | ServicePrincipalNames. LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-get-uac` | bof | Флаги UserAccountControl. LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-get-usergroups` | bof | Группы пользователя. LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-get-users` | bof | Все пользователи домена. LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-get-webdav-status` | bof | Проверка службы Web Client (WebDAV) через именованный канал DAV RPC SERVICE; без прав админа на цели, нужны учётные данные. |
+| `bof-get-writable` | bof | Объекты с правом записи. LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-getsystem` | bof | SYSTEM через дублирование токена winlogon.exe. Нужны права администратора. |
+| `bof-ghost-task` | bof | Создание/удаление задачи только через реестр без событий 4698 и 106. Нужен NT AUTHORITY\SYSTEM. |
+| `bof-ghostkatz` | bof | Дамп LSASS через физическую память и подписанные уязвимые драйверы с MmMapIoSpace; MSV1 и WDigest. Нужен администратор; возможен BSOD при сбое драйвера. |
+| `bof-global-unprotect` | bof | Поиск, расшифровка и загрузка конфигурации GlobalProtect VPN и настроек HIP. |
+| `bof-handle-finder` | bof | Открытые дескрипторы в целевом процессе. |
+| `bof-handle-stealer` | bof | NetworkService Chrome/Edge: дублирование дескриптора SQLite Cookies и копия в %LOCALAPPDATA%&lt;pid&gt;.db; автопоиск chrome.exe/msedge.exe. |
+| `bof-hash` | bof | Kerberos key hashes из пароля. |
+| `bof-hide-file` | bof | Скрытие файла/каталога: атрибуты system + hidden. |
+| `bof-ide-extension-surface` | bof | Манифесты расширений VS Code, Cursor, Windsurf, Zed, Insiders, OSS и server/remote из профилей: идентичность, activation events, capability signals. |
+| `bof-idle-time` | bof | Активность пользователя по последнему вводу; время в формате HH:MM:SS. |
+| `bof-ipconfig` | bof | IPv4, имя хоста и DNS-сервер. |
+| `bof-kerb-hash` | bof | Хеши паролей в ключи Kerberos: rc4_hmac, aes128_cts_hmac_sha1, aes256_cts_hmac_sha1, des_cbc_md5. |
+| `bof-kerberoast` | bof | AP-REQ по SPN и base64 билет для офлайн-взлома; apreq2hashcat.py для конвертации. |
+| `bof-kerberoasting` | bof | Учётные записи с SPN или TGS-REP для Hashcat; билеты между TICKET; TicketToHashcat.py. |
+| `bof-kerberos-bof` | bof | Список, дамп и очистка кэша Kerberos через LsaCallAuthenticationPackage без памяти LSASS. |
+| `bof-kerbeus-asktgs` | bof | Служебный билет из TGT. |
+| `bof-kerbeus-asktgt` | bof | TGT по паролю, хешу или без preauth. |
+| `bof-kerbeus-asreproasting` | bof | AS-REP для пользователей без Kerberos preauthentication. |
+| `bof-kerbeus-changepw` | bof | Смена пароля через kpasswd. |
+| `bof-kerbeus-cross_s4u` | bof | Междоменное злоупотребление constrained delegation S4U. |
+| `bof-kerbeus-describe` | bof | Разбор и описание билета Kerberos. |
+| `bof-kerbeus-dump` | bof | Билеты Kerberos из сессий входа. |
+| `bof-kerbeus-hash` | bof | Kerberos key hashes из пароля. |
+| `bof-kerbeus-kerberoasting` | bof | Служебный билет Kerberos для офлайн-взлома. |
+| `bof-kerbeus-klist` | bof | Билеты Kerberos с подробностями. |
+| `bof-kerbeus-ptt` | bof | Подача билета в текущую или указанную сессию входа. |
+| `bof-kerbeus-purge` | bof | Очистка билетов Kerberos в текущей или указанной сессии. |
+| `bof-kerbeus-renew` | bof | Продление TGT. |
+| `bof-kerbeus-s4u` | bof | S4U2self и S4U2proxy constrained delegation. |
+| `bof-kerbeus-tgtdeleg` | bof | TGT через злоупотребление GSS API delegation. |
+| `bof-kerbeus-triage` | bof | Билеты Kerberos в табличном виде. |
+| `bof-klist` | bof | Кэшированные билеты Kerberos: список, очистка, запрос по SPN. |
+| `bof-koh-client` | bof | Именованный канал Koh: список, фильтр, impersonation и освобождение токенов. Нужен SeImpersonatePrivilege. |
+| `bof-ksl-lsa` | bof | Учётные данные из LSASS через BYOVD KslD.sys без OpenProcess/NtReadVirtualMemory/MiniDumpWriteDump; MSV1_0, WDigest, ключи LSA. Нужны права администратора. |
+| `bof-lapsdump` | bof | Дамп паролей LAPS с указанных компьютеров AD. Нужны повышенные права в AD. |
+| `bof-lastpass` | bof | Поиск паролей и данных LastPass в памяти процессов Chrome или Brave. |
+| `bof-ldap-sign-check` | bof | Проверка DC на LdapEnforceChannelBinding/LdapServerIntegrity против LDAP relay; LDAP (389) и LDAPS (636). |
+| `bof-ldapsearch` | bof | LDAP-поиск (ПРИМЕЧАНИЕ: для всех атрибутов и ACL в base64 укажите *,ntsecuritydescriptor — разбор через BOFHound; пагинация может пострадать). |
+| `bof-ldapsecuritycheck` | bof | Требования LDAP signing и channel binding на контроллере домена. |
+| `bof-lin-arp` | bof | (linux) Таблица ARP из /proc/net/arp с разрешением имён. |
+| `bof-lin-awk` | bof | (linux) Минимальный awk (только вывод столбцов). |
+| `bof-lin-base64` | bof | (linux) Кодирование/декодирование Base64. |
+| `bof-lin-basename` | bof | (linux) Имя файла без каталога. |
+| `bof-lin-cat` | bof | (linux) Вывод содержимого файлов. |
+| `bof-lin-chmod` | bof | (linux) Изменение прав доступа к файлу. |
+| `bof-lin-chown` | bof | (linux) Смена владельца файла. |
+| `bof-lin-cp` | bof | (linux) Копирование файлов. |
+| `bof-lin-cut` | bof | (linux) Извлечение полей/столбцов. |
+| `bof-lin-date` | bof | (linux) Текущие дата и время. |
+| `bof-lin-df` | bof | (linux) Использование дискового пространства. |
+| `bof-lin-diff` | bof | (linux) Сравнение двух файлов. |
+| `bof-lin-dirname` | bof | (linux) Каталог из пути (без имени файла). |
+| `bof-lin-dmesg` | bof | (linux) Буфер сообщений ядра. |
+| `bof-lin-du` | bof | (linux) Оценка занятого места. |
+| `bof-lin-env` | bof | (linux) Переменные окружения из /proc/self/environ. |
+| `bof-lin-find` | bof | (linux) Поиск файлов. |
+| `bof-lin-free` | bof | (linux) Использование памяти. |
+| `bof-lin-grep` | bof | (linux) Поиск по содержимому файлов. |
+| `bof-lin-groups` | bof | (linux) Членство в группах. |
+| `bof-lin-head` | bof | (linux) Начало файла. |
+| `bof-lin-hostname` | bof | (linux) Имя хоста. |
+| `bof-lin-id` | bof | (linux) UID/GID пользователя и групп. |
+| `bof-lin-ifconfig` | bof | (linux) Сетевые интерфейсы. |
+| `bof-lin-kill` | bof | (linux) Отправка сигнала процессу. |
+| `bof-lin-ln` | bof | (linux) Создание ссылок. |
+| `bof-lin-logger` | bof | (linux) Запись сообщения в syslog. |
+| `bof-lin-ls` | bof | (linux) Содержимое каталога. |
+| `bof-lin-lsmod` | bof | (linux) Загруженные модули ядра. |
+| `bof-lin-md5sum` | bof | (linux) Хеш MD5. |
+| `bof-lin-mkdir` | bof | (linux) Создание каталогов. |
+| `bof-lin-mount` | bof | (linux) Точки монтирования. |
+| `bof-lin-mv` | bof | (linux) Перемещение/переименование файлов. |
+| `bof-lin-netstat` | bof | (linux) TCP/UDP-подключения из /proc/net (флаги: -tlnpu). |
+| `bof-lin-nl` | bof | (linux) Нумерация строк файла. |
+| `bof-lin-nslookup` | bof | (linux) DNS-запрос через getaddrinfo. |
+| `bof-lin-od` | bof | (linux) Восьмеричный дамп. |
+| `bof-lin-paste` | bof | (linux) Объединение строк файлов. |
+| `bof-lin-ping` | bof | (linux) Проверка доступности хоста. |
+| `bof-lin-ps` | bof | (linux) Список процессов. |
+| `bof-lin-pwd` | bof | (linux) Текущий рабочий каталог. |
+| `bof-lin-rev` | bof | (linux) Обратный порядок строк файла. |
+| `bof-lin-rm` | bof | (linux) Удаление файлов и каталогов. |
+| `bof-lin-rmdir` | bof | (linux) Удаление пустых каталогов. |
+| `bof-lin-route` | bof | (linux) Таблица маршрутизации. |
+| `bof-lin-sed` | bof | (linux) Потоковый редактор (s/old/new/g). |
+| `bof-lin-sha256sum` | bof | (linux) Хеш SHA-256. |
+| `bof-lin-sort` | bof | (linux) Сортировка строк файла. |
+| `bof-lin-stat` | bof | (linux) Метаданные файла. |
+| `bof-lin-strings` | bof | (linux) Печатные строки в файле. |
+| `bof-lin-sysctl` | bof | (linux) Чтение/запись параметров ядра. |
+| `bof-lin-tail` | bof | (linux) Конец файла. |
+| `bof-lin-tar` | bof | (linux) Создание, просмотр и распаковка tar-архивов. |
+| `bof-lin-touch` | bof | (linux) Создание файла или обновление меток времени. |
+| `bof-lin-tr` | bof | (linux) Замена/удаление символов. |
+| `bof-lin-traceroute` | bof | (linux) Трассировка маршрута до хоста. |
+| `bof-lin-tree` | bof | (linux) Рекурсивное дерево каталогов. |
+| `bof-lin-uname` | bof | (linux) Системная информация. |
+| `bof-lin-uniq` | bof | (linux) Удаление соседних дубликатов строк. |
+| `bof-lin-uptime` | bof | (linux) Uptime, load average и текущее время. |
+| `bof-lin-wc` | bof | (linux) Подсчёт слов, строк и байт. |
+| `bof-lin-wget` | bof | (linux) HTTP GET — загрузка. |
+| `bof-lin-whoami` | bof | (linux) Эффективное имя пользователя. |
+| `bof-lin-xxd` | bof | (linux) Hex-дамп. |
+| `bof-list-chrome-cookies` | bof | Подпроцессы браузера для дампа cookie; PID для bof-cookie-katz. Только x64. |
+| `bof-list-firewall-rules` | bof | Правила брандмауэра Windows. |
+| `bof-list-process-handles` | bof | Открытые дескрипторы процесса. |
+| `bof-listdns` | bof | Записи DNS-кэша с попыткой запроса и разрешения каждой. |
+| `bof-listmods` | bof | Модули процесса (DLL); текущий процесс при пустом PID. Дополнение к driversigs для обнаружения инъекции AV/EDR. |
+| `bof-locale` | bof | Язык локали, ID локали, дата, время и страна системы. |
+| `bof-make-token-cert` | bof | Impersonation по сертификату PFX. |
+| `bof-md5` | bof | MD5-хеш файла. |
+| `bof-mdm-policy-artifacts` | bof | Оценка постure MDM на Windows: join state, задачи, политики, артефакты enrollment. |
+| `bof-mem-read` | bof | Первые байты экспортируемых функций загруженной DLL. |
+| `bof-mem-search` | bof | Поиск строки в памяти процесса. |
+| `bof-memreader` | bof | Поиск шаблона строки в памяти целевого процесса; все совпадения в вывод beacon. |
+| `bof-move-object` | bof | Перенос объекта в другое OU. LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-msi-lateral-mv` | bof | MSI Server по DCOM: ODBC-драйвер через Custom Action Server для lateral movement. Все аргументы — wide strings. |
+| `bof-msi-search` | bof | Сканирование C:\Windows\Installer\ на кэш MSI и имена ПО; для исследования LPE через repair MSI. |
+| `bof-msv1-0-bof` | bof | Ключи DPAPI и NTLMv1 через LsaCallAuthenticationPackage без дескриптора LSASS; PPL и Credential Guard для ключей. |
+| `bof-nanorobeus` | bof | Управление билетами Kerberos: LUID, сессии, дамп, import (ptt), purge, TGT delegation, Kerberoasting. |
+| `bof-netgroup` | bof | Группы домена или члены группы в домене по умолчанию или указанном. |
+| `bof-netjoin-query` | bof | Сведения о присоединении к домену и рабочей станции: домен или рабочая группа. |
+| `bof-netlocalgroup` | bof | Локальные группы или их члены на локальном или указанном компьютере. |
+| `bof-netlocalgroup2` | bof | Вариант `netLocalGroupListMembers` с поддержкой BOFHound. |
+| `bof-netloggedon` | bof | Пользователи, вошедшие на локальный или удалённый компьютер. |
+| `bof-netloggedon2` | bof | Вариант `netloggedon` с поддержкой BOFHound. |
+| `bof-netshares` | bof | Общие ресурсы локального или удалённого компьютера. |
+| `bof-netstat` | bof | TCP и UDP IPv4 и порты. |
+| `bof-nettime` | bof | Время на удалённом компьютере. |
+| `bof-netuptime` | bof | Время загрузки локального или удалённого компьютера. |
+| `bof-netuser` | bof | Сведения о пользователе; из домена при указании domainname. |
+| `bof-netuserenum` | bof | Учётные записи на локальном компьютере или текущем домене. |
+| `bof-netview` | bof | Доступные компьютеры текущего домена. |
+| `bof-nonpagedldapsearch` | bof | LDAP-поиск без постраничной разбивки. |
+| `bof-notepad` | bof | Открытые Notepad/Notepad++ и текст из edit control. |
+| `bof-notepad-grab` | bof | Plain text из открытых Notepad через память; несохранённые заметки. |
+| `bof-notethief` | bof | Содержимое Notepad через Edit control и WM_GETTEXT. |
+| `bof-nslookup` | bof | DNS-запрос; DNS server — сервер запроса (пусто или 0 — по умолчанию). Тип записи: A, AAAA, ANY и т.д. В некоторых случаях возможны сбои. |
+| `bof-office-tokens` | bof | JWT access-токены Office из памяти указанного процесса Office. |
+| `bof-p-sremote` | bof | Все процессы на удалённом хосте. |
+| `bof-password-spray-a-d` | bof | Один пароль против многих учётных записей через LDAP, LDAPS, GC или GCS simple bind. |
+| `bof-password-spray-local` | bof | Локальный пользователь и пароль против списка хостов через SMB (IPC$). |
+| `bof-patchit` | bof | Патч, проверка и откат AMSI и ETW для x64; первые 10+ байт AmsiScanBuffer и EtwEventWrite. Не загружает amsi.dll, если её нет в процессе. Только x64. |
+| `bof-port-scan` | bof | Сканирование одного IPv4-хоста на открытые TCP/UDP через Winsock с ограниченным списком портов, таймаутами и кратким выводом. |
+| `bof-power-state` | bof | Форм-фактор: Laptop, Desktop, Tablet, Server, Embedded или Unknown по SMBIOS с fallback на power status. |
+| `bof-powershell-history` | bof | История PowerShell из PSReadLine и transcript по умолчанию; поиск учётных данных и инфраструктуры. |
+| `bof-privkit-autorun-check` | bof | Изменяемые ключи автозагрузки в реестре. |
+| `bof-privkit-cred-check` | bof | Сохранённые учётные данные в диспетчере Windows. |
+| `bof-privkit-elev-check` | bof | AlwaysInstallElevated в HKCU и HKLM. |
+| `bof-privkit-hijack-check` | bof | Уязвимые для hijack записи PATH. |
+| `bof-privkit-logon-check` | bof | Учётные данные AutoLogon в реестре. |
+| `bof-privkit-pshist-check` | bof | Файлы истории команд PowerShell. |
+| `bof-privkit-service-check` | bof | Изменяемые службы Windows. |
+| `bof-privkit-token-check` | bof | Привилегии текущего токена на предмет злоупотребления. |
+| `bof-privkit-uac-check` | bof | Конфигурация UAC. |
+| `bof-privkit-unquoted-svc` | bof | Пути служб без кавычек. |
+| `bof-probe` | bof | Проверка, открыт ли указанный порт. |
+| `bof-proc-version` | bof | Версия главного модуля процесса. |
+| `bof-procargs` | bof | Аргументы командной строки указанного процесса. |
+| `bof-procdump` | bof | Дамп процесса в файл через MiniDumpWriteDump; предварительно SeDebugPrivilege. |
+| `bof-process-destroy` | bof | Закрытие одного или всех дескрипторов в указанном процессе. |
+| `bof-process-list-handles` | bof | Все открытые дескрипторы указанного процесса. |
+| `bof-process-tokens-list` | bof | Доступные токены процессов: контекст, тип (primary/impersonation), уровень impersonation; фильтр по PID/имени. SeDebugPrivilege по умолчанию выключен (OPSEC). |
+| `bof-procinfo` | bof | Версионная информация исполняемого файла процесса (имя, версия, компания и т.д.). |
+| `bof-prockill` | bof | Завершение процесса по PID. |
+| `bof-procsearch` | bof | Поиск строки в читаемой памяти процесса с ASCII-контекстом вокруг. |
+| `bof-proxy-enum` | bof | Прокси Windows: WinINET, WinHTTP, политики, переменные окружения, WPAD, Chrome, .NET defaultProxy. |
+| `bof-psw` | bof | Заголовки окон процессов с активными окнами Windows. |
+| `bof-ptt` | bof | Подача билета в текущую или указанную сессию входа. |
+| `bof-purge` | bof | Очистка билетов Kerberos в текущей или указанной сессии. |
+| `bof-recon-ad` | bof | Объекты и атрибуты AD через ADSI: LDAP-фильтры, user/computer/group, Kerberos, Global Catalog; четыре режима в одном бинарнике. |
+| `bof-reg-del` | bof | Удаление ключа или значения реестра. |
+| `bof-reg-delete` | bof | Удаление ключа или значения локально или удалённо. |
+| `bof-reg-query` | bof | Запрос значения или перечисление одного ключа; удалённые компьютеры. |
+| `bof-reg-query-recursive` | bof | Рекурсивное перечисление ключа с заданного пути; удалённые компьютеры. |
+| `bof-reg-save` | bof | Экспорт ключа реестра в файл. |
+| `bof-reg-set` | bof | Создание или установка значения реестра локально или удалённо. |
+| `bof-regsave` | bof | Привилегии и дамп SAM, SYSTEM и SECURITY для офлайн-разбора и хешей. Нужен администратор. |
+| `bof-regsession` | bof | SID вошедших пользователей через HKEY_USERS. Совместимо с BOFHound. |
+| `bof-remotereg` | bof | Вошедшие пользователи на удалённых серверах, VDI и DC через API удалённого реестра. |
+| `bof-remove-ace` | bof | Удаление ACE из DACL. LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-remove-attribute` | bof | Удаление значения атрибута. LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-remove-delegation` | bof | Очистка SPN делегирования. LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-remove-groupmember` | bof | Исключение пользователя из группы. LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-remove-object` | bof | Удаление объекта AD. LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-remove-rbcd` | bof | Очистка RBCD. LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-remove-spn` | bof | Удаление указанного SPN. LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-remove-uac` | bof | Снятие флага UAC. LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-renew` | bof | Продление TGT. |
+| `bof-resources` | bof | Использование памяти и свободное место на основном диске. |
+| `bof-routeprint` | bof | IPv4-маршруты. |
+| `bof-runpe` | bof | Произвольный PE в жертвенном процессе (process herpaderping): файл, запись PE, перезапись 0x82 0x7f 0x76 0x7c перед запуском. |
+| `bof-s4u` | bof | S4U2self и S4U2proxy constrained delegation. |
+| `bof-sc-config` | bof | Настройка существующей службы Windows локально или удалённо. |
+| `bof-sc-create` | bof | Создание новой службы Windows локально или удалённо. |
+| `bof-sc-delete` | bof | Удаление существующей службы. |
+| `bof-sc-description` | bof | Описание существующей службы Windows. |
+| `bof-sc-enum` | bof | Службы: qc, query, qfailure, qtriggers. |
+| `bof-sc-failure` | bof | Действия при сбое службы. |
+| `bof-sc-qc` | bof | Реализация sc qc в BOF. |
+| `bof-sc-qdescription` | bof | Реализация sc qdescription в BOF. |
+| `bof-sc-qfailure` | bof | Условия сбоя службы. |
+| `bof-sc-qtriggerinfo` | bof | Триггеры службы. |
+| `bof-sc-query` | bof | Реализация sc query в BOF. |
+| `bof-sc-start` | bof | Запуск существующей службы Windows. |
+| `bof-sc-stop` | bof | Остановка существующей службы Windows. |
+| `bof-schtask-enum` | bof | Задачи планировщика через COM: состояние, расписание и конфигурация без лишнего XML. |
+| `bof-schtasks-del` | bof | Удаление задачи или папки. |
+| `bof-schtasks-run` | bof | Запуск задачи. |
+| `bof-schtasks-stop` | bof | Остановка выполняющейся задачи. |
+| `bof-schtaskscreate` | bof | Создание или обновление задачи из XML-определения. |
+| `bof-schtasksdelete` | bof | Удаление задачи или папки. |
+| `bof-schtasksenum` | bof | Задачи планировщика локально или удалённо. |
+| `bof-schtasksquery` | bof | Запрос указанной задачи локально или удалённо. |
+| `bof-schtasksrun` | bof | Немедленный запуск задачи. |
+| `bof-schtasksstop` | bof | Остановка выполняющейся задачи. |
+| `bof-screenshot` | bof | Снимки экрана через WinAPI без fork-and-run; JPEG, grayscale, quality, scaling, свёрнутые окна. |
+| `bof-self-delete` | bof | Удаление заблокированного или запущенного EXE с диска через переименование NTFS alternate data stream. |
+| `bof-service-control` | bof | Локальные службы через SCM: query (лимит или одна), create, start, stop, delete, failure actions. Изменения обычно требуют elevation. |
+| `bof-session-view` | bof | Сессии Terminal Services: ID, пользователи, домены, состояние, LUID. |
+| `bof-set-attribute` | bof | Замена значения атрибута. LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-set-delegation` | bof | Замена конфигурации делегирования. LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-set-owner` | bof | Смена владельца объекта. LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-set-password` | bof | Смена пароля пользователя. LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-set-spn` | bof | Замена всех SPN. LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-set-uac` | bof | Установка флагов UAC (замена). LDAP (389) с подписью/шифрованием и LDAPS (636). |
+| `bof-setuserpass` | bof | Пароль указанной учётной записи. |
+| `bof-sha1` | bof | SHA1-хеш файла. |
+| `bof-sha256` | bof | SHA256-хеш файла. |
+| `bof-shadowcreds` | bof | KeyCredential в msDS-KeyCredentialLink, PKINIT, NT-хеш через UnPAC the hash, затем удаление shadow credential. Нужна запись в msDS-KeyCredentialLink. |
+| `bof-sharefolder` | bof | Общая папка с чтением/записью для всех или удаление пустой папки. |
+| `bof-shutdown` | bof | Локальное или удалённое выключение системы. |
+| `bof-signal-key` | bof | Ключи расшифровки БД Signal Desktop на Windows, где Signal установлен и использовался. |
+| `bof-silentchrome` | bof | Тихая установка или откат расширения Chrome/Edge через Preferences и Secure Preferences. Порт SharpSilentChrome. |
+| `bof-silentharvest` | bof | Дамп учётных данных только через реестр: SAM и секреты из HKLM\\SECURITY\\Policy\\Secrets. Достаточно SeBackupPrivilege (без SYSTEM). |
+| `bof-slack-cookie` | bof | Cookie аутентификации Slack из памяти указанного процесса Slack. |
+| `bof-slack-key` | bof | Base64-ключ Slack из %APPDATA%\Slack\Local State для расшифровки cookie. |
+| `bof-sleeper` | bof | SetThreadExecutionState против перехода хоста в сон. |
+| `bof-smbinfo` | bof | Версия удалённой системы через NetWkstaGetInfo: Windows, домен и связанные данные без сканера портов. |
+| `bof-sprayad` | bof | Password spray в AD через LDAP или Kerberos и LogonUserSSPI; пропуск отключённых, заблокированных и с большим BadPwdCount. |
+| `bof-sql-1434udp` | bof | Сведения о подключении SQL Server через SQL Server Browser на UDP 1434. |
+| `bof-sql-adsi` | bof | Учётные данные ADSI с связанного ADSI-сервера. |
+| `bof-sql-agentcmd` | bof | Системная команда через задания SQL Server Agent. |
+| `bof-sql-agentstatus` | bof | Статус SQL Agent и задания на сервере. |
+| `bof-sql-checkrpc` | bof | Связанные серверы и статус RPC. |
+| `bof-sql-clr` | bof | Загрузка и выполнение .NET-сборки в хранимой процедуре через CLR. |
+| `bof-sql-columns` | bof | Столбцы таблицы на SQL-сервере. |
+| `bof-sql-databases` | bof | Базы данных на SQL-сервере. |
+| `bof-sql-impersonate` | bof | SQL-логины с правом impersonation на сервере. |
+| `bof-sql-info` | bof | Сведения об удалённом SQL-сервере. |
+| `bof-sql-links` | bof | Связанные SQL-серверы. |
+| `bof-sql-olecmd` | bof | Системная команда через OLE automation на SQL-сервере. |
+| `bof-sql-query` | bof | Произвольный SQL-запрос на удалённом SQL-сервере. |
+| `bof-sql-rows` | bof | Число строк таблицы на SQL-сервере. |
+| `bof-sql-search` | bof | Поиск имени столбца по таблицам базы. |
+| `bof-sql-smb` | bof | Принуждение NetNTLM с SQL Server через xp_dirtree на UNC listener. |
+| `bof-sql-tables` | bof | Таблицы в базе на SQL-сервере. |
+| `bof-sql-togglemodule` | bof | Включение/отключение RPC, CLR, xp_cmdshell или OLE automation на SQL Server. |
+| `bof-sql-users` | bof | Пользователи с доступом к базе на SQL-сервере. |
+| `bof-sql-whoami` | bof | Вошедший пользователь, mapped user и роли SQL на сервере. |
+| `bof-sql-xpcmd` | bof | Системная команда через xp_cmdshell на SQL-сервере. |
+| `bof-sspi-uac-bypass` | bof | Обход UAC через подделку SSPI datagram context token, impersonation и CreateSvcRpc для службы SYSTEM. |
+| `bof-start-web-client` | bof | Запуск WebClient из пользовательского контекста через service trigger; для WebDAV/PetitPotam coercion. |
+| `bof-static-syscalls-dump` | bof | Unhook NtReadVirtualMemory и дамп памяти через MiniDumpWriteDump. Только x64. |
+| `bof-suspendresume` | bof | Приостановка или возобновление процесса по PID: 1 — suspend, 0 — resume. |
+| `bof-syscallsdump` | bof | Unhook NtReadVirtualMemory и дамп памяти через MiniDumpWriteDump. Только x64. |
+| `bof-tasklist` | bof | Процессы с PID, PPID и CommandLine (WMI). |
+| `bof-teams-cookies` | bof | Cookie Microsoft Teams из процесса ms-teams.exe: ключ шифрования и fileless-загрузка Cookies. |
+| `bof-tgtdeleg` | bof | TGT через злоупотребление GSS API delegation. |
+| `bof-toastnotify` | bof | Toast-уведомления Windows с заимствованными Application User Model ID; стандартные и custom XML с actions и protocol links. |
+| `bof-token-vault` | bof | In-memory хранилище украденных или продублированных access-токенов Windows для повторного использования без повторного duplicate. |
+| `bof-token2cert` | bof | ESC1 через impersonation токена: enrollment, сертификат с произвольным SAN, PKINIT, NT-хеш через UnPAC the hash. Только x64, elevation. |
+| `bof-tray-scout` | bof | Исполняемый файл панели задач и tooltips иконок трея; опционально полные пути host и процессов иконок. |
+| `bof-triage` | bof | Билеты Kerberos в табличном виде. |
+| `bof-unexpire-user` | bof | Учётная запись без срока действия. |
+| `bof-unexpireuser` | bof | Учётная запись без срока действия. |
+| `bof-uptime` | bof | Время загрузки системы и uptime. |
+| `bof-user-idle` | bof | Idle пользователя с последнего ввода и использование GDI/USER в текущем процессе. |
+| `bof-useridletime` | bof | Idle пользователя в секундах, минутах, часах и днях. |
+| `bof-veeam-dumper` | bof | Зашифрованные учётные данные из БД Veeam B&R или Veeam One через sqlcmd/psql, соль из реестра, DPAPI. |
+| `bof-vssenum` | bof | Теневые копии на части Server 2012+. |
+| `bof-wallpaper-enum` | bof | Путь обоев рабочего стола для каждого монитора через IDesktopWallpaper; централизованные обои — сетевые пути и политики. |
+| `bof-wd-toggle` | bof | WDigest и обход Credential Guard: патч wdigest!g_fParameter_UseLogonCredential и wdigest!g_IsCredGuardEnabled в LSASS через direct syscalls. Не переживает перезагрузку; смещения зависят от сборки. |
+| `bof-webcam-bof` | bof | Один кадр с веб-камеры по умолчанию; на диск или через beacon как файл или screenshot. |
+| `bof-wef-detect` | bof | Конфигурация Windows Event Forwarding (централизованное логирование). |
+| `bof-wer-dump` | bof | Дамп защищённого LSASS через WerFaultSecure.exe во временный каталог; дамп как .dll рядом. |
+| `bof-wer-resume` | bof | Возобновление приостановленного lsass.exe перед bof-wer-dump; другой процесс beacon, не WerDump. |
+| `bof-wevt-channel-enum` | bof | Локальные каналы журнала событий с опциональным фильтром подстроки, лимитом вывода и verbose metadata; без фильтра на хостах с сотнями каналов не запускать. |
+| `bof-wevt-logon-enum` | bof | Недавние успешные/неудачные входы (4624, 4625, 4672) через wevtapi: удалённая станция/IP и имя пользователя. Нужно чтение Security (обычно admin/SYSTEM). |
+| `bof-whoami` | bof | whoami /all. |
+| `bof-wi-fi-passwords` | bof | Сохранённые пароли Wi-Fi на локальной системе. |
+| `bof-wifi-dump` | bof | Интерфейсы WiFi и профили с паролями в открытом виде через WlanGetProfile и WLAN_PROFILE_GET_PLAINTEXT_KEY. |
+| `bof-win-version` | bof | Краткий обзор установки Windows через реестр и системные API. |
+| `bof-window-handles-enum` | bof | Дескрипторы окон всех процессов и доступ к буферу обмена через легитимный handle. |
+| `bof-window-list` | bof | Заголовки видимых окон рабочего стола текущего пользователя; опционально PID. |
+| `bof-windowlist` | bof | Видимые окна текущей сессии пользователя. |
+| `bof-winver` | bof | Версия Windows, номер сборки и UBR (Update Build Revision). |
+| `bof-wmi-query` | bof | WMI-запрос; результат в CSV. |
+| `bof-wsc-status` | bof | Состояние Windows Security Center: AntiVirus, Firewall, AntiSpyware, WSC Service, Auto Update, Internet Settings, UAC. |
+| `bof-xpipe` | bof | Активные именованные каналы; опционально владелец и DACL для указанного канала. |
+| `net-abandoned-com-keys` | dotnet | «Брошенные» ключи COM InprocServer32, где DLL больше нет. Persistence через rundll32.exe -sta `\{CLSID\}`. |
+| `net-ad-collector` | dotnet | ADCollector: облегчённое перечисление AD для векторов атаки и понимания конфигурации; высокоценные цели, ACL и атрибуты, не полный перебор. S.DS с DC, S.DS.P для LDAP. |
+| `net-adcspwn` | dotnet | ADCSPwn: эскалация в AD через coercion аутентификации machine account (Petitpotam) и relay к службе сертификатов. |
+| `net-adsearch` | dotnet | Эффективные LDAP-запросы к AD: domain admins, произвольный поиск, LDAPS, JSON, атрибуты из generic-запросов. |
+| `net-certify` | dotnet | C#: перечисление и злоупотребление misconfiguration AD CS — CA, шаблоны, оценка уязвимостей, запрос и загрузка сертификатов. |
+| `net-cheese-dcom` | dotnet | Выполнение команд и lateral movement через DCOM; контекст привилегированного пользователя. MMC20.Application, ShellWindows, ShellBrowserWindow, ExcelDDE, VisioAddonEx, OutlookShellEx, ExcelXLL, VisioExecLine, OfficeMacro; target `.` — локально. |
+| `net-cheese-exec` | dotnet | PsExec-подобное выполнение через создание службы Windows; привилегированный пользователь; create/start/stop/delete/restart удалённой службы. |
+| `net-cheese-ps` | dotnet | PowerShell локально/удалённо через System.Management.Automation.PowerShell, WS Management, обход CLM/AMSI/WLDP, модули, шифрование, reflective PE. Без target — локально; remoting — привилегии. |
+| `net-cheese-rdp` | dotnet | Кража учётных данных RDP через reflective DLL в mstsc.exe; привилегированный пользователь или SeImpersonatePrivilege. На базе RdpThief. |
+| `net-cheese-sql` | dotnet | MSSQL: domain SPN, linked servers, impersonation, xp_cmdshell, OLE, CLR, OPENQUERY. `net-cheese-sql &lt;command&gt; /help` — аргументы по команде. |
+| `net-cimplant` | dotnet | Файлы, реестр, службы, процессы, lateral movement, перечисление системы. Нужен локальный администратор на цели. |
+| `net-com-hunter` | dotnet | COM-серверы в LocalServer32 и InProcServer32 через WMI. |
+| `net-cred-phisher` | dotnet | Запрос учётных данных текущего пользователя через CredUIPromptForWindowsCredentials. |
+| `net-crop` | dotnet | LNK, URL, library-ms или searchConnector-ms на WebDAV; Explorer может аутентифицироваться и отдать NetNTLM Farmer. |
+| `net-driver-query` | dotnet | Загруженные драйверы; опционально только не подписанные Microsoft. |
+| `net-edd` | dotnet | Перечисление домена в духе PowerView: лес, домен, компьютеры, пользователи, цепочки admin discovery, share hunting. |
+| `net-encrypted-zip` | dotnet | Сжатие файла/каталога и AES256 CFB для ZIP; ключ обнуляется RtlZeroMemory. |
+| `net-etw-event-subscription` | dotnet | Подписка на события ETW (как WMI): вход пользователя или старт процесса. |
+| `net-farmer` | dotnet | Локальный WebDAV для сбора NetNTLM в домене Windows через WebDAV Mini Redirector; с Crop или Fertiliser. |
+| `net-fertiliser` | dotnet | Вредоносный field code в Office (.docx) для WebDAV при открытии — NetNTLM на Farmer. |
+| `net-forge-cert` | dotnet | Подделка сертификатов AD с украденным ключом CA (.pfx/.p12); DPERSIST1 из Certified Pre-Owned; .pfx для Rubeus PKINIT или NT hash. |
+| `net-gmsa-password-reader` | dotnet | msDS-ManagedPassword gMSA по LDAP → NTLM-хеши. |
+| `net-god-potato-dotnet` | dotnet | SeImpersonatePrivilege → NT AUTHORITY\SYSTEM через DCOM Potato; Server 2012–2022, Windows 8–11. |
+| `net-gopher` | dotnet | Поиск «лёгких» учётных данных и данных для эскалации на рабочей станции; все проверки без аргументов. |
+| `net-gps-coordinates` | dotnet | GPS (~1 км) при включённых Location Services; Windows 10+. |
+| `net-group3r` | dotnet | GPO AD и misconfiguration: LDAP к DC, файлы GPO из SYSVOL, скрипты, MSI и файлы на шарах. |
+| `net-harvest-crop` | dotnet | Расшифровка AES-логов Farmer при включённом шифровании вывода. |
+| `net-hijack-hunter` | dotnet | PE-заголовок: связанные DLL, уязвимые hijacking, техники злоупотребления. |
+| `net-hook-detector` | dotnet | Хуки Native API в текущем процессе (EDR). Только x64. |
+| `net-implant-ssp` | dotnet | Установка пользовательской SSP DLL для LSA при загрузке; экспорт SpLsaModeInitialize. |
+| `net-inspect-assembly` | dotnet | CIL .NET-сборки: deserializer и .NET remoting для triage эскалации. |
+| `net-internal-monologue` | dotnet | Internal Monologue: NTLM-хеши без LSASS; понижение NetNTLM, impersonation non-network logon, NetNTLMv1 через SSPI/NTLM. |
+| `net-junction-folder` | dotnet | Junction в Startup Windows Accessories (Vault 7); DLL через verclsid.exe. |
+| `net-kee-thief` | dotnet | Key material KeePass 2.x из памяти KeePass.exe через CLR MD, PwDatabase/CompositeKey, RtlEncryptMemory через shellcode. |
+| `net-koh` | dotnet | Koh server: перехват credential material через утечки token/logon session; SSPI; SYSTEM и SeTcbPrivilege для capture. |
+| `net-krb-relay-up` | dotnet | KrbRelay + Rubeus: coercion Kerberos machine account, relay LDAP/ADCS, RBCD/Shadow Credentials/ADCS, служба SYSTEM при слабом LDAP signing. |
+| `net-ldap-sign-check-dotnet` | dotnet | DC и LDAP signing/channel binding для оценки relay; LDAP и LDAPS на каждом DC. |
+| `net-lock-less` | dotnet | Открытые handles и копирование заблокированных файлов через duplicate handle; NtQuerySystemInformation, MapViewOfFile без kill locking process. |
+| `net-mlokit` | dotnet | MLOps Attack Toolkit: REST recon, кража данных/моделей, poisoning, notebooks — Azure ML, BigML, Vertex AI, MLFlow, Palantir, SageMaker. |
+| `net-moriarty` | dotnet | Сканер эскалации (Watson/Sherlock): KB, уязвимости Windows 10/11 и Server 2016/2019/2022. |
+| `net-nopowershell` | dotnet | PowerShell-подобное выполнение без System.Management.Automation.dll in-memory; pipelines, AD, WMI, реестр, сеть, архивы. |
+| `net-pass-the-cert` | dotnet | LDAP/LDAPS Schannel с клиентским сертификатом без PKINIT: эскалация, RBCD, SPN, machine account. |
+| `net-phantom-service` | dotnet | Поиск и опциональное удаление «phantom» служб с non-ASCII, недоступных штатным средствам. |
+| `net-port-bender` | dotnet | Перенаправление локального порта на удалённый хост через beacon. |
+| `net-restricted-admin` | dotnet | Включение/отключение Restricted Admin Mode для RDP pass-the-hash удалённо через WMI StdRegProv (DisableRestrictedAdmin). |
+| `net-rubeus` | dotnet | C# Kerberos: билеты, renew, S4U, golden/silver/diamond, Kerberoast, AS-REP roast, spray, управление билетами. |
+| `net-runas-cs` | dotnet | Запуск под другими учётными данными; альтернатива runas.exe: logon types, UAC bypass, remote I/O, выбор CreateProcess. |
+| `net-safety-katz` | dotnet | LSASS minidump + in-memory Mimikatz (logonpasswords, ekeys), удаление дампа. |
+| `net-sauron-eye` | dotnet | Поиск файлов по ключевым словам на дисках и сетевых ресурсах; содержимое, Office, VBA, regex. |
+| `net-search-outlook` | dotnet | Поиск по всем аккаунтам и папкам Outlook в запущенном экземпляре по ключевому слову. |
+| `net-seatbelt` | dotnet | C# host enumeration: проверки безопасности offensive/defensive; система, пользователь, сеть, credentials. |
+| `net-session-searcher` | dotnet | PuTTY .ppk и RDP-файлы на подключённых дисках; разбор учётных данных. |
+| `net-shadow-spray` | dotnet | Shadow Credentials spray по пользователям и компьютерам домена; GenericWrite/GenericAll, KeyCredentials, PKINIT, UnPACTheHash. |
+| `net-sharp-chrome` | dotnet | Данные Chrome через .NET-сборку. |
+| `net-sharp-cloud` | dotnet | C#: файлы облачных учётных данных AWS, Azure и GCP в профилях пользователей. |
+| `net-sharp-cookie-monster` | dotnet | Cookie всех сайтов, включая httpOnly, secure и session, через remote debugging Chrome/Edge. |
+| `net-sharp-dpapi` | dotnet | DPAPI masterkeys, credentials, vaults, сертификаты, RDG, KeePass, SCCM, Chrome/Edge. |
+| `net-sharp-dump` | dotnet | C# Out-Minidump.ps1: сжатый minidump процесса (по умолчанию LSASS), gzip, удаление сырого дампа. |
+| `net-sharp-edr-checker` | dotnet | C#: процессы, DLL, каталоги, службы, драйверы AV/EDR, в т.ч. скрытые по metadata. |
+| `net-sharp-exec` | dotnet | C# lateral movement: PSExec, WMI, WMIExec, SMBExec; удалённое выполнение и полуинтерактивные shell. |
+| `net-sharp-exfiltrate` | dotnet | Модульная exfiltration файлов/каталогов через доверенные облачные каналы; сжатие и шифрование; фильтры расширений и размера. |
+| `net-sharp-gpo-abuse` | dotnet | Злоупотребление правами редактирования GPO: user rights, локальные админы, logon/startup scripts, immediate scheduled tasks. |
+| `net-sharp-hide` | dotnet | Persistence: скрытые Run-ключи реестра через NtSetValueKey с null-byte в UNICODE_STRING имени значения. |
+| `net-sharp-hound` | dotnet | Сборщик BloodHound: пользователи, группы, сессии, ACL, trusts, GPO, AD CS для BloodHound CE. |
+| `net-sharp-hound3` | dotnet | Устаревший ingestor BloodHound; несовместим с BloodHound 4.1+. |
+| `net-sharp-katz` | dotnet | Credentials из LSASS, DCSync, pass-the-hash, Zerologon, PrintNightmare, HiveNightmare. |
+| `net-sharp-laps` | dotnet | Пароли LAPS из ms-mnet-AdmPwd; ExtendedRight/GenericAll на компьютер или Domain Admin. |
+| `net-sharp-map-exec` | dotnet | CrackMapExec-подобный инструмент: Kerberos и NTLM через CIM, Reg32, SMB, WinRM, LDAP, spray. |
+| `net-sharp-move` | dotnet | Аутентифицированное удалённое выполнение: WMI, SCM, DCOM, Task Scheduler, hijack DLL службы, hijack DCOM server, правка служб и задач. |
+| `net-sharp-no-ps-exec` | dotnet | Fileless lateral movement: временная подмена binary path остановленной LocalSystem-службы, payload, восстановление через 5 с. |
+| `net-sharp-persist` | dotnet | Persistence: реестр, задачи, LNK в Startup, KeePass backdoor, службы, Tortoise SVN hooks, backdoor задач; add/remove/check/list. |
+| `net-sharp-printer` | dotnet | Консольная ListNetworks: сетевые принтеры в контексте текущего пользователя. |
+| `net-sharp-rdp` | dotnet | RDP: удалённое выполнение через Run (Win+R). |
+| `net-sharp-rdp-hijack` | dotnet | PoC hijack RDP: WTSConnectSession и WTSDisconnectSession для отключённых интерактивных сессий. |
+| `net-sharp-roast` | dotnet | Service tickets и TGS-хеши для hashcat. |
+| `net-sharp-sccm` | dotnet | Post-exploitation SCCM/MECM: lateral movement, credentials, client push для NTLM coercion. |
+| `net-sharp-sec-dump` | dotnet | .NET secretsdump.py: удалённый/локальный SAM и LSA Secrets по RPC. |
+| `net-sharp-shares` | dotnet | Многопоточный перебор доступных сетевых шар: LDAP-цели, read/write. |
+| `net-sharp-smb-exec` | dotnet | Команды по SMB с NTLM hash (pass-the-hash). |
+| `net-sharp-sphere` | dotnet | vSphere: VMware Tools и Web Services API — execution, файлы, memory dump на гостях. |
+| `net-sharp-stay` | dotnet | Persistence elevated/non-elevated: реестр, задачи, службы, WMI events, COM handler hijack, LNK backdoors. |
+| `net-sharp-token-finder` | dotnet | Plain text токены M365 Desktop Office для компрометации M365-личности. |
+| `net-sharp-up` | dotnet | Аудит типичных misconfiguration LPE на локальной системе. |
+| `net-sharp-view` | dotnet | .NET PowerView: домен, ACL, шары, сессии, Kerberoasting. |
+| `net-sharp-wifi-grabber` | dotnet | Пароли WiFi в открытом виде из всех WLAN-профилей; Win32 WLAN API. |
+| `net-sharp-wmi` | dotnet | C# WMI: локально/удалённо, процессы, VBS через event subscriptions, upload, firewall, управление процессами. |
+| `net-sharp-wsus` | dotnet | Lateral movement через WSUS: создание, одобрение и развёртывание вредоносных обновлений. |
+| `net-sharpsh` | dotnet | C# PowerShell через RunspaceFactory: encoded commands, remote script, clipboard; inline assembly. |
+| `net-sigma-potato` | dotnet | GodPotato для service account → SYSTEM: disk, reflection, PowerShell, reverse shell. |
+| `net-snaffler` | dotnet | Обход файловых шар AD в поисках credentials и чувствительных файлов по правилам и regex. |
+| `net-sql-recon` | dotnet | Offensive recon и post-exploitation SQL Server: enumeration, impersonation, linked server, SCCM modules. |
+| `net-stand-in` | dotnet | AD post-exploitation: LDAP, ACL, Kerberoast, ASREP, delegation, GPO, ADCS, machine accounts. |
+| `net-sweet-potato` | dotnet | Native LPE service account → SYSTEM: RottenPotato, JuicyPotato, PrintSpoofer, EfsRpc. |
+| `net-unquoted-path` | dotnet | Некавычённые пути служб вне System32/SysWow64 для planting PE (T1034). |
+| `net-webdav-status` | dotnet | Многопоточная проверка Web Client через DAV RPC SERVICE; учётные данные, не admin на цели. |
+| `net-winpeas` | dotnet | WinPEAS: misconfiguration, службы, credentials, AV/EDR, сеть, AD, векторы LPE. |
+| `net-winrmdll` | dotnet | Команды на удалённых хостах через WinRM. |

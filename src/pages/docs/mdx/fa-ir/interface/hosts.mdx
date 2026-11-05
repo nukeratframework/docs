@@ -1,0 +1,32 @@
+---
+title: نشست‌ها
+---
+
+import { MonitorIcon } from 'lucide-react';
+import hosts from '@/assets/img/tutorial/hosts.png';
+import hostsInfo from '@/assets/img/tutorial/hosts_01.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+تب **Sessions** راه اصلی پایش sessionهای متصل به هر team server پیکربندی‌شده است.
+
+می‌توانید تب **Sessions** را از <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">آیکون <MonitorIcon size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> در نوار بالا</span>، یا از **Tabs** > **Sessions** باز کنید.
+
+<ImageZoom src={hosts} alt="Sessions" className="tutorial_img" />
+
+با باز کردن تب، sessionهای همهٔ team serverهای پیکربندی‌شده به‌صورت خودکار فهرست می‌شوند؛ نیازی به انتخاب team server نیست.
+
+برای جستجوی راحت‌تر از فیلد **Filter sessions...** بالای تب برای فیلتر روی هر رشته در اطلاعات session استفاده کنید.
+
+## اطلاعات session
+
+برای دیدن همهٔ اطلاعات session، روی ردیف session دوبار کلیک کنید تا پنل کناری با جزئیات بیشتر باز شود.
+
+<ImageZoom src={hostsInfo} alt="Sessions Info" className="tutorial_img" />
+
+همان پنل فیلد یادداشت دارد؛ می‌توانید یادداشت مرتبط با session بنویسید. **Save** را بزنید تا یادداشت ذخیره شود. هر اپراتوری که به team server دسترسی دارد می‌تواند آن یادداشت‌ها را بخواند.
+
+## حذف session
+
+برای حذف session، ردیف را انتخاب کنید و **Remove** را بزنید.
+
+**مهم**: پیش از حذف مطمئن شوید implant دیگر روی میزبان در حال اجرا نیست؛ وگرنه session دوباره اضافه می‌شود. نکته: در ترمینال دستور `kill` را بزنید تا implant میزبان متوقف شود.

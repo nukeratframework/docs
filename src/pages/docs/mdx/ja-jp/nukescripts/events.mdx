@@ -1,0 +1,279 @@
+---
+title: イベント
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+
+NukeScript でイベント呼び出しを設定することは、スクリプトを実行するために必須です。そのため、すべてのスクリプトには少なくとも 1 つのイベント呼び出しが必要です。
+
+イベント呼び出しの形式は `event.<name>:my_function()` です。
+
+- `event`: イベント呼び出しの開始を示す予約語
+- `<name>`: イベント名
+- `my_function()`: イベント発火時に実行される関数
+
+例:
+
+```python
+def on_new_host(row):
+    cmd(row["tag"], "whoami")
+
+event.new_host:on_new_host()
+```
+
+イベントから最初に呼ばれる関数をイベントエントリポイント関数と呼び、特定の構文ルールがあります。
+
+1. エントリポイント呼び出しに引数を渡してはいけません
+2. エントリポイント関数はデフォルトでパラメータを 1 つだけ持つべきです（任意の名前でよいが、ここでは `row` をデフォルトとする）
+3. すべての `event.<name>:handler()` 行は、他のコードの後、スクリプトの末尾に置く必要があります
+
+以下は構文が誤っている例です。
+
+```python
+def on_new_host(row, some_parameter):
+    cmd(row["tag"], "whoami")
+
+event.new_host:on_new_host("example")
+```
+
+エントリポイント関数の主パラメータには、常にイベント内容を含む辞書が渡されます。これは単にイベントをトリガーしたデータベース行です。
+
+辞書の中身を理解するにはデータベース列レイアウトを知るとよいです。詳細は [データベース列](#データベース列) を参照してください。
+
+## イベント一覧
+
+利用可能なイベント:
+
+| イベント | 説明 | キー |
+| --- | --- | --- |
+| `new_host` | 初回チェックイン | `tag`, `ip`, `external_ip`, `listener`, `arch`, `os`, `user`, `hostname`, `status`, `delay`, `first_seen`, `last_seen`, `next_checkin`, … |
+| `removed_host` | チームサーバーからホスト削除 | `new_host` と同じキー |
+| `expired_host` | チェックインウィンドウを逃したホスト | `new_host` と同じキー |
+| `new_queue_line` | インプラント実行前にキューに入ったタスク | `tag`, `host`, `type`, `command`, `input`, `parameters`, `is_completed`, `is_ready`, … |
+| `implant_error` | キュータスク失敗 | 空でない `error` を含む |
+| `task_completed` | エラーなくキュータスク完了 | 完了時 `is_completed`, カスタムメッセージ時 `custom_response` |
+| `new_checkin` | 新規チェックイン | `tag`, `host`, `type` |
+| `keylogger_update` | キーロガー更新 | `tag`, `content`, `host_tag` |
+| `folders_update` | フォルダエクスプローラーの挿入または更新 | `host`, `path`, `type`, `modified`, `size` |
+| `process_update` | プロセスツリーの挿入または更新 | `tag`, `host`, `tree` |
+| `output_received` | 新規ターミナル出力 | `terminal_id`, `host`, `input`, `output` |
+| `credentials_update` | 新規保存資格情報 | `tag`, `name`, `host`, `content` |
+| `listeners_update` | 新規リスナー挿入 | `tag`, `type`, `protocol`, `config` |
+| `heartbeat_1s` | 1 秒ごとに実行 | |
+| `heartbeat_5s` | 5 秒ごとに実行 | |
+| `heartbeat_10s` | 10 秒ごとに実行 | |
+| `heartbeat_15s` | 15 秒ごとに実行 | |
+| `heartbeat_30s` | 30 秒ごとに実行 | |
+| `heartbeat_1m` | 1 分ごとに実行 | |
+| `heartbeat_5m` | 5 分ごとに実行 | |
+| `heartbeat_10m` | 10 分ごとに実行 | |
+| `heartbeat_15m` | 15 分ごとに実行 | |
+| `heartbeat_20m` | 20 分ごとに実行 | |
+| `heartbeat_30m` | 30 分ごとに実行 | |
+| `heartbeat_60m` | 60 分ごとに実行 | |
+| `heartbeat_2h` | 2 時間ごとに実行 | |
+| `heartbeat_12h` | 12 時間ごとに実行 | |
+| `heartbeat_1d` | 1 日ごとに実行 | |
+| `heartbeat_3d` | 3 日ごとに実行 | |
+| `heartbeat_7d` | 7 日ごとに実行 | |
+| `heartbeat_15d` | 15 日ごとに実行 | |
+| `heartbeat_30d` | 30 日ごとに実行 | |
+
+## データベース列
+
+NukeScript イベントをトリガーするテーブルの列レイアウトは以下のとおりです。
+
+<Tabs className="api-tabs api-schema-tabs" items={['hosts', 'queue', 'checkins', 'terminal', 'keylogger', 'folders', 'process', 'credentials', 'listeners']}>
+  <Tab value="hosts">
+    <table className="api-schema-table" style={{ borderCollapse: 'collapse', width: '100%' }}>
+      <thead>
+        <tr>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>列</th>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>型</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style={{ padding: '8px 12px' }}><code>id</code></td><td style={{ padding: '8px 12px' }}>INTEGER</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>tag</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>ip</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>host_server</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>host_port</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>external_ip</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>listener</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>privilege</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>relays</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>notes</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>process</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>pid</code></td><td style={{ padding: '8px 12px' }}>INTEGER</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>arch</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>os</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>user</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>hostname</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>info</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>first_seen</code></td><td style={{ padding: '8px 12px' }}>DATETIME</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>last_seen</code></td><td style={{ padding: '8px 12px' }}>DATETIME</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>last_activity</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>next_checkin</code></td><td style={{ padding: '8px 12px' }}>DATETIME</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>delay</code></td><td style={{ padding: '8px 12px' }}>INTEGER</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>status</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>implant_config</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>created_at</code></td><td style={{ padding: '8px 12px' }}>DATETIME</td></tr>
+      </tbody>
+    </table>
+  </Tab>
+  <Tab value="queue">
+    <table className="api-schema-table" style={{ borderCollapse: 'collapse', width: '100%' }}>
+      <thead>
+        <tr>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>列</th>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>型</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style={{ padding: '8px 12px' }}><code>id</code></td><td style={{ padding: '8px 12px' }}>INTEGER</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>tag</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>host</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>type</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>command</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>input</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>parameters</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>is_completed</code></td><td style={{ padding: '8px 12px' }}>INTEGER</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>error</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>custom_response</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>captured</code></td><td style={{ padding: '8px 12px' }}>INTEGER</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>created_at</code></td><td style={{ padding: '8px 12px' }}>DATETIME</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>nukescript_trigger</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>is_ready</code></td><td style={{ padding: '8px 12px' }}>INTEGER</td></tr>
+      </tbody>
+    </table>
+  </Tab>
+  <Tab value="checkins">
+    <table className="api-schema-table" style={{ borderCollapse: 'collapse', width: '100%' }}>
+      <thead>
+        <tr>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>列</th>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>型</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style={{ padding: '8px 12px' }}><code>id</code></td><td style={{ padding: '8px 12px' }}>INTEGER</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>tag</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>host</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>type</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>created_at</code></td><td style={{ padding: '8px 12px' }}>DATETIME</td></tr>
+      </tbody>
+    </table>
+  </Tab>
+  <Tab value="terminal">
+    <table className="api-schema-table" style={{ borderCollapse: 'collapse', width: '100%' }}>
+      <thead>
+        <tr>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>列</th>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>型</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style={{ padding: '8px 12px' }}><code>id</code></td><td style={{ padding: '8px 12px' }}>INTEGER</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>terminal_id</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>tag</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>host</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>input</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>output</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>timestamp</code></td><td style={{ padding: '8px 12px' }}>DATETIME</td></tr>
+      </tbody>
+    </table>
+  </Tab>
+  <Tab value="keylogger">
+    <table className="api-schema-table" style={{ borderCollapse: 'collapse', width: '100%' }}>
+      <thead>
+        <tr>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>列</th>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>型</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style={{ padding: '8px 12px' }}><code>id</code></td><td style={{ padding: '8px 12px' }}>INTEGER</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>tag</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>content</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>host_tag</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>created_at</code></td><td style={{ padding: '8px 12px' }}>DATETIME</td></tr>
+      </tbody>
+    </table>
+  </Tab>
+  <Tab value="folders">
+    <table className="api-schema-table" style={{ borderCollapse: 'collapse', width: '100%' }}>
+      <thead>
+        <tr>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>列</th>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>型</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style={{ padding: '8px 12px' }}><code>id</code></td><td style={{ padding: '8px 12px' }}>INTEGER</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>host</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>path</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>type</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>modified</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>size</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>created_at</code></td><td style={{ padding: '8px 12px' }}>DATETIME</td></tr>
+      </tbody>
+    </table>
+  </Tab>
+  <Tab value="process">
+    <table className="api-schema-table" style={{ borderCollapse: 'collapse', width: '100%' }}>
+      <thead>
+        <tr>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>列</th>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>型</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style={{ padding: '8px 12px' }}><code>id</code></td><td style={{ padding: '8px 12px' }}>INTEGER</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>tag</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>host</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>tree</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>created_at</code></td><td style={{ padding: '8px 12px' }}>DATETIME</td></tr>
+      </tbody>
+    </table>
+  </Tab>
+  <Tab value="credentials">
+    <table className="api-schema-table" style={{ borderCollapse: 'collapse', width: '100%' }}>
+      <thead>
+        <tr>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>列</th>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>型</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style={{ padding: '8px 12px' }}><code>id</code></td><td style={{ padding: '8px 12px' }}>INTEGER</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>tag</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>name</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>server</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>host</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>content</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>description</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>created_at</code></td><td style={{ padding: '8px 12px' }}>DATETIME</td></tr>
+      </tbody>
+    </table>
+  </Tab>
+  <Tab value="listeners">
+    <table className="api-schema-table" style={{ borderCollapse: 'collapse', width: '100%' }}>
+      <thead>
+        <tr>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>列</th>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>型</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style={{ padding: '8px 12px' }}><code>id</code></td><td style={{ padding: '8px 12px' }}>INTEGER</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>tag</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>type</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>protocol</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>config</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>key_pem</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>cert_pem</code></td><td style={{ padding: '8px 12px' }}>TEXT</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>created_at</code></td><td style={{ padding: '8px 12px' }}>DATETIME</td></tr>
+      </tbody>
+    </table>
+  </Tab>
+</Tabs>

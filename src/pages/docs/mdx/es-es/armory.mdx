@@ -1,0 +1,576 @@
+---
+title: Armory
+---
+
+Armory es un conjunto listo para usar de 543 utilidades (BOF y ejecutables .NET) para que puedas descargarlas y ejecutarlas rápidamente en un host concreto.
+
+Todas las utilidades se descargan del repositorio oficial de armory de NukeRat en [**github.com/nukeratframework/armory**](https://github.com/nukeratframework/armory)
+
+Se descargan precompiladas automáticamente, pero también puedes compilarlas manualmente. Para ello puedes:
+
+1. Compilarlas y añadirlas manualmente a la carpeta `server/infra/bin/armory/`
+2. Establecer el valor `repository` bajo `[server.armory]` en `server/server.conf` para que apunte a tu propio host de releases de GitHub
+
+## Comandos
+
+Por defecto, NukeRat no incluye binarios de armory precompilados. Usa los comandos de armory para instalarlos en el team server:
+
+| Comando | Acción |
+| --- | --- |
+| `armory` | Listar utilidades disponibles y descripciones breves |
+| `armory install all` | Descargar todas las utilidades del último bundle de release |
+| `armory install &lt;tool&gt;` | Descargar archivos de una utilidad |
+| `armory update` | Actualizar el índice de armory (`armory.json`) desde el repositorio |
+| `armory update &lt;tool&gt;` | Actualizar el índice y volver a descargar una utilidad |
+| `armory remove &lt;tool&gt;` | Eliminar archivos en caché de esa utilidad |
+| `help &lt;command&gt;` | Mostrar ayuda de un comando de utilidad |
+
+## Catálogo
+
+A continuación está la lista completa de las 543 utilidades de armory. Los nombres coinciden con el comando de terminal que pasas a `armory install`:
+
+| Nombre | Categoría | Desc |
+| --- | --- | --- |
+| `bof-aadjoininfo` | bof | Muestra información de unión a Azure AD o Entra ID del dispositivo. |
+| `bof-adnet-enum` | bof | Enumera Active Directory Certificate Services. |
+| `bof-adnet-enum-com2` | bof | Enumera CAs y plantillas en AD usando el objeto COM IX509PolicyServerListManager. |
+| `bof-adnet-on-behalf` | bof | Solicita un certificado de inscripción AD CS en nombre de otro usuario usando un certificado de agente de inscripción con extensión XCN_OID_ENROLLMENT_AGENT. |
+| `bof-add-ace` | bof | Añade ACE al DACL del objeto. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-add-attribute` | bof | Añade o concatena un valor de atributo. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-add-computer` | bof | Crea un nuevo objeto de equipo. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-add-defender-excl` | bof | Añade exclusiones de Windows Defender mediante la clase WMI MSFT_MpPreference usando COM. |
+| `bof-add-delegation` | bof | Establece o reemplaza SPNs de delegación. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-add-exclusion` | bof | Añade una nueva exclusión en Windows Defender para carpeta, archivo, proceso o extensión. |
+| `bof-add-firewall-rule` | bof | Añade una regla de firewall entrante o saliente usando COM. |
+| `bof-add-group` | bof | Crea un nuevo grupo. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-add-groupmember` | bof | Añade un usuario a un grupo. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-add-local-cert` | bof | Añade un certificado (autofirmado) a un almacén de certificados local concreto. Por ejemplo, añadir un certificado autofirmado —con el que también firmaste tu binario malicioso— a la carpeta \"Trusted Root Certification Authorities\" (ROOT) del equipo local objetivo. |
+| `bof-add-machine-account` | bof | Abusa de la cuota por defecto de cuentas de equipo de Active Directory (ms-DS-MachineAccountQuota) para añadir cuentas de equipo rogue para ataques posteriores. |
+| `bof-add-ou` | bof | Crea una unidad organizativa. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-add-rbcd` | bof | Configura delegación RBCD. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-add-sidhistory` | bof | Añade SID a sidHistory. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-add-spn` | bof | Añade ServicePrincipalName. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-add-uac` | bof | Añade flag UserAccountControl. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-add-user` | bof | Crea un nuevo objeto de usuario. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-add-user-by-samr` | bof | Añade un usuario a un grupo local por SAMR. Requiere privilegios de administrador. No usar en Active Directory. |
+| `bof-adduser` | bof | Añade un usuario local o remoto. |
+| `bof-adduser-to-group` | bof | Añade un usuario a un grupo. |
+| `bof-addusertogroup` | bof | Añade el usuario indicado al grupo de dominio indicado. |
+| `bof-adv-audit-policies` | bof | Obtiene políticas avanzadas de auditoría de seguridad. |
+| `bof-ai-surface` | bof | Mapea herramientas de IA en endpoints de desarrollo Windows y destaca artefactos de agentes de IA y MCP listos para triage que pueden exponer datos de flujo de trabajo, estado local y credenciales. |
+| `bof-allow-firewall-rule` | bof | Añade regla de permitir firewall entrante o saliente. |
+| `bof-amsi-etw-detect` | bof | Comprueba presencia de AMSI y ETW en el proceso actual detectando DLLs cargadas y exports relacionados con ETW. Útil para elegir objetivos con menos actividad de seguridad. |
+| `bof-app-count` | bof | Cuenta aplicaciones instaladas vía registro, elimina duplicados e imprime. Aplicado a muchos beacons, permite inferir un dispositivo por diferencias en el recuento de apps. |
+| `bof-applocker-policy` | bof | Enumera configuraciones de política AppLocker, colecciones de reglas y modos de aplicación escaneando claves de registro relevantes. |
+| `bof-arp` | bof | Lista la tabla ARP. |
+| `bof-ask-mfa` | bof | Muestra un diálogo falso de aprobación de Microsoft Authenticator con el número indicado. El diálogo se cierra solo tras 30 segundos. |
+| `bof-askcreds` | bof | Recoge credenciales con CredUIPromptForWindowsCredentialsName. Se ejecuta en un hilo y espera hasta 60 segundos entrada del usuario. El beacon no responde durante la espera. |
+| `bof-asktgs` | bof | Solicita un ticket de servicio desde un TGT. |
+| `bof-asktgt` | bof | Solicita un TGT con contraseña, hash o sin preauth. |
+| `bof-asr-status` | bof | Enumera reglas Attack Surface Reduction (ASR) de Windows Defender desde ubicaciones del registro para identificar reglas configuradas, estado de aplicación (Block/Audit/Warn/Disabled) y origen de política (Intune/MDM vs Group Policy). |
+| `bof-asrenum` | bof | Identifica reglas ASR, acciones y ubicaciones de exclusión consultando MSFT_MpPreference vía WMI. Requiere contexto elevado. |
+| `bof-asreproasting` | bof | Solicita AS-REP para usuarios sin preautenticación Kerberos. |
+| `bof-authenticate-http` | bof | Puede forzar una petición HTTP autenticada por Windows desde el contexto del usuario actual hacia un servidor (ntlmrelayx) para un ataque de relay (LDAP) autenticado. |
+| `bof-backup-priv-sam` | bof | Abusa SeBackupPrivilege vía registro remoto para volcar hives SAM, SYSTEM y SECURITY de un sistema remoto. |
+| `bof-bitlocker-status` | bof | Enumera estado de cifrado BitLocker, configuraciones de política y ubicaciones de backup de clave de recuperación escaneando claves de registro. |
+| `bof-c-enumerate-defender` | bof | Enumera exclusiones de Windows Defender vía WMI. Requiere contexto de beacon elevado. |
+| `bof-cacls` | bof | Lista permisos de usuario para el archivo indicado; admite comodines. |
+| `bof-capture-net-ntlm` | bof | Captura el hash NetNTLMv2 del usuario actual simulando un intercambio de autenticación NTLM entre cliente y servidor. |
+| `bof-cdp-enable` | bof | Habilita Chrome DevTools Protocol en Chrome o Edge x64 en ejecución. Resuelve símbolos internos del navegador en runtime e inicia el servidor de depuración remota en el hilo UI del navegador. Solo x64. |
+| `bof-cdp-enable-iso` | bof | Habilita Chrome DevTools Protocol en Chrome x64 en ejecución con aislamiento de procesos de Windows. Usa consultas de handles limitados al proceso aislado y resuelve símbolos desde chrome.dll local. Solo x64. |
+| `bof-certstore-loot` | bof | Enumera almacenes de certificados locales para encontrar certificados con claves privadas exportables y proporciona la ruta para exportarlos. |
+| `bof-change-pass` | bof | Establece la contraseña de un usuario en host local o remoto. |
+| `bof-changepw` | bof | Cambia la contraseña de un usuario vía kpasswd. |
+| `bof-chrome-key` | bof | Descifra la clave Chrome codificada en base64 de Local State para descifrar cookies del navegador offline. |
+| `bof-chromium-key-dump` | bof | Vuelca la master key de Chrome/Edge y descarga archivos Cookie/Login Data del perfil del navegador. |
+| `bof-cicd-credential-hunt` | bof | Encuentra artefactos habituales de credenciales CI/CD, cloud y de desarrollador en el perfil de usuario Windows actual. Por defecto informa ruta y tamaño. .gitconfig y .ssh/config se clasifican como configuración, no como credenciales. |
+| `bof-clipboard-grab` | bof | Obtiene texto del portapapeles de Windows con APIs Win32 y devuelve el contenido al callback. |
+| `bof-clipboard-monitor` | bof | BOF asíncrono que monitoriza cambios del portapapeles con GetClipboardSequenceNumber e imprime contenido al detectar cambio. Captura texto e imagen (imágenes como BMP base64 en modo sync). Recuperación de imagen solo en modo sync. |
+| `bof-clipboard-steal` | bof | Habilitar, deshabilitar, comprobar y volcar el historial del portapapeles de Windows. |
+| `bof-cloud-metadata-check` | bof | Sondea servicios locales de metadatos cloud de AWS, Azure y GCP desde el proceso actual, informando identidad del proveedor, contexto de instancia y fragmentos acotados de credenciales cuando son alcanzables. |
+| `bof-cloudap-bof` | bof | Extrae cookies SSO de Entra ID, cookies SSO de dispositivo, cookies SSO empresariales AD FS y estado del proveedor cloud vía LsaCallAuthenticationPackage. Requiere dispositivo unido a Entra ID/Azure AD con sesión cloud activa. |
+| `bof-com-probe` | bof | Comprueba si un objeto COM puede instanciarse desde un CLSID dado. Prueba in-process primero y cae en local server. |
+| `bof-contact-harvester` | bof | Recolecta contactos de la libreta global de Outlook vía COM. |
+| `bof-cookie-graber` | bof | Extrae claves maestras de cifrado WebKit de Local State de Chrome y Edge vía DPAPI. Vuelca primero clave Edge, luego Chrome. Usa la clave maestra con CookieProcessor.exe offline para descifrar cookies de la base en disco. |
+| `bof-cookie-monster` | bof | Roba cookies y logins de Chrome, Edge y Firefox. Extrae clave maestra WebKit y clave App Bound, duplica handles a Cookies y Login Data para descarga sin archivo. Admite descifrado de clave en modo SYSTEM sin inyección en el navegador. Usa decrypt.py offline en bases descargadas. |
+| `bof-cred-man` | bof | Vuelca Windows Credential Manager abusando SeTrustedCredManAccess. Roba token de winlogon.exe para activar el privilegio. Requiere privilegios de administrador. |
+| `bof-cred-prompt` | bof | Inicia el prompt de credenciales de Windows para capturar credenciales del usuario. Las credenciales introducidas se devuelven como salida. El prompt es persistente: la víctima no puede cancelar/cerrar ni dejar contraseña vacía; cualquier intento aparece en la salida. Finalmente se programa un temporizador para que el beacon responda en algún momento. |
+| `bof-credui` | bof | Invoca el prompt de credenciales con CredUIPromptForWindowsCredentials y verifica la credencial enviada con LogonUser. |
+| `bof-cross-s4u` | bof | Realiza abuso de delegación restringida S4U entre dominios. |
+| `bof-cryptvortex` | bof | Cifra o descifra archivos en un directorio. |
+| `bof-curl` | bof | Realiza peticiones HTTP sin establecer proxy SOCKS. |
+| `bof-cve-2022-26923` | bof | Explotación de escalada de privilegios de dominio AD CS CVE-2022-26923. Basada en AddMachineAccount con cambios en dNSHostName y servicePrincipalName. |
+| `bof-dcom-local-server32` | bof | Instancia una clase DCOM/COM por CLSID en un host designado, lanzando el servidor EXE out-of-process asociado en un proceso separado. Centrándose en EXE susceptibles a DLL o COM hijacking y con permiso de escritura en directorios de carga de módulos, se logra ejecución de código (remota). Técnica útil para movimiento lateral. |
+| `bof-dcompotato-notify` | bof | Obtiene privilegio SYSTEM con SeImpersonate pasando un objeto IUnknown malicioso a la llamada DCOM PrintNotify. |
+| `bof-defender-exclusions` | bof | Lista rutas, procesos y extensiones excluidos de Windows Defender desde el registro. |
+| `bof-del-exclusion` | bof | Elimina una exclusión de Windows Defender para carpeta, archivo, proceso o extensión. |
+| `bof-del-firewall-rule` | bof | Elimina una regla de firewall usando COM. |
+| `bof-del-local-cert` | bof | Elimina un certificado de equipo local de un almacén indicado por su thumbprint único. |
+| `bof-del-machine-account` | bof | Elimina una cuenta de equipo rogue creada en Active Directory. |
+| `bof-del-task-scheduler` | bof | Elimina una tarea programada en el sistema actual o un host remoto. |
+| `bof-describe` | bof | Analiza y describe un ticket Kerberos. |
+| `bof-detect-hooks` | bof | Detecta hooks inline en el proceso actual escaneando funciones Nt y Zw exportadas de ntdll en busca de patrones de instrucción inesperados. |
+| `bof-dir` | bof | Lista archivos en un directorio. Admite comodines (p. ej. \"C:\\Windows\\S*\"), a diferencia del comando `ls` de CobaltStrike. |
+| `bof-disableuser` | bof | Deshabilita la cuenta de usuario indicada en el equipo objetivo. |
+| `bof-dll-env-hijacking` | bof | Crea una estructura de archivos oculta, mueve una DLL proxy maliciosa ya en disco a una nueva carpeta system32, oculta la DLL proxy, modifica la variable de entorno SYSTEMROOT, ejecuta el binario vulnerable como proceso suplantado para cargar la DLL maliciosa y restaura SYSTEMROOT para que el beacon siga funcionando. |
+| `bof-dll-hijack-hunter` | bof | Recorre el orden de resolución SafeDllSearchMode desde una ruta y nombre de DLL dados. Opcionalmente comprueba si un archivo coincidente se puede abrir con acceso de escritura. |
+| `bof-domaininfo` | bof | Enumera información de dominio con Active Directory Domain Services. |
+| `bof-draugr` | bof | Stack spoofing Draugr con indirect syscalls. Asigna memoria vía NtAllocateVirtualMemory, carga User32.dll y llama MessageBoxA con marcos de pila sintéticos. |
+| `bof-driversigs` | bof | Enumera ImagePath de servicios instalados para comparar el certificado de firma con vendors AV/EDR conocidos. |
+| `bof-dropspawn` | bof | Crea un proceso nuevo dejando una DLL proxy en disco y suplantando el directorio de aplicación del orden de búsqueda DLL. Soporta x86, x64 y spawn cross-architecture. La DLL soltada debe borrarse tras cargarla el nuevo proceso. |
+| `bof-dump` | bof | Extrae tickets Kerberos de sesiones de logon. |
+| `bof-dump-procargs` | bof | Vuelca argumentos de línea de comandos del proceso desde el PEB. |
+| `bof-edgedump` | bof | Extrae artefactos de credenciales guardadas de Edge desde la memoria del proceso msedge.exe principal. Escanea regiones legibles en busca de patrones de credenciales. No lee archivos del navegador, SQLite ni usa DPAPI. El mismo contexto de usuario puede leer Edge del usuario actual; contexto elevado puede leer Edge en sesiones logueadas. |
+| `bof-elevate-trusted` | bof | Eleva el beacon actual a SYSTEM y obtiene el privilegio de grupo TrustedInstaller mediante impersonation SetThreadToken. |
+| `bof-enableuser` | bof | Habilita y desbloquea la cuenta de usuario indicada en el equipo objetivo. |
+| `bof-entra-authcode-flow` | bof | Obtiene tokens de acceso y refresh de Microsoft Entra lanzando un navegador con URL de flujo OAuth authorization code. Mantiene el intercambio de tokens en el endpoint y puede sortear políticas de acceso condicional. Cómo funciona: 1. Abre pestaña con URL OAuth 2. Monitoriza títulos de ventana del redirect con el código 3. Intercambia el código por tokens. |
+| `bof-enum-active-hosts` | bof | Enumera hosts activos o verifica un único puerto abierto. Acepta lista con hostnames o IP predefinidos cargada desde tu cliente operador. |
+| `bof-enum-dll-sideloading` | bof | Enumera un .EXE, carpeta o todas las carpetas recursivamente para identificar sideloading DLL en ejecutables. |
+| `bof-enum-drives` | bof | Enumera letras de unidad y tipo. |
+| `bof-enum-exclusions` | bof | Enumera archivos, carpetas, extensiones y procesos excluidos en Windows Defender. |
+| `bof-enum-files` | bof | Busca archivos coincidentes por palabra, extensión o palabra clave en el contenido. Admite comodines. |
+| `bof-enum-filter-driver` | bof | Enumera filter drivers. |
+| `bof-enum-handles` | bof | Enumera tipos de handle `process` y `thread` entre procesos. |
+| `bof-enum-lib` | bof | Encuentra un módulo cargado concreto en todos los procesos o lista todos los módulos de un proceso. |
+| `bof-enum-local-cert` | bof | Lista todos los certificados de equipo local de un almacén. Nombres habituales: ROOT, MY, TRUST, CA, USERDS, AuthRoot, Disallowed. |
+| `bof-enum-local-sessions` | bof | Enumera sesiones de usuario conectadas localmente y por RDP. |
+| `bof-enum-sec-products` | bof | Devuelve productos de seguridad AV/EDR en ejecución en el host local o remoto comparando procesos con una lista fija de 130 productos. |
+| `bof-enum-shares` | bof | Lista recursos compartidos del dominio y nivel de acceso con hostnames/IP predefinidos. Comprobación TCP/445 rápida para omitir hosts offline y comprobaciones discretas de atributos. |
+| `bof-enum-task-scheduler` | bof | Enumera y lista información básica de todas las tareas programadas en la carpeta raíz. |
+| `bof-enum-web-client` | bof | Enumera hosts con el servicio WebClient en ejecución usando hostnames o IP predefinidos. La lista se carga desde tu sistema atacante. |
+| `bof-enumprotections` | bof | Enumera procesos del sistema e informa nivel de protección, relación de servicio, usuario, session ID y ruta. Útil para procesos de servicios de terceros sin protección candidatos a DLL hijacking. |
+| `bof-env` | bof | Lista variables de entorno del proceso. |
+| `bof-esc1-unpac` | bof | Ejecuta la cadena completa de ataque ADCS ESC1. Solicita certificado con SAN arbitrario (y SID para bypass KB5014754), autentica vía PKINIT y extrae hash NT con UnPAC the hash. |
+| `bof-etw` | bof | Parchea y revierte EtwEventWrite en ntdll.dll para degradar logging basado en ETW. |
+| `bof-event-log-manage` | bof | Inspecciona canales Event Log, gestiona logs y fuentes clásicos del BOF, escribe eventos texto o binarios vía fuentes registradas y limpia canales con backup opcional. create, clear y destroy requieren contexto Administrator o SYSTEM elevado. |
+| `bof-execute-cross-session` | bof | Ejecuta un binario en disco en el contexto de otro usuario mediante interacción entre sesiones con COM IStandardActivator, ISpecialSystemProperties e IHxHelpPaneServer. No requiere inyección de proceso. |
+| `bof-find-loaded-module` | bof | Encuentra en qué procesos está cargado *modulepart*, opcionalmente filtrando solo *procnamepart*. |
+| `bof-find-module` | bof | Enumera procesos con módulos cargados concretos (p. ej. clr.dll, winhttp.dll, amsi.dll) con syscalls directos. Útil para elegir spawnto seguro en opsec. |
+| `bof-find-proc-handle` | bof | Enumera procesos con handles al proceso objetivo (p. ej. lsass.exe). Puede identificar handles LSASS existentes para no abrir otros nuevos. |
+| `bof-firewall-rule` | bof | Añade, elimina o consulta reglas de Windows Firewall vía COM (INetFwPolicy2) sin lanzar netsh.exe ni cmd.exe. Útil para pivoting interno. |
+| `bof-force-lock-screen` | bof | Fuerza la pantalla de bloqueo de la sesión actual. |
+| `bof-functionutil` | bof | Lee, compara y parchea funciones API de módulos cargados frente a copias DLL en disco. Detecta hooks EPP/EDR y desengancha funciones. |
+| `bof-get-acl` | bof | Muestra DACL/ACE del objeto. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-get-attribute` | bof | Lee un atributo LDAP concreto. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-get-azure-token` | bof | Intenta completar flujo OAuth authorization code contra Azure con logins guardados del navegador e imprime tokens devueltos. |
+| `bof-get-clipboard` | bof | Imprime texto del portapapeles con APIs Win32. |
+| `bof-get-computers` | bof | Lista todos los equipos del dominio. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-get-delegation` | bof | Muestra configuración de delegación. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-get-domain-info` | bof | Devuelve información del dominio y DC actual: bosque, dominio, nombre y dirección del DC, sitio del DC, etc. |
+| `bof-get-domaininfo` | bof | Consulta información de dominio desde rootDSE. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-get-dpapi-system` | bof | Obtiene la clave DPAPI_SYSTEM y bootkey. |
+| `bof-get-groupmembers` | bof | Lista miembros de un grupo. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-get-groups` | bof | Lista todos los grupos del dominio. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-get-machacct-quota` | bof | Lee ms-DS-MachineAccountQuota del dominio actual. |
+| `bof-get-maq` | bof | Obtiene la cuota de cuentas de equipo. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-get-netntlm` | bof | Captura hash NetNTLMv2 vía SSPI. |
+| `bof-get-netsession` | bof | Enumera sesiones en el equipo local o indicado. |
+| `bof-get-netsession2` | bof | Versión modificada de `netsession` compatible con BOFHound. |
+| `bof-get-object` | bof | Vuelca todos los atributos de un objeto. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-get-password-policy` | bof | Obtiene política de contraseñas y bloqueos del servidor o dominio objetivo. |
+| `bof-get-priv` | bof | Activa el privilegio de token indicado en el proceso actual. |
+| `bof-get-rbcd` | bof | Muestra Resource-Based Constrained Delegation. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-get-session-info` | bof | Imprime información de la sesión de logon del usuario actual. |
+| `bof-get-spn` | bof | Lista ServicePrincipalNames. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-get-uac` | bof | Muestra flags UserAccountControl. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-get-usergroups` | bof | Lista grupos a los que pertenece un usuario. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-get-users` | bof | Lista todos los usuarios del dominio. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-get-webdav-status` | bof | Comprueba Web Client (WebDAV) en sistemas remotos sondeando el named pipe DAV RPC SERVICE. No requiere admin en el objetivo pero sí credenciales válidas (sin anónimo). |
+| `bof-get-writable` | bof | Encuentra objetos con acceso de escritura. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-getsystem` | bof | Obtiene SYSTEM duplicando el token de winlogon.exe. Requiere privilegios de administrador. |
+| `bof-ghost-task` | bof | Crea o elimina tareas programadas solo vía registro sin eventos Windows 4698 y 106. Requiere NT AUTHORITY\SYSTEM. |
+| `bof-ghostkatz` | bof | Vuelca credenciales LSASS leyendo memoria física con drivers kernel vulnerables firmados y primitivas MmMapIoSpace. Soporta MSV1 (logonpasswords) y WDigest. Requiere administrador. Puede causar BSOD si falla un driver. |
+| `bof-global-unprotect` | bof | Localiza, descifra y descarga configuración GlobalProtect VPN y ajustes HIP. |
+| `bof-handle-finder` | bof | Enumera handles abiertos en un proceso objetivo. |
+| `bof-handle-stealer` | bof | Encuentra procesos NetworkService de Chrome/Edge, duplica handle a la base SQLite Cookies y guarda copia en %LOCALAPPDATA%&lt;pid&gt;.db. Escanea chrome.exe y msedge.exe automáticamente. |
+| `bof-hash` | bof | Genera hashes de claves Kerberos desde una contraseña. |
+| `bof-hide-file` | bof | Oculta directorio o archivo cambiando atributos a systemfile + hidden. |
+| `bof-ide-extension-surface` | bof | Enumera manifests de extensiones VS Code, Cursor, Windsurf, Zed, Insiders, OSS y server/remote por perfil de usuario y resume identidad, eventos de activación y señales de capacidad. |
+| `bof-idle-time` | bof | Comprueba actividad del usuario según última entrada. Devuelve HH:MM:SS. |
+| `bof-ipconfig` | bof | Lista dirección IPv4, hostname y servidor DNS. |
+| `bof-kerb-hash` | bof | Hashea contraseñas a claves Kerberos: rc4_hmac, aes128_cts_hmac_sha1, aes256_cts_hmac_sha1, des_cbc_md5. |
+| `bof-kerberoast` | bof | Solicita ticket de servicio Kerberos (AP-REQ) para un SPN y devuelve ticket base64 para cracking offline. Convierte con apreq2hashcat.py. |
+| `bof-kerberoasting` | bof | Lista cuentas con SPN o solicita tickets TGS-REP para Hashcat offline. Tickets entre etiquetas TICKET. Convierte con TicketToHashcat.py. |
+| `bof-kerberos-bof` | bof | Lista, vuelca y purga tickets Kerberos en caché vía LsaCallAuthenticationPackage sin tocar memoria LSASS. |
+| `bof-kerbeus-asktgs` | bof | Solicita ticket de servicio desde un TGT. |
+| `bof-kerbeus-asktgt` | bof | Solicita TGT con contraseña, hash o sin preauth. |
+| `bof-kerbeus-asreproasting` | bof | Solicita AS-REP para usuarios sin preautenticación Kerberos. |
+| `bof-kerbeus-changepw` | bof | Cambia contraseña de usuario vía kpasswd. |
+| `bof-kerbeus-cross_s4u` | bof | Realiza abuso S4U de delegación restringida entre dominios. |
+| `bof-kerbeus-describe` | bof | Analiza y describe un ticket Kerberos. |
+| `bof-kerbeus-dump` | bof | Extrae tickets Kerberos de sesiones de logon. |
+| `bof-kerbeus-hash` | bof | Genera hashes de claves Kerberos desde una contraseña. |
+| `bof-kerbeus-kerberoasting` | bof | Solicita ticket de servicio Kerberos para cracking offline. |
+| `bof-kerbeus-klist` | bof | Lista tickets Kerberos con detalle. |
+| `bof-kerbeus-ptt` | bof | Envía un ticket a la sesión de logon actual o indicada. |
+| `bof-kerbeus-purge` | bof | Purga tickets Kerberos de la sesión actual o indicada. |
+| `bof-kerbeus-renew` | bof | Renueva un TGT. |
+| `bof-kerbeus-s4u` | bof | Realiza abuso S4U2self y S4U2proxy de delegación restringida. |
+| `bof-kerbeus-tgtdeleg` | bof | Obtiene un TGT usable vía abuso de delegación GSS-API. |
+| `bof-kerbeus-triage` | bof | Lista tickets Kerberos en formato tabla. |
+| `bof-klist` | bof | Muestra tickets Kerberos en caché. Soporta listar, purgar y solicitar tickets de servicio para un SPN. |
+| `bof-koh-client` | bof | Comunica por named pipe Koh para listar, filtrar, impersonar y liberar tokens capturados. Requiere SeImpersonatePrivilege para impersonar tokens capturados. |
+| `bof-ksl-lsa` | bof | Extrae credenciales de memoria LSASS con la primitiva de lectura física BYOVD KslD.sys. No llama OpenProcess, NtReadVirtualMemory ni MiniDumpWriteDump sobre lsass. Extrae hashes NT MSV1_0, WDigest en claro (si está activo) y claves LSA. Requiere privilegios administrativos. |
+| `bof-lapsdump` | bof | Vuelca contraseñas LAPS de equipos indicados en Active Directory. Requiere privilegios AD elevados. |
+| `bof-lastpass` | bof | Busca contraseñas y datos LastPass en memoria de procesos Chrome o Brave. |
+| `bof-ldap-sign-check` | bof | Escanea un DC para comprobar si LdapEnforceChannelBinding o LdapServerIntegrity se modificaron para mitigar relay LDAP. Prueba binding LDAP (389) y LDAPS (636). |
+| `bof-ldapsearch` | bof | Ejecuta búsquedas LDAP (NOTA: especifica *,ntsecuritydescriptor como atributo si quieres todos los atributos + ACL base64 de los objetos, resoluble con BOFHound. Puede romper paginación, aunque en pruebas funcionó bien). |
+| `bof-ldapsecuritycheck` | bof | Comprueba requisitos de LDAP signing y channel binding en un controlador de dominio. |
+| `bof-lin-arp` | bof | (linux) Muestra la tabla ARP desde /proc/net/arp con resolución de hostname. |
+| `bof-lin-awk` | bof | (linux) awk mínimo (solo imprime columnas). |
+| `bof-lin-base64` | bof | (linux) Codifica/decodifica Base64. |
+| `bof-lin-basename` | bof | (linux) Elimina el directorio de la ruta. |
+| `bof-lin-cat` | bof | (linux) Concatena e imprime archivos. |
+| `bof-lin-chmod` | bof | (linux) Cambia permisos de archivo. |
+| `bof-lin-chown` | bof | (linux) Cambia propiedad de archivo. |
+| `bof-lin-cp` | bof | (linux) Copia archivos. |
+| `bof-lin-cut` | bof | (linux) Extrae campos/columnas. |
+| `bof-lin-date` | bof | (linux) Imprime fecha/hora actual. |
+| `bof-lin-df` | bof | (linux) Uso de espacio en disco. |
+| `bof-lin-diff` | bof | (linux) Compara dos archivos. |
+| `bof-lin-dirname` | bof | (linux) Elimina el nombre de archivo de la ruta. |
+| `bof-lin-dmesg` | bof | (linux) Imprime el ring buffer del kernel. |
+| `bof-lin-du` | bof | (linux) Estima uso de disco. |
+| `bof-lin-env` | bof | (linux) Imprime variables de entorno desde /proc/self/environ. |
+| `bof-lin-find` | bof | (linux) Busca archivos. |
+| `bof-lin-free` | bof | (linux) Muestra uso de memoria. |
+| `bof-lin-grep` | bof | (linux) Busca en contenido de archivos. |
+| `bof-lin-groups` | bof | (linux) Imprime membresías de grupo. |
+| `bof-lin-head` | bof | (linux) Muestra la primera parte de un archivo. |
+| `bof-lin-hostname` | bof | (linux) Imprime el hostname. |
+| `bof-lin-id` | bof | (linux) Imprime IDs de usuario/grupo. |
+| `bof-lin-ifconfig` | bof | (linux) Muestra interfaces de red. |
+| `bof-lin-kill` | bof | (linux) Envía señal a un proceso. |
+| `bof-lin-ln` | bof | (linux) Crea enlaces. |
+| `bof-lin-logger` | bof | (linux) Escribe mensaje en syslog. |
+| `bof-lin-ls` | bof | (linux) Lista contenido de directorio. |
+| `bof-lin-lsmod` | bof | (linux) Lista módulos del kernel cargados. |
+| `bof-lin-md5sum` | bof | (linux) Calcula hash md5. |
+| `bof-lin-mkdir` | bof | (linux) Crea directorios. |
+| `bof-lin-mount` | bof | (linux) Lista puntos de montaje. |
+| `bof-lin-mv` | bof | (linux) Mueve/renombra archivos. |
+| `bof-lin-netstat` | bof | (linux) Muestra conexiones TCP/UDP desde /proc/net (flags: -tlnpu). |
+| `bof-lin-nl` | bof | (linux) Numera líneas de un archivo. |
+| `bof-lin-nslookup` | bof | (linux) Consulta DNS vía getaddrinfo. |
+| `bof-lin-od` | bof | (linux) Volcado octal. |
+| `bof-lin-paste` | bof | (linux) Fusiona líneas de archivos. |
+| `bof-lin-ping` | bof | (linux) Prueba alcance del host. |
+| `bof-lin-ps` | bof | (linux) Lista procesos. |
+| `bof-lin-pwd` | bof | (linux) Imprime directorio de trabajo. |
+| `bof-lin-rev` | bof | (linux) Invierte líneas de un archivo. |
+| `bof-lin-rm` | bof | (linux) Elimina archivos/directorios. |
+| `bof-lin-rmdir` | bof | (linux) Elimina directorios vacíos. |
+| `bof-lin-route` | bof | (linux) Muestra tabla de enrutamiento. |
+| `bof-lin-sed` | bof | (linux) Editor de flujo (s/old/new/g). |
+| `bof-lin-sha256sum` | bof | (linux) Calcula hash sha-256. |
+| `bof-lin-sort` | bof | (linux) Ordena líneas de un archivo. |
+| `bof-lin-stat` | bof | (linux) Muestra estado del archivo. |
+| `bof-lin-strings` | bof | (linux) Encuentra cadenas imprimibles. |
+| `bof-lin-sysctl` | bof | (linux) Lee/escribe parámetros del kernel. |
+| `bof-lin-tail` | bof | (linux) Muestra la última parte de un archivo. |
+| `bof-lin-tar` | bof | (linux) Crea, lista y extrae archivos tar. |
+| `bof-lin-touch` | bof | (linux) Crea archivo o actualiza marcas de tiempo. |
+| `bof-lin-tr` | bof | (linux) Traduce/elimina caracteres. |
+| `bof-lin-traceroute` | bof | (linux) Traza ruta al host. |
+| `bof-lin-tree` | bof | (linux) Árbol de directorios recursivo. |
+| `bof-lin-uname` | bof | (linux) Imprime información del sistema. |
+| `bof-lin-uniq` | bof | (linux) Elimina líneas adyacentes duplicadas. |
+| `bof-lin-uptime` | bof | (linux) Imprime uptime, load averages y hora actual. |
+| `bof-lin-wc` | bof | (linux) Cuenta palabras, líneas y bytes. |
+| `bof-lin-wget` | bof | (linux) Descarga HTTP GET. |
+| `bof-lin-whoami` | bof | (linux) Imprime nombre de usuario efectivo. |
+| `bof-lin-xxd` | bof | (linux) Volcado hexadecimal. |
+| `bof-list-chrome-cookies` | bof | Lista subprocesos del navegador aptos para volcar cookies. Usa el PID devuelto con bof-cookie-katz. Solo x64. |
+| `bof-list-firewall-rules` | bof | Lista reglas del firewall de Windows. |
+| `bof-list-process-handles` | bof | Lista handles abiertos en un proceso. |
+| `bof-listdns` | bof | Lista entradas de caché DNS. Intenta consultar y resolver cada una. |
+| `bof-listmods` | bof | Lista módulos (DLL) del proceso. Si PID está vacío, apunta al proceso actual. Complemento de driversigs para detectar inyección AV/EDR. |
+| `bof-locale` | bof | Lista idioma de locale del sistema, ID de locale, fecha, hora y país. |
+| `bof-make-token-cert` | bof | Impersona usando un certificado PFX. |
+| `bof-md5` | bof | Hashea nombre de archivo con md5. |
+| `bof-mdm-policy-artifacts` | bof | Usa un modelo de puntuación para evaluar postura de inscripción MDM en Windows (estado de unión, tareas programadas, política, artefactos de inscripción). |
+| `bof-mem-read` | bof | Lee los primeros bytes de funciones exportadas de una DLL cargada. |
+| `bof-mem-search` | bof | Busca una cadena en memoria del proceso. |
+| `bof-memreader` | bof | Busca un patrón de cadena en memoria del proceso objetivo y devuelve todas las coincidencias a la salida del beacon. |
+| `bof-move-object` | bof | Mueve un objeto a otra OU. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-msi-lateral-mv` | bof | Usa MSI Server por DCOM para instalar y configurar un driver ODBC vía Custom Action Server para movimiento lateral. Todos los argumentos son wide strings. |
+| `bof-msi-search` | bof | Escanea C:\\Windows\\Installer\\ en busca de MSI en caché y los lista con el nombre del software asociado. Ayuda a identificar instaladores MSI para investigación LPE vía vulnerabilidades MSI repair. |
+| `bof-msv1-0-bof` | bof | Recupera claves DPAPI y genera respuestas NTLMv1 vía LsaCallAuthenticationPackage sin abrir handle a LSASS. Funciona con PPL y Credential Guard para recuperación de claves. |
+| `bof-nanorobeus` | bof | Gestión de tickets Kerberos. Soporta listar LUIDs, sesiones, tickets, volcar, importar (ptt), purgar, delegación TGT y Kerberoasting. |
+| `bof-netgroup` | bof | Lista grupos de dominio o miembros desde el dominio por defecto o indicado. |
+| `bof-netjoin-query` | bof | Consulta información de unión a dominio Windows y detalles de estación de trabajo (dominio o workgroup). |
+| `bof-netlocalgroup` | bof | Lista grupos locales o miembros en el equipo local o indicado. |
+| `bof-netlocalgroup2` | bof | Versión modificada de `netLocalGroupListMembers` compatible con BOFHound. |
+| `bof-netloggedon` | bof | Devuelve usuarios logueados en el equipo local o remoto. |
+| `bof-netloggedon2` | bof | Versión modificada de `netloggedon` compatible con BOFHound. |
+| `bof-netshares` | bof | Lista recursos compartidos en el equipo local o remoto. |
+| `bof-netstat` | bof | Lista puertos TCP y UDP IPv4. |
+| `bof-nettime` | bof | Muestra la hora en un equipo remoto. |
+| `bof-netuptime` | bof | Devuelve información de hora de arranque en el equipo local o remoto. |
+| `bof-netuser` | bof | Obtiene info de un usuario; desde dominio si se indica domainname. |
+| `bof-netuserenum` | bof | Enumera cuentas de usuario en el equipo local o dominio actual. |
+| `bof-netview` | bof | Lista equipos alcanzables en el dominio actual. |
+| `bof-nonpagedldapsearch` | bof | Ejecuta búsquedas LDAP sin paginación. |
+| `bof-notepad` | bof | Busca ventanas Notepad/Notepad++ abiertas y toma texto del control del editor. |
+| `bof-notepad-grab` | bof | Extrae y devuelve texto plano de ventanas Notepad abiertas leyendo memoria (notas no guardadas o en memoria). |
+| `bof-notethief` | bof | Roba contenido de Notepad abierto vía control Edit y WM_GETTEXT. |
+| `bof-nslookup` | bof | Consulta DNS. El servidor DNS es el que quieres consultar (vacío o 0 = predeterminado). Tipo de registro A, AAAA, ANY, etc. Algunos casos limitados por crashes observados. |
+| `bof-office-tokens` | bof | Recoge tokens JWT de acceso de Office desde memoria del proceso Office indicado. |
+| `bof-p-sremote` | bof | Lista todos los procesos en ejecución en el host remoto. |
+| `bof-password-spray-a-d` | bof | Valida una contraseña contra varias cuentas con LDAP, LDAPS, GC o GCS simple bind. |
+| `bof-password-spray-local` | bof | Valida usuario y contraseña local contra una lista de hostnames con autenticación SMB (IPC$). |
+| `bof-patchit` | bof | Parchea, comprueba y revierte AMSI y ETW en procesos x64. Compara los primeros 10+ bytes de AmsiScanBuffer y EtwEventWrite. No carga amsi.dll si no está presente. Solo x64. |
+| `bof-port-scan` | bof | Escanea un host IPv4 en busca de puertos TCP/UDP abiertos vía Winsock con listas acotadas, timeouts configurables y salida concisa. |
+| `bof-power-state` | bof | Identifica factor de forma (Laptop, Desktop, Tablet, Server, Embedded, Unknown) con datos SMBIOS y fallback de estado de energía. |
+| `bof-powershell-history` | bof | Recoge artefactos de historial PowerShell de PSReadLine y transcripciones por defecto. Útil para credenciales o infraestructura. |
+| `bof-privkit-autorun-check` | bof | Comprueba claves de registro autorun modificables. |
+| `bof-privkit-cred-check` | bof | Comprueba credenciales almacenadas en Windows Credential Manager. |
+| `bof-privkit-elev-check` | bof | Comprueba AlwaysInstallElevated en HKCU y HKLM. |
+| `bof-privkit-hijack-check` | bof | Comprueba entradas PATH secuestrables. |
+| `bof-privkit-logon-check` | bof | Comprueba credenciales AutoLogon en el registro. |
+| `bof-privkit-pshist-check` | bof | Comprueba archivos de historial de comandos PowerShell. |
+| `bof-privkit-service-check` | bof | Comprueba servicios Windows modificables. |
+| `bof-privkit-token-check` | bof | Comprueba privilegios del token actual con potencial de abuso. |
+| `bof-privkit-uac-check` | bof | Comprueba estado de configuración UAC. |
+| `bof-privkit-unquoted-svc` | bof | Comprueba rutas de servicio sin comillas. |
+| `bof-probe` | bof | Comprueba si un puerto concreto está abierto. |
+| `bof-proc-version` | bof | Obtiene versión del módulo principal de un proceso. |
+| `bof-procargs` | bof | Extrae argumentos de línea de comandos del proceso indicado. |
+| `bof-procdump` | bof | Vuelca el proceso indicado a archivo con MiniDumpWriteDump. Activa SeDebugPrivilege primero. |
+| `bof-process-destroy` | bof | Cierra un handle concreto o todos los handles del proceso indicado. |
+| `bof-process-list-handles` | bof | Lista todos los handles abiertos del proceso indicado. |
+| `bof-process-tokens-list` | bof | Enumera tokens accesibles de procesos en ejecución (contexto, tipo primary/impersonation, nivel). Filtro opcional por PID o nombre. SeDebugPrivilege desactivado por defecto (OPSEC). |
+| `bof-procinfo` | bof | Muestra información de versión del ejecutable (nombre, versión, empresa, etc.). |
+| `bof-prockill` | bof | Termina un proceso objetivo por PID. |
+| `bof-procsearch` | bof | Busca una cadena en memoria legible del proceso y muestra contexto ASCII circundante. |
+| `bof-proxy-enum` | bof | Enumera estado de proxy Windows (WinINET, WinHTTP, políticas, variables de entorno, WPAD, Chrome, defaultProxy .NET). |
+| `bof-psw` | bof | Muestra títulos de ventana de procesos con Windows activas. |
+| `bof-ptt` | bof | Envía un ticket a la sesión de logon actual o indicada. |
+| `bof-purge` | bof | Purga tickets Kerberos de la sesión actual o indicada. |
+| `bof-recon-ad` | bof | Consulta objetos y atributos de Active Directory vía ADSI. Filtros LDAP personalizados, consultas user/computer/group, comunicaciones Kerberos cifradas y búsqueda en Global Catalog. Un binario, cuatro modos de consulta. |
+| `bof-reg-del` | bof | Elimina una clave o valor del registro. |
+| `bof-reg-delete` | bof | Elimina clave o valor del registro en sistema local o remoto. |
+| `bof-reg-query` | bof | Consulta un valor del registro o enumera una clave. Soporta equipos remotos. |
+| `bof-reg-query-recursive` | bof | Enumera recursivamente una clave del registro desde una ruta. Soporta equipos remotos. |
+| `bof-reg-save` | bof | Exporta una clave del registro a un archivo. |
+| `bof-reg-set` | bof | Crea o establece un valor del registro en host local o remoto. |
+| `bof-regsave` | bof | Obtiene privilegios necesarios y vuelca claves SAM, SYSTEM y SECURITY para parsing offline y extracción de hashes. Requiere privilegios de administrador. |
+| `bof-regsession` | bof | Devuelve SIDs de usuarios logueados enumerando HKEY_USERS. Compatible con BOFHound. |
+| `bof-remotereg` | bof | Consulta usuarios logueados en servidores remotos, VDI o DC vía API de registro remoto. |
+| `bof-remove-ace` | bof | Elimina ACE del DACL. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-remove-attribute` | bof | Elimina valor de atributo. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-remove-delegation` | bof | Limpia SPNs de delegación. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-remove-groupmember` | bof | Elimina usuario del grupo. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-remove-object` | bof | Elimina objeto AD. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-remove-rbcd` | bof | Limpia configuración RBCD. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-remove-spn` | bof | Elimina SPN concreto. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-remove-uac` | bof | Elimina flag UAC. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-renew` | bof | Renueva un TGT. |
+| `bof-resources` | bof | Lista uso de memoria y espacio en disco disponible en la unidad principal. |
+| `bof-routeprint` | bof | Lista rutas IPv4. |
+| `bof-runpe` | bof | Ejecuta un PE arbitrario dentro de un proceso sacrificial con implementación parcial de process herpaderping. Crea el archivo remoto, escribe el PE y sobrescribe con 0x82 0x7f 0x76 0x7c antes de ejecutar. |
+| `bof-s4u` | bof | Realiza abuso S4U2self y S4U2proxy de delegación restringida. |
+| `bof-sc-config` | bof | Configura un servicio Windows existente en sistema local o remoto. |
+| `bof-sc-create` | bof | Crea un servicio Windows nuevo en sistema local o remoto. |
+| `bof-sc-delete` | bof | Elimina un servicio Windows existente. |
+| `bof-sc-description` | bof | Establece la descripción de un servicio Windows existente. |
+| `bof-sc-enum` | bof | Enumera servicios para info qc, query, qfailure y qtriggers. |
+| `bof-sc-failure` | bof | Configura acciones de fallo de un servicio Windows existente. |
+| `bof-sc-qc` | bof | Implementación sc qc en BOF. |
+| `bof-sc-qdescription` | bof | Implementación sc qdescription en BOF. |
+| `bof-sc-qfailure` | bof | Consulta condiciones de fallo de un servicio. |
+| `bof-sc-qtriggerinfo` | bof | Consulta condiciones de trigger de un servicio. |
+| `bof-sc-query` | bof | Implementación sc query en BOF. |
+| `bof-sc-start` | bof | Inicia un servicio Windows existente. |
+| `bof-sc-stop` | bof | Detiene un servicio Windows existente. |
+| `bof-schtask-enum` | bof | Enumera tareas programadas con COM Task Scheduler. Resumen de estado, programación y configuración sin saturar el beacon con XML. |
+| `bof-schtasks-del` | bof | Elimina una tarea programada o carpeta. |
+| `bof-schtasks-run` | bof | Ejecuta una tarea programada. |
+| `bof-schtasks-stop` | bof | Detiene una tarea programada en ejecución. |
+| `bof-schtaskscreate` | bof | Crea o actualiza una tarea desde un archivo XML de definición. |
+| `bof-schtasksdelete` | bof | Elimina una tarea programada o carpeta. |
+| `bof-schtasksenum` | bof | Enumera tareas programadas en equipo local o remoto. |
+| `bof-schtasksquery` | bof | Consulta la tarea indicada en equipo local o remoto. |
+| `bof-schtasksrun` | bof | Inicia una tarea programada de inmediato. |
+| `bof-schtasksstop` | bof | Detiene una tarea programada en ejecución. |
+| `bof-screenshot` | bof | Captura pantallas vía WinAPI sin fork-and-run. Compresión JPEG, escala de grises, calidad, escala y captura de ventana minimizada. |
+| `bof-self-delete` | bof | Elimina un ejecutable bloqueado o en ejecución del disco con renombrado NTFS alternate data stream. |
+| `bof-service-control` | bof | Gestiona servicios Windows locales vía SCM: consulta (lista acotada o servicio único), crear, iniciar, detener, eliminar y configurar fallos. Cambios suelen requerir derechos elevados. |
+| `bof-session-view` | bof | Enumera sesiones Windows Terminal Services: IDs, usuarios, dominios, estados de conexión y LUIDs. |
+| `bof-set-attribute` | bof | Reemplaza valor de atributo. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-set-delegation` | bof | Reemplaza configuración de delegación. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-set-owner` | bof | Cambia propietario del objeto. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-set-password` | bof | Cambia contraseña de usuario. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-set-spn` | bof | Reemplaza todos los SPN. Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-set-uac` | bof | Establece flags UAC (reemplazo). Admite LDAP estándar (389) con signing/sealing y LDAPS (636). |
+| `bof-setuserpass` | bof | Establece la contraseña de la cuenta de usuario indicada. |
+| `bof-sha1` | bof | Hashea nombre de archivo con sha1. |
+| `bof-sha256` | bof | Hashea nombre de archivo con sha256. |
+| `bof-shadowcreds` | bof | Escribe KeyCredential en msDS-KeyCredentialLink del objetivo, autentica vía PKINIT, extrae hash NT con UnPAC the hash y elimina la shadow credential. Requiere escritura en msDS-KeyCredentialLink. |
+| `bof-sharefolder` | bof | Crea carpeta compartida legible/escribible por todos o elimina carpeta vacía. |
+| `bof-shutdown` | bof | Inicia apagado del sistema local o remoto. |
+| `bof-signal-key` | bof | Obtiene claves de descifrado de la base Signal Desktop en hosts Windows con Signal Desktop instalado y usado. |
+| `bof-silentchrome` | bof | Instala o revierte silenciosamente una extensión en Chrome/Edge modificando Preferences y Secure Preferences. Port de SharpSilentChrome. |
+| `bof-silentharvest` | bof | Volcador de credenciales solo registro: hashes SAM y secretos desde HKLM\\SECURITY\\Policy\\Secrets. Solo SeBackupPrivilege (sin SYSTEM). |
+| `bof-slack-cookie` | bof | Recoge cookie de autenticación Slack desde memoria del proceso Slack indicado. |
+| `bof-slack-key` | bof | Descifra clave Slack base64 de %APPDATA%\\Slack\\Local State para descifrar cookies. |
+| `bof-sleeper` | bof | Llama SetThreadExecutionState para evitar que el host entre en suspensión. |
+| `bof-smbinfo` | bof | Recopila info de versión remota con NetWkstaGetInfo (versión Windows, dominio, etc.) sin escáner de puertos. |
+| `bof-sprayad` | bof | Password spray LDAP o Kerberos contra AD con LogonUserSSPI. Omite cuentas deshabilitadas, bloqueadas y BadPwdCount alto si se indica. |
+| `bof-sql-1434udp` | bof | Enumera información de conexión SQL Server vía SQL Server Browser en UDP 1434. |
+| `bof-sql-adsi` | bof | Obtiene credenciales ADSI de un servidor vinculado ADSI. |
+| `bof-sql-agentcmd` | bof | Ejecuta comando de sistema con trabajos del agente SQL Server. |
+| `bof-sql-agentstatus` | bof | Enumera estado del agente SQL y trabajos en un servidor. |
+| `bof-sql-checkrpc` | bof | Enumera servidores vinculados y estado RPC. |
+| `bof-sql-clr` | bof | Carga y ejecuta ensamblado .NET en procedimiento almacenado SQL vía integración CLR. |
+| `bof-sql-columns` | bof | Enumera columnas de una tabla en un servidor SQL. |
+| `bof-sql-databases` | bof | Enumera bases de datos en un servidor SQL. |
+| `bof-sql-impersonate` | bof | Enumera logins SQL impersonables en un servidor. |
+| `bof-sql-info` | bof | Recopila información de un servidor SQL remoto. |
+| `bof-sql-links` | bof | Enumera servidores SQL vinculados. |
+| `bof-sql-olecmd` | bof | Ejecuta comando de sistema con procedimientos OLE automation en SQL Server. |
+| `bof-sql-query` | bof | Ejecuta consulta SQL personalizada en servidor SQL remoto. |
+| `bof-sql-rows` | bof | Devuelve recuento de filas de una tabla en SQL Server. |
+| `bof-sql-search` | bof | Busca nombre de columna en tablas de una base de datos. |
+| `bof-sql-smb` | bof | Fuerza autenticación NetNTLM desde SQL Server vía xp_dirtree hacia listener UNC. |
+| `bof-sql-tables` | bof | Enumera tablas de una base en SQL Server. |
+| `bof-sql-togglemodule` | bof | Habilita o deshabilita RPC, CLR, xp_cmdshell u OLE automation en SQL Server. |
+| `bof-sql-users` | bof | Enumera usuarios con acceso a base de datos en SQL Server. |
+| `bof-sql-whoami` | bof | Recopila usuario logueado, usuario mapeado y roles SQL en un servidor. |
+| `bof-sql-xpcmd` | bof | Ejecuta comando de sistema vía xp_cmdshell en SQL Server. |
+| `bof-sspi-uac-bypass` | bof | Bypass UAC vía impersonation de token SSPI datagram y creación de servicio SYSTEM con CreateSvcRpc. |
+| `bof-start-web-client` | bof | Inicia WebClient desde contexto de usuario con service trigger. Necesario para coerción PetitPotam WebDAV si el servicio no está en ejecución. |
+| `bof-static-syscalls-dump` | bof | Desengancha NtReadVirtualMemory y crea volcado de memoria con MiniDumpWriteDump. Solo x64. |
+| `bof-suspendresume` | bof | Suspende o reanuda un proceso por PID (1=suspender, 0=reanudar). |
+| `bof-syscallsdump` | bof | Desengancha NtReadVirtualMemory y crea volcado de memoria con MiniDumpWriteDump. Solo x64. |
+| `bof-tasklist` | bof | Lista procesos en ejecución con PID, PPID y CommandLine (usa WMI). |
+| `bof-teams-cookies` | bof | Roba cookies de Microsoft Teams ejecutándose dentro de ms-teams.exe. Extrae clave de cifrado y descarga la base Cookies sin archivo. |
+| `bof-tgtdeleg` | bof | Obtiene un TGT usable vía abuso de delegación GSS-API. |
+| `bof-toastnotify` | bof | Envía notificaciones toast de Windows con Application User Model IDs prestados. Toasts estándar y XML personalizado con acciones y enlaces protocolo. |
+| `bof-token-vault` | bof | Almacenamiento en memoria de tokens de acceso Windows robados o duplicados para reutilizarlos sin volver a duplicar. |
+| `bof-token2cert` | bof | Abusa plantillas ESC1 con impersonation de token para extraer hashes NT de usuarios de dominio. Roba token con derechos de inscripción, certificado SAN arbitrario, PKINIT y UnPAC the hash. Solo x64. Requiere privilegios elevados. |
+| `bof-tray-scout` | bof | Informa ejecutable host de la barra de tareas y enumera tooltips de iconos de bandeja, con rutas completas opcionales. |
+| `bof-triage` | bof | Lista tickets Kerberos en formato tabla. |
+| `bof-unexpire-user` | bof | Configura cuenta de usuario para que no expire. |
+| `bof-unexpireuser` | bof | Configura cuenta de usuario para que no expire. |
+| `bof-uptime` | bof | Lista hora de arranque del sistema y tiempo en ejecución. |
+| `bof-user-idle` | bof | Obtiene tiempo idle del usuario y uso de recursos GUI (handles GDI/USER) en el proceso actual. |
+| `bof-useridletime` | bof | Muestra tiempo idle del usuario en segundos, minutos, horas y días. |
+| `bof-veeam-dumper` | bof | Extrae credenciales cifradas de bases Veeam Backup and Replication o Veeam One. Usa sqlcmd/psql, salt del registro y DPAPI. |
+| `bof-vssenum` | bof | Enumera Shadow Copies en algunos servidores Server 2012+. |
+| `bof-wallpaper-enum` | bof | Enumera ruta del fondo de escritorio por monitor con IDesktopWallpaper COM. Fondos centralizados pueden revelar rutas de red, trusts y políticas. |
+| `bof-wd-toggle` | bof | Habilita caché WDigest y sortea Credential Guard parcheando wdigest en LSASS vía syscalls directos. No persiste tras reinicio; offsets varían por build. |
+| `bof-webcam-bof` | bof | Captura una imagen de la webcam predeterminada. Guardar en disco o descargar por el beacon como archivo o screenshot. |
+| `bof-wef-detect` | bof | Detecta configuración Windows Event Forwarding (WEF), indicando logging centralizado y reenvío de eventos de seguridad. |
+| `bof-wer-dump` | bof | Vuelca LSASS protegido con WerFaultSecure.exe. Escribe WerFaultSecure en temp con nombre aleatorio y guarda volcado como .dll. |
+| `bof-wer-resume` | bof | Reanuda lsass.exe suspendido antes de bof-wer-dump. Debe ejecutarse desde otro proceso beacon que WerDump por política de protección. |
+| `bof-wevt-channel-enum` | bof | Enumera canales Event Log locales con filtro opcional insensible a mayúsculas, salida acotada y metadatos verbose opcionales. No ejecutar sin filtro en hosts con cientos de canales de baja señal. |
+| `bof-wevt-logon-enum` | bof | Enumera logons exitosos/fallidos recientes del log Security (4624, 4625, 4672) vía wevtapi e imprime estación remota y usuario. Requiere lectura del log Security (admin o SYSTEM). |
+| `bof-whoami` | bof | Lista whoami /all. |
+| `bof-wi-fi-passwords` | bof | Extrae contraseñas Wi-Fi guardadas del sistema local. |
+| `bof-wifi-dump` | bof | Enumera interfaces WiFi y vuelca credenciales de perfil en claro con WlanGetProfile y WLAN_PROFILE_GET_PLAINTEXT_KEY. |
+| `bof-win-version` | bof | Consulta registro y APIs del sistema para un resumen conciso de la instalación Windows. |
+| `bof-window-handles-enum` | bof | Enumera handles de ventana en procesos del sistema y usa uno legítimo para acceder al portapapeles. |
+| `bof-window-list` | bof | Enumera títulos de ventanas visibles en el escritorio del usuario, opcionalmente con PIDs. |
+| `bof-windowlist` | bof | Lista ventanas visibles en la sesión del usuario actual. |
+| `bof-winver` | bof | Muestra versión de Windows, número de build y revisión de parche (UBR). |
+| `bof-wmi-query` | bof | Ejecuta consulta WMI y muestra resultados en CSV. |
+| `bof-wsc-status` | bof | Consulta estado de Windows Security Center: antivirus, firewall, antispyware, servicio WSC, actualizaciones, Internet y UAC. |
+| `bof-xpipe` | bof | Lista named pipes activos y opcionalmente devuelve propietario y permisos DACL de un pipe concreto. |
+| `net-abandoned-com-keys` | dotnet | Enumera claves COM InprocServer32 abandonadas cuya DLL referenciada ya no existe. Útil para persistencia vía rundll32.exe -sta `\{CLSID\}`. |
+| `net-ad-collector` | dotnet | ADCollector enumera el entorno Active Directory para identificar vectores de ataque. Resume configuración y despliegue para reconocimiento inicial, extrayendo atributos, propiedades y ACLs de objetivos de alto valor. Usa S.DS y S.DS.P para LDAP. |
+| `net-adcspwn` | dotnet | ADCSPwn escala privilegios en AD forzando autenticación de cuentas de equipo (Petitpotam) y relay al servicio de certificados. |
+| `net-adsearch` | dotnet | Herramienta de consulta eficiente de AD: domain admins, LDAP personalizado, LDAPS, salida JSON y atributos custom. |
+| `net-certify` | dotnet | Herramienta C# para enumerar y abusar misconfiguraciones en AD CS: CAs, plantillas, evaluación de vulnerabilidades, solicitudes y descargas. |
+| `net-cheese-dcom` | dotnet | Ejecución de comandos y movimiento lateral vía DCOM. Usuario privilegiado. Varios métodos DCOM (MMC20.Application, ShellWindows, etc.). Target `.` = local. |
+| `net-cheese-exec` | dotnet | Ejecución tipo PsExec y movimiento lateral creando servicios Windows. Usuario privilegiado. create/start/stop/delete/restart remoto. |
+| `net-cheese-ps` | dotnet | PowerShell y movimiento lateral con System.Management.Automation.PowerShell. Local/remoto WS Management, bypass CLM/AMSI/WLDP, payloads cifrados, PE reflectivo. Sin target = local. Remoting requiere usuario privilegiado. |
+| `net-cheese-rdp` | dotnet | Robo de credenciales RDP por inyección DLL reflectiva en mstsc.exe. Usuario privilegiado o SeImpersonatePrivilege. Basado en RdpThief. |
+| `net-cheese-sql` | dotnet | Abuso de confianza MSSQL para ejecución y movimiento lateral: SPN, linked servers, impersonation, xp_cmdshell, OLE, CLR, OPENQUERY. `net-cheese-sql &lt;command&gt; /help` para detalle. |
+| `net-cimplant` | dotnet | Operaciones de archivos, registro, servicios, procesos, movimiento lateral y enumeración. Requiere administrador local en el objetivo. |
+| `net-com-hunter` | dotnet | Enumera servidores COM en LocalServer32 e InProcServer32 vía WMI. |
+| `net-cred-phisher` | dotnet | Solicita credenciales al usuario con CredUIPromptForWindowsCredentials. |
+| `net-crop` | dotnet | Crea LNK, URL, library-ms o searchConnector-ms hacia WebDAV; Explorer puede autenticarse y filtrar NetNTLM a Farmer. |
+| `net-driver-query` | dotnet | Detalle de drivers cargados; filtro opcional de drivers no firmados por Microsoft. |
+| `net-edd` | dotnet | Enumeración de dominio .NET tipo PowerView: bosque, dominio, equipos, usuarios, admin chaining y share hunting. |
+| `net-encrypted-zip` | dotnet | Comprime y cifra ZIP con AES256 CFB. Borra clave de memoria con RtlZeroMemory. |
+| `net-etw-event-subscription` | dotnet | Suscripción ETW similar a eventos WMI. Dispara en logon de usuario o inicio de proceso. |
+| `net-farmer` | dotnet | Servidor WebDAV local para NetNTLM en dominio Windows vía WebDAV Mini Redirector. Usar con Crop o Fertiliser. |
+| `net-fertiliser` | dotnet | Envenena documento Office (.docx) con field code malicioso que abre WebDAV al abrir y filtra NetNTLM a Farmer. |
+| `net-forge-cert` | dotnet | Falsifica certificados AD con clave privada CA robada (.pfx/.p12). DPERSIST1 de Certified Pre-Owned. .pfx usable con Rubeus PKINIT o hash NT. |
+| `net-gmsa-password-reader` | dotnet | Lee blob msDS-ManagedPassword de gMSA vía LDAP y parsea a hashes NTLM. |
+| `net-god-potato-dotnet` | dotnet | Escalada SeImpersonatePrivilege → NT AUTHORITY\SYSTEM con técnica Potato DCOM. Server 2012–2022, Windows 8–11. |
+| `net-gopher` | dotnet | Busca artefactos de credenciales y datos de escalada en la estación. Ejecuta todas las comprobaciones integradas sin argumentos. |
+| `net-gps-coordinates` | dotnet | Rastrea coordenadas GPS (~1 km) si Location Services está activo. Windows 10+. |
+| `net-group3r` | dotnet | Enumera GPO de AD y misconfiguraciones explotables. LDAP a DCs, parseo SYSVOL e inspección de scripts/MSI en shares. |
+| `net-harvest-crop` | dotnet | Descifra logs Farmer cifrados con AES cuando el cifrado de salida Farmer está activo. |
+| `net-hijack-hunter` | dotnet | Analiza cabecera PE para DLLs enlazadas secuestrables y técnicas de abuso. |
+| `net-hook-detector` | dotnet | Detecta hooks en APIs nativas del proceso actual (EDR). Solo x64. |
+| `net-implant-ssp` | dotnet | Instala DLL SSP suministrada para que LSA la cargue al arranque. Debe exportar SpLsaModeInitialize. |
+| `net-inspect-assembly` | dotnet | Inspecciona CIL de ensamblado .NET: deserialización y remoting para triage LPE. |
+| `net-internal-monologue` | dotnet | Ataque Internal Monologue: hashes NTLM sin tocar LSASS. Degrada NetNTLM, impersona tokens non-network logon, NTLMv1 vía SSPI local. |
+| `net-junction-folder` | dotnet | Junction en carpeta Startup de Accesorios Windows (técnica Vault 7). DLL ejecutada por verclsid.exe. |
+| `net-kee-thief` | dotnet | Extrae material de claves KeePass 2.x de memoria con CLR MD y shellcode para blobs RtlEncryptMemory. |
+| `net-koh` | dotnet | Servidor Koh que captura credenciales por fuga de tokens/sesiones logon. SSPI y almacenamiento para impersonation. SYSTEM y SeTcbPrivilege para captura. |
+| `net-krb-relay-up` | dotnet | Wrapper KrbRelay+Rubeus para LPE local sin LDAP signing: coerción Kerberos, relay LDAP/ADCS, RBCD/Shadow/ADCS, servicio SYSTEM. |
+| `net-ldap-sign-check-dotnet` | dotnet | Enumera DCs y comprueba LDAP signing/channel binding. Prueba LDAP y LDAPS en cada DC. |
+| `net-lock-less` | dotnet | Enumera handles de archivos y copia archivos bloqueados duplicando handles sin matar el proceso bloqueador. |
+| `net-mlokit` | dotnet | Toolkit de ataque MLOps vía REST: Azure ML, Vertex AI, MLFlow, SageMaker, etc. (recon, robo de datos/modelos, poisoning). |
+| `net-moriarty` | dotnet | Escáner LPE .NET (Watson/Sherlock): KBs faltantes, vulnerabilidades conocidas y exploits sugeridos Win10/11 y Server 2016–2022. |
+| `net-nopowershell` | dotnet | Ejecución tipo PowerShell en .NET sin System.Management.Automation.dll. execute-assembly en memoria. Pipelines, AD, WMI, registro, red, archivos. |
+| `net-pass-the-cert` | dotnet | Autenticación LDAP/LDAPS Schannel con certificado cliente si PKINIT no está soportado. RBCD, SPN, cuentas de equipo, etc. |
+| `net-phantom-service` | dotnet | Busca y opcionalmente elimina servicios phantom non-ASCII no removibles con herramientas integradas. |
+| `net-port-bender` | dotnet | Redirige un puerto local a un host remoto a través del beacon. |
+| `net-restricted-admin` | dotnet | Habilita/deshabilita Restricted Admin Mode para RDP pass-the-hash vía WMI StdRegProv (DisableRestrictedAdmin en Lsa). |
+| `net-rubeus` | dotnet | Herramienta C# Kerberos raw: tickets, S4U, golden/silver/diamond, Kerberoast, AS-REP, spray, gestión. |
+| `net-runas-cs` | dotnet | Ejecuta procesos con otras credenciales. Alternativa OSS a runas.exe: logon types, bypass UAC, I/O remoto. |
+| `net-safety-katz` | dotnet | Volcado LSASS minidump + Mimikatz in-memory personalizado; borra el dump tras extraer logonpasswords/ekeys. |
+| `net-sauron-eye` | dotnet | Búsqueda de archivos para red teams: keywords, contenido, Office, macros VBA, regex, unidades de red. |
+| `net-search-outlook` | dotnet | Busca en todas las cuentas y subcarpetas de Outlook en ejecución emails con keyword. |
+| `net-seatbelt` | dotnet | Enumeración host C# con comprobaciones ofensivas/defensivas: sistema, usuario, red, credenciales. |
+| `net-session-searcher` | dotnet | Busca .ppk PuTTY y archivos RDP en unidades conectadas y parsea credenciales. |
+| `net-shadow-spray` | dotnet | Spray Shadow Credentials en usuarios y equipos del dominio; GenericWrite/GenericAll, PKINIT, UnPACTheHash. |
+| `net-sharp-chrome` | dotnet | Extrae datos del navegador Chrome con ensamblado .NET. |
+| `net-sharp-cloud` | dotnet | Busca archivos de credenciales cloud (AWS, Azure, GCP) en perfiles de usuario. |
+| `net-sharp-cookie-monster` | dotnet | Vuelca cookies de todos los sitios (httpOnly, secure, session) vía protocolo de depuración remota Chrome/Edge. |
+| `net-sharp-dpapi` | dotnet | Descifra masterkeys DPAPI, credenciales, vaults, certificados, RDG, KeePass, SCCM, Chrome/Edge. |
+| `net-sharp-dump` | dotnet | Port C# de Out-Minidump.ps1: minidump comprimido (LSASS por defecto), gzip, borra raw dump. |
+| `net-sharp-edr-checker` | dotnet | Detección EDR/AV C#: procesos, DLLs, directorios, servicios, drivers, EDR oculto por metadatos. |
+| `net-sharp-exec` | dotnet | Movimiento lateral C#: PSExec, WMI, WMIExec, SMBExec y shells semi-interactivos. |
+| `net-sharp-exfiltrate` | dotnet | Framework C# modular para exfiltrar por canales cloud de confianza; comprime y cifra antes de subir. Filtros extensión/tamaño. |
+| `net-sharp-gpo-abuse` | dotnet | Abuso de derechos de edición GPO: derechos de usuario, admins locales, scripts logon/startup, tareas programadas. |
+| `net-sharp-hide` | dotnet | Persistencia con claves Run ocultas vía NtSetValueKey y prefijo null byte en UNICODE_STRING. |
+| `net-sharp-hound` | dotnet | Colector BloodHound CE: usuarios, grupos, sesiones, ACLs, trusts, GPOs, ADCS, rutas de ataque. |
+| `net-sharp-hound3` | dotnet | Ingestor BloodHound legacy (deprecated). No compatible con BloodHound 4.1+. |
+| `net-sharp-katz` | dotnet | Volcado LSASS, DCSync, pass-the-hash, Zerologon, PrintNightmare, HiveNightmare. |
+| `net-sharp-laps` | dotnet | Contraseñas LAPS desde ms-mnet-AdmPwd. ExtendedRight/GenericAll en equipo o Domain Admin. |
+| `net-sharp-map-exec` | dotnet | Alternativa nativa Windows a CrackMapExec: Kerberos/NTLM sobre CIM, Reg32, SMB, WinRM, LDAP, spray. |
+| `net-sharp-move` | dotnet | Toolkit ejecución remota autenticada: WMI, SCM, DCOM, Task Scheduler, hijacks DLL/DCOM, servicios y tareas. |
+| `net-sharp-no-ps-exec` | dotnet | Movimiento lateral fileless: secuestra servicio LocalSystem detenido, ejecuta payload, restaura en 5 s. |
+| `net-sharp-persist` | dotnet | Persistencia Windows: registro, tareas, LNK startup, backdoor KeePass, servicios, Tortoise SVN, backdoors de tareas. |
+| `net-sharp-printer` | dotnet | Versión consola de ListNetworks: impresoras de red accesibles al usuario. |
+| `net-sharp-rdp` | dotnet | Consola RDP para ejecución remota autenticada vía Win+R. |
+| `net-sharp-rdp-hijack` | dotnet | PoC hijack de sesión RDP con WTSConnectSession/WTSDisconnectSession. |
+| `net-sharp-roast` | dotnet | Solicita tickets de servicio y devuelve hashes TGS crackables formato hashcat. |
+| `net-sharp-sccm` | dotnet | Post-explotación SCCM: movimiento lateral, credenciales, abuso client push para coerción NTLM. |
+| `net-sharp-sec-dump` | dotnet | Port .NET de secretsdump.py: SAM remoto y LSA Secrets vía RPC. |
+| `net-sharp-shares` | dotnet | Ensamblado C# multihilo: shares de dominio accesibles; LDAP + comprobación lectura/escritura. |
+| `net-sharp-smb-exec` | dotnet | Ejecuta comandos remotos vía SMB con hash NTLM (pass-the-hash). |
+| `net-sharp-sphere` | dotnet | Ataque vSphere: VMs invitadas vía VMware Tools y API Web Services (ejecución, archivos, volcado memoria). |
+| `net-sharp-stay` | dotnet | Persistencia .NET: registro elevado/no elevado, tareas, servicios, WMI, hijack COM, LNK. |
+| `net-sharp-token-finder` | dotnet | Enumera apps Office M365 Desktop con tokens en claro para comprometer identidad M365. |
+| `net-sharp-up` | dotnet | Audita el sistema local en busca de misconfiguraciones LPE habituales. |
+| `net-sharp-view` | dotnet | Port .NET PowerView: dominio, ACLs, shares, sesiones, Kerberoast. |
+| `net-sharp-wifi-grabber` | dotnet | Contraseñas WiFi en claro de perfiles WLAN guardados (APIs Win32 WLAN). |
+| `net-sharp-wmi` | dotnet | Toolkit WMI C#: enumeración local/remota, procesos, VBS por suscripciones, upload, firewall. |
+| `net-sharp-wsus` | dotnet | Movimiento lateral vía WSUS: crea, aprueba y despliega updates maliciosos. |
+| `net-sharpsh` | dotnet | PowerShell C# vía RunspaceFactory: comandos codificados, scripts remotos, portapapeles. Para inline assembly. |
+| `net-sigma-potato` | dotnet | Derivado GodPotato: cuenta de servicio → SYSTEM. Disco, reflection .NET, PowerShell, reverse shell integrado. |
+| `net-snaffler` | dotnet | Crawler de shares AD: credenciales y archivos sensibles con reglas y regex configurables. |
+| `net-sql-recon` | dotnet | Recon ofensivo y post-explotación SQL Server: enumeración, impersonation, linked server, SCCM. |
+| `net-stand-in` | dotnet | Toolkit post-explotación AD: LDAP, ACLs, Kerberoast, AS-REP, delegación, GPO, ADCS, cuentas de equipo. |
+| `net-sweet-potato` | dotnet | Técnicas LPE nativas cuenta de servicio → SYSTEM: RottenPotato, JuicyPotato, PrintSpoofer, EfsRpc. |
+| `net-unquoted-path` | dotnet | Lista rutas de servicio sin comillas fuera de System32/SysWow64 para planting PE (T1034). |
+| `net-webdav-status` | dotnet | Comprobación WebDAV C# multihilo vía named pipe DAV RPC. Sin admin en objetivo; credenciales válidas. |
+| `net-winpeas` | dotnet | WinPEAS: misconfiguraciones, servicios vulnerables, credenciales, AV/EDR, red, AD, vectores LPE. |
+| `net-winrmdll` | dotnet | Ejecuta comandos en hosts remotos vía WinRM. |

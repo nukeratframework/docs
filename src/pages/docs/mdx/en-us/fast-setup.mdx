@@ -1,0 +1,87 @@
+---
+title: Fast setup
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import keyAdd from '@/assets/img/tutorial/key_2.png';
+import listenerForm from '@/assets/img/tutorial/listener_form.png';
+
+Quick guide from setup through building your first implant (linux server).
+
+  <Steps>
+    <Step>
+      ### Install the server
+      Clone the repository and run the installer.
+
+      ```bash
+      git clone https://github.com/nukeratframework/nukerat && cd nukerat && sudo bash install.sh
+      ```
+    </Step>
+    <Step>
+      ### Create an operator key
+      To use the server you will need an operator key. From the repository root run:
+
+      ```bash
+      ./nukerat.py server key add test
+      ```
+
+      The output will look something like:
+      ```html
+      test:z6MIe3MbZQL57Hx3fOthGZJ:oxcWICLu9Tnu7GyvwDiwVCRoER4ybKv...
+
+      Operator created successfully: test
+      ```
+
+      Copy the generated key so you can paste it in the client.
+    </Step>
+    <Step>
+      ### Start the server
+      Use the command below to start the server on 0.0.0.0:9000 (default)
+
+      ```bash
+      ./nukerat.py server start
+      ```
+    </Step>
+    <Step>
+      ### Open the client
+      Use this command to open the client:
+
+      ```bash
+      ./nukerat.py client start
+      ```
+    </Step>
+    <Step>
+      ### Configure a server
+      In the top bar go to **NukeRat** > **Servers** > **Add**. Paste the operator key, set port 9000 (default) and the server IP, then click **Auth**.
+
+      <ImageZoom src={keyAdd} alt="Add server" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+
+    </Step>
+    <Step>
+      ### Configure a listener
+      This is the port the implant will use to communicate. Go to **NukeRat** > **Listeners** > **Add**
+
+      1. Pick an identification name
+      2. Select "Channel" in the TYPE field
+      3. Leave "http" in the channel field
+      4. Select the server you created earlier
+      5. Fill in a port different from the one used for the server
+      6. Click **Create**
+
+      <ImageZoom src={listenerForm} alt="Listener form" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+    </Step>
+    <Step>
+      ### Build an implant
+      Go to **NukeRat** > **Implants** > **Add**, then:
+
+      1. In COMPILE SERVER select the server you created earlier
+      2. Choose the target operating system
+      3. Click **Command and control** on the left and point C2 at the listener you created earlier, something like: http://192.168.1.100:9000
+    </Step>
+    <Step>
+      ### Execute and happy hacking!
+
+      Run the implant on the target machine and if everything is set up right a new session should appear. To interact, open a terminal under **Tabs** > **Terminal** and in the dropdown called "Host" next to the tab name, pick the session and have fun!
+    </Step>
+  </Steps>

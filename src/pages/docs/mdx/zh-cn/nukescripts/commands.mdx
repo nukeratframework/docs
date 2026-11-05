@@ -1,0 +1,34 @@
+---
+title: 命令
+---
+
+NukeScript 提供一组原生命令，用于在团队服务端上执行操作。请注意，NukeScript 并不限于这些原生命令；它在 Python 中运行，你仍可使用 Python 本身的任意库或函数。
+
+## 命令目录
+
+以下为可用命令列表：
+
+| 命令 | 说明 | 参数 |
+| --- | --- | --- |
+| `cmd` | 同步终端命令，以字符串形式返回输出 | `host_tag`、`command` |
+| `async_cmd` | 将命令入队并立即返回 | `host_tag`、`command` |
+| `process` | 请求进程树 | `host_tag` |
+| `folders` | 列出远程目录 | `host_tag`、`path` |
+| `screenshot` | 截屏；可选关键字参数 `output` 指定保存路径 | `host_tag`、`output`（可选，仅关键字） |
+| `approve_cmd` | 允许任务执行；在 `new_queue_line` 脚本内使用 | `queue_tag` |
+| `reject_cmd` | 阻止任务并记录错误 | `queue_tag` |
+| `conclude` | 以自定义响应标记任务完成 | `queue_tag`、`message` |
+| `credentials` | 返回所有已存凭据 | |
+| `credentials.add` | 添加凭据并返回新 tag | `name`、`host`、`description`、`content` |
+| `credentials.remove` | 按 tag 删除凭据 | `tag` |
+| `db.<table>` | 表的全部行，或所有行的某一列 | 可选列名。表：`users`、`terminal`、`hosts`、`listeners`、`folders`、`process`、`queue`、`agents`、`agents_history`、`credentials`、`keylogger`、`nukescripts`、`nukescripts_output`、`custom_notifications`、`checkins` |
+| `keylogs` | 返回所有键盘记录条目 | |
+| `network.add_socks` | SOCKS 跳板；成功时返回含 `session_id` 的状态字符串 | `host_tag`、`port`、`user`（可选）、`password`（可选） |
+| `network.add_forward` | TCP 端口转发 | `host_tag`、`local_port`、`target_host`、`target_port` |
+| `network.remove` | 停止 SOCKS 或端口转发 | `db.listeners()` 中 `type` 为 `socks` 或 `port_forwarding` 的 `tag` |
+| `network.restart` | 重启 SOCKS 或端口转发 | `db.listeners()` 中 `type` 为 `socks` 或 `port_forwarding` 的 `tag` |
+| `file_server.upload` | 将本地文件复制到监听器内容目录 | `port`、`path` |
+| `file_server.delete` | 从监听器内容目录删除文件 | `port`、`filename` |
+| `agent` | 向已配置的 AI Agent 发送提示 | `agent_tag`、`prompt` |
+| `echo` | 写入 NS Output | `content` |
+| `message_box` | 向操作员显示通知 | `title`、`body`、`type`（`info`、`error` 或 `success`） |

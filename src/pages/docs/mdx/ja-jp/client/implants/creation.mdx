@@ -1,0 +1,85 @@
+---
+title: 作成
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import compileServer from '@/assets/img/tutorial/base.png';
+import arch from '@/assets/img/tutorial/arch.png';
+import c2 from '@/assets/img/tutorial/c2.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import urlStage from '@/assets/img/tutorial/url_stage.png';
+import relayImplant from '@/assets/img/tutorial/relay_implant.png';
+
+このトピックでは、NukeRat クライアントでのインプラント作成を扱います。クライアントは 2 種類のインプラントベースを提供します: **Stageless** と **Loader**。
+
+- **Stageless**: HTTP、HTTPS、custom HTTP、TCP、SMB（SMB は Windows のみ）経由でリスナーに接続するフルインプラント
+- **Loader**: 設定した URL から外部ステージをダウンロードする最小インプラント
+- **Relay stageless**（設定）: ピボットチャネル（**TCP** は全 OS、**SMB** は Windows）を使い、チームサーバーに直接ではなく別のインプラント経由で通信する stageless インプラント
+
+## Stageless インプラント
+
+基本的な stageless インプラントを作成するには、以下の手順に従います。
+
+  <Steps>
+    <Step>
+      ### インプラント作成タブを開く
+      **NukeRat > Implants** に移動します。
+    </Step>
+    <Step>
+      ### インプラントベースを選択
+      **Stageless** ベースを選びます。
+    </Step>
+    <Step>
+      ### コンパイルサーバーを選択
+      コンパイルサーバーはインプラントのコンパイルに使うサーバーです。**NukeRat** > **Servers** でサーバーが設定済みである必要があります。
+      <ImageZoom src={compileServer} alt="Compile Server" className="h-[4.5rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+      サーバー設定の詳細は [Servers](/docs/servers) を参照してください。
+    </Step>
+    <Step>
+      ### OS とアーキテクチャを選ぶ
+      インプラントが動作するプラットフォームとアーキテクチャを選びます。Windows ビルドは **x64** のみです。Linux と macOS では **amd** または **arm** CPU を選びます。どちらの CPU でもクライアントは **x64**（64 ビット）インプラントをビルドします。
+      <ImageZoom src={arch} alt="Architecture" className="h-[12rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+    </Step>
+    <Step>
+      ### C2 を設定
+      通信先をリスナーで作成したチャネルに向けます。下の例では HTTP チャネルを使っています。
+      <ImageZoom src={c2} alt="C2" className="h-[11rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+      HTTP チャネルの作成方法は [HTTP チャネルの作成](/docs/listeners/channel#creating-an-http-channel) を参照してください。暗号化 POST プロトコル（パス、ボディテンプレート、ステータスコード）については [インプラント API](/docs/rest-api/implants) を参照してください。
+    </Step>
+    <Step>
+      ### インプラントをビルド
+      **Build** をクリックしてインプラントをコンパイルします。
+    </Step>
+  </Steps>
+
+
+## Loader インプラント
+
+作成手順は stageless インプラントと似ていますが、いくつか違いがあります。Loader の C2 は **HTTP** と **custom** チャネルのみサポートします。以下の手順を参照してください。
+
+  <Steps>
+    <Step>
+      ### Loader ベースを選択
+      ベースを **Stageless** から **Loader** に変更します。
+    </Step>
+    <Step>
+      ### ペイロードを設定
+      **Stage** タブでペイロード URL を設定します。
+
+      シェルコードは、シェルコード形式で作成した stageless インプラントになります。
+      <ImageZoom src={urlStage} alt="URL Stage" className="h-[4.5rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+    **ヒント**: NukeRat の **File server** 機能でペイロードを素早くホストできます。詳しくは [ファイルサーバー](/docs/listeners/file-server#creating-a-file-server) を参照してください。
+    </Step>
+  </Steps>
+
+## Relay stageless インプラント
+
+Relay stageless インプラントも **Stageless** ベースのビルドです。違いは C2 です。**Channel** でピボットプロトコル（**TCP**、Windows では **SMB**）を選び、**Relay implant** フィールドでチームサーバー方向へトラフィックを転送する上流インプラント（ホスト、ポート、または SMB パイプ）を指定します。
+
+ターゲットホストからインターネットへの外向き経路がない場合に有用です。
+
+作成手順は stageless インプラントと同じで、C2 設定だけが変わります。
+
+<ImageZoom src={relayImplant} alt="Relay Implant" className="h-[18rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+
+サポートされる OS では **TCP** を使えます。**SMB** は Windows インプラントのみです。ターゲットホスト側で、上流インプラントにリレーが設定済みである必要があります。リレーの詳細は [Relay](/docs/pivoting/relay#how-to-use) を参照してください。

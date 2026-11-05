@@ -1,0 +1,35 @@
+---
+title: نمودار حمله
+---
+
+import { Share2 } from 'lucide-react';
+import attackGraphs from '@/assets/img/tutorial/graphs.png';
+import attackGraphsInfo from '@/assets/img/tutorial/graphs_01.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+تب نمودار حمله نمای گرافیکی sessionهای متصل و فعال است. هدف اصلی کمک به تجسم pivoting شبکه و مسیرهای relay است.
+
+می‌توانید تب **Attack Graph** را از <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">آیکون <Share2 size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> در نوار بالا</span>، یا از **Tabs** > **Attack Graph** باز کنید.
+
+با باز کردن تب، کلاینت به هر team server پیکربندی‌شده درخواست می‌فرستد و برای هر کدام نمودار جدا می‌سازد.
+
+<ImageZoom src={attackGraphs} alt="Attack Graph" className="tutorial_img" />
+
+نمودارها هنگام اتصال session یا تغییر سطح امتیاز، مثلاً از user به admin، به‌صورت خودکار به‌روز می‌شوند.
+
+## اطلاعات session
+
+هر session به‌صورت آیکون مانیتور با تصویر سیستم‌عامل داخل آن نمایش داده می‌شود. اگر session از قبل امتیاز elevated دارد، مانیتور قرمز دیده می‌شود.
+
+می‌توانید روی session دوبار کلیک کنید تا پنل کناری با اطلاعات بیشتر باز شود.
+
+<ImageZoom src={attackGraphsInfo} alt="Attack Graph Info" className="tutorial_img" />
+
+## اتصالات relay
+
+وقتی دو session از طریق relay به هم وصل‌اند، فلشی بین آن‌ها با برچسب نوع relay، **TCP** یا **SMB**، رسم می‌شود.
+
+گاهی session از نمای نمودار ناپدید می‌شود. دو دلیل رایج:
+
+1. session والد دیگر relay فعال ندارد
+2. session فرزند بدون استفاده از relay متصل شده است

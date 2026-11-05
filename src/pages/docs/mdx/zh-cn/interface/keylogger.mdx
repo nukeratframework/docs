@@ -1,0 +1,53 @@
+---
+title: 键盘记录
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { Keyboard, RefreshCw } from 'lucide-react';
+import keylogger from '@/assets/img/tutorial/keylogger.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+键盘记录标签页与截图标签页类似，属于被动功能：仅读取和编辑已在主机上捕获的按键，不会主动发起捕获。
+
+可从顶部栏<span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">的 <Keyboard size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> 图标</span>打开 **Keylogger（键盘记录）** 标签页，或从 **Tabs（标签页）** > **Keylogger（键盘记录）** 进入。
+
+<ImageZoom src={keylogger} alt="Keylogger" className="tutorial_img" />
+
+## 使用方法
+
+按以下步骤使用键盘记录标签页：
+
+  <Steps>
+    <Step>
+      ### 启动键盘记录
+      在终端执行 `keylogger start` 启动键盘记录。在 Windows 上可用 `--method [keystate|boardstate]` 切换捕获方式。
+    </Step>
+    <Step>
+      ### 刷新键盘记录标签页
+      该标签页不会自动更新，需手动点击 <RefreshCw size={18.5} className="w-4 ml-1.5 inline-flex items-center gap-1 whitespace-nowrap align-middle" /> 刷新。
+    </Step>
+  </Steps>
+
+键盘记录标签页无需选择主机或服务器，客户端会向所有已配置的团队服务器发起请求。
+
+## 工作原理
+
+键盘记录在独立后台线程中运行，并将捕获的按键分批发送到服务器。
+
+### Windows
+
+如上所述，Windows 键盘记录支持两种捕获方式：一种侧重 OPSEC，另一种侧重捕获准确度。
+
+- **keystate** 通过 `SetWindowsHookEx` 使用底层键盘钩子。对钩子监控更易暴露，但避免大范围轮询。
+
+- **boardstate** 为省略 `--method` 时的默认方式。通过 `user32.dll` 的 `GetAsyncKeyState` 在循环中轮询按键状态。不安装钩子，但频繁轮询可能较显眼。
+
+核心逻辑位于 `implants/windows/stageless/capabilities/keylogger.nim`。
+
+### Linux
+
+通过 X11（`libX11.so`）调用 `XOpenDisplay` 与 `XQueryKeymap`，需要 `DISPLAY`。核心逻辑位于 `implants/linux/stageless/capabilities/keylogger.nim`。
+
+### MacOS
+
+MacOS 不支持此功能。

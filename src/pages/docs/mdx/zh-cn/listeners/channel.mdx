@@ -1,0 +1,132 @@
+---
+title: 通道
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import listenerForm from '@/assets/img/tutorial/listener_form.png';
+import listenerOk from '@/assets/img/tutorial/listener_ok.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+植入体要与团队服务器通信，需要事先为其配置通道。
+
+目前有两类通道：
+- HTTP/HTTPS
+- Custom
+
+## HTTP/HTTPS 通道
+
+这是最简单、最常见的通道。除植入体访问用的 URL 外，通常不需要额外配置。
+
+创建通道时还可以调整更高级的设置，例如：
+
+- 修改 URL 路径（示例：`https://example.com/path` → `https://example.com/path/custom`）
+- 响应头
+- 植入体请求与 listener 响应的自定义 body 模板
+
+## 自定义通道
+
+这是最复杂、也最灵活的通道类型。当你需要非常特定的通信方式时必不可少，例如：
+
+- Telegram
+- Discord
+- Dropbox
+
+没有预设，一切需手动配置，包括在创建植入体时编写与通道通信的自定义代码片段。
+
+创建界面中没有「custom channel」选项，因为必须手动搭建。详见 [自定义 C2](/docs/custom-channels)。
+
+## 其他通道类型呢？
+
+一些框架仍支持 DNS、DoH、mTLS 等替代通道。我们刻意只保留这两类，以贴合当前趋势，尤其是与 Telegram、Google Drive 等外部通信服务集成的需求。
+
+目前没有官方计划再增加更多通道类型。
+
+若仍需要特定类型（例如 DNS），需通过 **Custom Channel** 自行实现通信。
+
+## 创建 HTTP 通道
+
+HTTP 通道（无 SSL）最容易创建。按以下步骤操作：
+
+  <Steps>
+    <Step>
+      ### 打开 listeners 标签页
+      打开 **NukeRat** > **Listeners** > **Add**。
+    </Step>
+    <Step>
+      ### 填写字段
+      <ImageZoom src={listenerForm} alt="Listener Form" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+      - **Name**：便于识别的名称。
+      - **Type**：选择 `Channel`
+      - **Channel**：选择 `http` 或 `https`
+      - **Server**：listener 将创建在其上的团队服务器（须事先配置）
+      - **Port to open**：使用的端口
+    </Step>
+    <Step>
+      ### 点击 **Create**
+      若一切正确，listener 会创建并显示在 listeners 标签页列表中。
+      <ImageZoom src={listenerOk} alt="Listener Ok" className="h-[6.5rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+    </Step>
+  </Steps>
+
+创建完成后，植入体即可通过刚配置的通道通信。
+
+HTTP 通道（无 SSL）使用植入体构建时的共享 AES 256 密钥加密植入体请求与 listener 响应。即使有人截获 HTTP 会话，没有该密钥也无法读懂 body。线上载荷形态见 [通信加密](/docs/rest-api/implants#通信加密)。
+
+## HTTPS 与证书
+
+要使用 SSL，创建 listener 时在 **Channel** 字段选择 `https`。端口字段下方会出现 **Certificate** 区域。在 **Source** 下选择 self signed 或 manual。
+
+NukeRat 会通过 `openssl` 自动生成自签名证书，并可自定义有效期、CN、SAN、密钥类型等。
+
+部分字段的 placeholder 仅为示例，切勿原样使用，否则可能因证书特征匹配而被检测。
+
+手动证书时，粘贴或上传证书与私钥 PEM（例如来自 Namecheap 等提供商）。
+
+与无 SSL 的 HTTP 通道一样，HTTPS 通道对植入体 body 使用相同的 AES 256 加密。TLS 保护传输层，即便经过 SSL/TLS inspection，body 仍保持加密。
+
+## 高级自定义
+
+HTTP/HTTPS 通道在 **Advanced** 下包含若干字段：
+
+- **Endpoint path**：植入体通信使用的 URL 路径
+- **Response headers**：通道的响应头
+- **Custom body**：预设（`off`、`custom`，或内置 `json`、`xml` 示例），以及 custom body 不为 `off` 时可选的 **Listener response** 与 **Implant request** 模板
+
+## Custom body
+
+默认情况下，植入体与服务器之间的通信很直接：字符串加密后写入 body，例如：
+
+```http
+POST /api HTTP/1.1
+Host: example.com
+
+U2FsdGVkX1/Z8mN3kL9qP2vX7dQ4jK1mR5sT8uW2xY3aB6cD9e...
+```
+
+可见 body 只是一段加密数据，没有固定结构。使用 custom body 时，可在植入体与服务器之间定义共享结构，例如：
+
+**服务器响应：**
+```http
+{
+  "status": "ok",
+  "data": "§content§"
+}
+```
+
+**植入体请求：**
+```http
+{
+  "type": "telemetry",
+  "event": "sync",
+  "payload": "§content§",
+}
+```
+
+配置完成后，通道会按定义格式发送响应，并期望植入体请求采用相同格式。
+
+通道创建界面中提供了一些 custom body 示例，但不建议原样使用，可能因 body 特征匹配而被检测。
+
+### 说明
+
+1. 为使植入体正确通信，创建植入体时需复用相同的 **Listener response** 与 **Implant request** 模板。listener 读取 `implantBody`，并在运行时用 `listenerResponse` 包装回复（见 [请求体模板 (`implantBody`)](/docs/rest-api/implants#请求体模板-implantbody)）。
+2. 在 HTTP/HTTPS 通道上，当 `implantBody` 为空或恰好为 `§content§` 时，整个原始请求 body 会被加密。使用自定义结构时，仅加密 `§content§` 片段。listener 在解密前会提取该片段。

@@ -1,0 +1,32 @@
+---
+title: Sessions
+---
+
+import { MonitorIcon } from 'lucide-react';
+import hosts from '@/assets/img/tutorial/hosts.png';
+import hostsInfo from '@/assets/img/tutorial/hosts_01.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+The sessions tab is the main way to monitor sessions connected to every configured team server.
+
+You can open the **Sessions** tab from <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">the <MonitorIcon size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> icon</span> in the top bar, or from **Tabs** > **Sessions**.
+
+<ImageZoom src={hosts} alt="Sessions" className="tutorial_img" />
+
+When you open the tab, sessions from every configured team server are listed automatically, so you do not need to select a team server.
+
+To search more easily, use the **Filter sessions...** field at the top of the tab to filter by any string in the session information.
+
+## Session information
+
+To see all session information, double click the session row to open a side panel with more details.
+
+<ImageZoom src={hostsInfo} alt="Sessions Info" className="tutorial_img" />
+
+The same side panel includes a notes field where you can add relevant notes about the session. Click **Save** to persist the note. Any operator with access to the team server can read those notes.
+
+## Removing a session
+
+To remove a session, select the session row and click **Remove**.
+
+**Important**: Before removing a session, make sure its implant is no longer running. Otherwise, the session will be added again. Tip: use the `kill` command in the terminal to stop the host implant.

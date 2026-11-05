@@ -1,0 +1,55 @@
+---
+title: 파일 브라우저
+---
+import folderExplorer from '@/assets/img/tutorial/folder_explorer.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import {
+  ArrowDownToLine,
+  ArrowLeft,
+  ArrowRight,
+  Bot,
+  ChevronsRight,
+  Folder,
+  LayoutGrid,
+  List,
+  RefreshCw,
+} from 'lucide-react';
+import { Callout } from '@/ui/custom/callout';
+
+파일 브라우저를 사용하면 터미널 명령에 의존하지 않고 호스트의 파일과 디렉터리를 탐색할 수 있습니다.
+
+상단 바의 <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle"><Folder size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> 아이콘</span>에서 **File Browser** 탭을 열거나, **Tabs** > **File Browser**에서 열 수 있습니다.
+
+<Callout type="info">
+  파일 브라우저를 사용하기 전에 탭 이름 옆 **Host**를 클릭하여 대상 호스트를 선택하세요.
+</Callout>
+
+호스트를 선택하면 클라이언트가 해당 호스트의 디렉터리 목록을 요청합니다. 응답으로 파일 브라우저가 처음 로드될 때 채워집니다.
+
+<ImageZoom src={folderExplorer} alt="Folder explorer" className="tutorial_img" />
+
+왼쪽의 파일 및 디렉터리 트리로 선택한 호스트의 폴더와 파일을 더 빠르게 탐색할 수 있으며, 트리 위의 검색 바는 트리를 로컬에서 필터링합니다. 호스트에 새 목록 명령을 보내지는 않습니다.
+
+## 파일 다운로드
+
+파일을 클릭하면 원시 내용을 볼 수 있습니다. **Download** 버튼으로 로컬에 저장하세요.
+
+이미지 파일은 파일 브라우저에서 인라인으로 표시됩니다.
+
+파일 크기가 25 MB를 넘으면 파일 브라우저는 전체 내용을 불러오는 대신 경고를 표시합니다. 전체 페이로드가 필요하면 터미널에서 파일을 다운로드하세요.
+
+## 동작 방식
+
+디렉터리 목록의 경우 임플란트가 디렉터리를 읽고 결과를 클라이언트가 렌더링할 사용자 정의 JSON 형식으로 변환합니다. 파일 다운로드의 경우 임플란트가 원시 파일 바이트를 반환합니다.
+
+### Windows
+
+`kernel32.dll`(`FindFirstFileW`, `FindNextFileW`, `GetLogicalDriveStringsW`, `GetFileAttributesW`)을 사용합니다. 핵심 로직은 `implants/windows/stageless/capabilities/folders.nim`에 있습니다.
+
+### Linux
+
+POSIX `opendir`, `readdir`, `stat`을 사용합니다. 핵심 로직은 `implants/linux/stageless/capabilities/folders.nim`에 있습니다.
+
+### MacOS
+
+`macapi` 모듈(`ListDirEntries`, `PathExists`, `PathIsDir`)을 사용합니다. 핵심 로직은 `implants/mac/stageless/capabilities/folders.go`에 있습니다.

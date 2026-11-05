@@ -1,0 +1,70 @@
+---
+title: 設定
+---
+
+チームサーバーの設定は `./nukerat.py server config` 経由で行います。クライアントの **NukeRat** > **Servers** からサーバーを追加する操作と混同しないでください。
+
+`server.conf` がおおよそカバーする内容は次のとおりです。
+
+- 管理 API のホストとポート
+- TLS（証明書と鍵）
+- オペレーター JWT（有効期間と署名シークレット）
+- SQLite のサイズ上限
+- Armory リポジトリ URL
+- インプラント間の AES リレー鍵
+
+必要に応じて、その他のセクションもあります。
+
+## コマンド
+
+ランチャーの構文（`./nukerat.py server config …`）です。`import` サブコマンドはありません。
+
+すべて一覧表示:
+
+```bash
+./nukerat.py server config list
+```
+
+キーを変更（`<key>` は `section.option` 形式。値にスペースを含む場合はキーの後に続けて指定）:
+
+```bash
+./nukerat.py server config set server.port 8080
+```
+
+その他の例:
+
+```bash
+./nukerat.py server config set server.host 192.168.1.100
+./nukerat.py server config set server.keys.jwt.duration 30m
+```
+
+デフォルトにリセット（ランチャーが認識するキーのみ。シークレットは旧値ではなく**新しい**値になります）:
+
+```bash
+./nukerat.py server config reset server.port
+```
+
+ファイルで `server.conf` 全体を置き換え（上書きコピー。稼働中の conf と同じ INI レイアウト）:
+
+```bash
+./nukerat.py server config load /path/to/server.conf
+```
+
+ファイルは有効な `server.conf` である必要があります。例:
+
+```ini
+[server]
+host = 0.0.0.0
+port = 8080
+
+[server.keys]
+jwt.duration = 7d
+```
+
+自己署名証明書と conf で有効化した TLS:
+
+```bash
+./nukerat.py server config create-tls
+```
+
+`openssl` が必要です。その後、クライアントで **Protocol** を `https` にして認証します（[Servers](/docs/servers)）。

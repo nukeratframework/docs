@@ -1,0 +1,36 @@
+---
+title: Attack graph
+---
+
+import { Share2 } from 'lucide-react';
+import attackGraphs from '@/assets/img/tutorial/graphs.png';
+import attackGraphsInfo from '@/assets/img/tutorial/graphs_01.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+The attack graph tab is a graphical view of connected and active sessions. Its main purpose is to help visualize network pivoting and relay paths.
+
+You can open the **Attack Graph** tab from <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">the <Share2 size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> icon</span> in the top bar, or from **Tabs** > **Attack Graph**.
+
+When you open the tab, the client sends a request to every configured team server and builds a separate graph for each one.
+
+<ImageZoom src={attackGraphs} alt="Attack Graph" className="tutorial_img" />
+
+The graphs update automatically when a session connects or when privilege level changes, for example from user to admin.
+
+## Session information
+
+Each session is shown as a monitor icon with the operating system image inside. If the session already has elevated privileges, the monitor appears in red.
+
+You can also double click a session to open a side panel with more information.
+
+<ImageZoom src={attackGraphsInfo} alt="Attack Graph Info" className="tutorial_img" />
+
+## Relay connections
+
+When two sessions are connected through a relay, an arrow is drawn between them with a label showing the relay type, either **TCP** or **SMB**.
+
+In some cases, a session will disappear from the graph view. This can happen for two reasons:
+
+1. The parent session no longer has an active relay
+2. The child session connected without using a relay
+

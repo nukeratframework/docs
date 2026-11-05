@@ -1,0 +1,15 @@
+{
+  "title": "界面",
+  "pages": [
+    "terminal",
+    "folder-explorer",
+    "processes",
+    "screenshot",
+    "keylogger",
+    "credentials",
+    "hosts",
+    "attack-graphs",
+    "ai-agent",
+    "file-server"
+  ]
+}

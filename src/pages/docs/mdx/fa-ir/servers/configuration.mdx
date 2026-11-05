@@ -1,0 +1,70 @@
+---
+title: پیکربندی
+---
+
+تنظیمات team server از `./nukerat.py server config` انجام می‌شود. این را با افزودن سرور در کلاینت تحت **NukeRat** > **Servers** اشتباه نگیرید.
+
+`server.conf` تقریباً موارد زیر را پوشش می‌دهد:
+
+- host و port API مدیریت
+- TLS (گواهی و کلید)
+- JWT اپراتور (مدت اعتبار و secret امضا)
+- محدودیت‌های اندازهٔ SQLite
+- URL مخزن Armory
+- کلید relay AES بین implantها
+
+به‌علاوه بخش‌های دیگر وقتی به آن‌ها نیاز باشد.
+
+## دستورات
+
+این نحو launcher است (`./nukerat.py server config …`). زیردستور `import` وجود ندارد.
+
+فهرست همهٔ تنظیمات:
+
+```bash
+./nukerat.py server config list
+```
+
+تغییر یک کلید (`<key>` به صورت `section.option`؛ مقدار اگر بعد از کلید بیاید می‌تواند فاصله داشته باشد):
+
+```bash
+./nukerat.py server config set server.port 8080
+```
+
+مثال‌های بیشتر:
+
+```bash
+./nukerat.py server config set server.host 192.168.1.100
+./nukerat.py server config set server.keys.jwt.duration 30m
+```
+
+بازگشت به پیش‌فرض (فقط کلیدهایی که launcher می‌شناسد؛ برای secretها مقدار **جدید** ساخته می‌شود، نه مقدار قبلی):
+
+```bash
+./nukerat.py server config reset server.port
+```
+
+جایگزینی کل `server.conf` با یک فایل (کپی روی فایل فعلی، همان چیدمان INI مثل conf زنده):
+
+```bash
+./nukerat.py server config load /path/to/server.conf
+```
+
+فایل باید `server.conf` معتبر باشد، مثلاً:
+
+```ini
+[server]
+host = 0.0.0.0
+port = 8080
+
+[server.keys]
+jwt.duration = 7d
+```
+
+گواهی self-signed و TLS فعال در conf:
+
+```bash
+./nukerat.py server config create-tls
+```
+
+به `openssl` نیاز دارد. سپس در کلاینت با **Protocol** `https` احراز هویت کنید ([سرورها](/docs/servers)).

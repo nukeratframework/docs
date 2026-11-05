@@ -1,0 +1,77 @@
+---
+title: Reports
+---
+
+import { Callout } from '@/ui/custom/callout';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import activityReport from '@/assets/img/tutorial/report.png';
+
+NukeRat lets you generate reports of everything that occurred during an operation. You can export each report as PDF (default), HTML, or JSON. The available report types are:
+
+- **Activity**: executed terminal commands and captured credentials
+- **Hosts Report**: details of compromised hosts
+- **Indicators of Compromise**: list of Indicators of Compromise
+
+## Activity report
+
+Activity reports give you a high level overview of what happened during the operation. They are structured like this:
+
+| Section | Description |
+|---------|-------------|
+| Target scope | List of compromised hosts |
+| Queue activity | Up to 200 terminal commands (time, hostname, user, command) |
+| Captured credentials | Up to 200 captured credentials |
+
+When you create an activity report, you can enable **Hide credentials** to mask credential contents in the export.
+
+<Callout type="info">
+  Tip: queue activity rows come from terminal queue entries. You can remove commands from the queue by going to **NukeRat** > **Queue**. That lets you drop unwanted captures before you generate the report.
+</Callout>
+
+## Hosts report
+
+This is the simplest report. It lists up to 200 compromised hosts in a single table with:
+
+- Hostname
+- User
+- Operating system
+- Internal IP
+- External IP
+- PID of the NukeRat implant
+
+## Indicators of Compromise
+
+The IOC report is the most complex of the three. It breaks down every IOC stored for the operation across these sections:
+
+| Section | Description |
+|---------|-------------|
+| Target scope | List of compromised hosts |
+| IP Addresses | List of IP addresses |
+| Domains | List of domains |
+| Files | List of file paths detected from command output |
+| Hashes | List of file hashes (MD5, SHA1 and SHA256) |
+
+NukeRat fills the IOC database automatically. Terminal commands are scanned with regex rules for IPv4 addresses, domains, and known file extensions. Files transferred through the file server also get MD5, SHA1, and SHA256 hashes recorded. Nothing dynamic runs behind the scenes, like an AI model processing the output. So you may get mismatched indicators or plain capture errors, though that is not very common.
+
+<Callout type="info">
+    Tip: to address any indicator capture issues, NukeRat has an IOC editor where you can review captured indicators and remove them. Open it from **NukeRat** > **IOCs**.
+</Callout>
+
+## Example of report
+
+Below is an example of what the report styling looks like:
+<ImageZoom src={activityReport} alt="Activity report" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+Careful opening the report. You might get hit with a visual flashbang because it's in white mode ¯\\_(ツ)_/¯
+
+## Limitations
+
+All reports are generated on the team server you select. That means each report is limited to the hosts connected to that specific server.
+
+If you are working with more than one team server, you will need to generate a report for each server separately.
+
+## Feedbacks
+
+Report generation is still experimental. Expect it to change more often than most other NukeRat features. Mostly because we are still
+figuring out what operators actually need from reports.
+
+If you have feedback or suggestions, open an issue on GitHub.

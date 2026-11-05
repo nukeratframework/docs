@@ -1,0 +1,35 @@
+---
+title: SOCKS
+---
+
+import socks from '@/assets/img/tutorial/socks.png';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+NukeRat 原生支持 SOCKS，可将流量经指定主机路由。当前支持 SOCKS5。
+
+团队服务端打开监听端口；流量经所选植入体作为出口中继。
+
+## 配置步骤
+
+创建 SOCKS5 代理请按以下步骤操作：
+
+  <Steps>
+    <Step>
+      ### 打开 Network 窗口
+      进入 **NukeRat** > **Network**，点击 **Add**。
+    </Step>
+    <Step>
+      ### 配置代理
+      <ImageZoom src={socks} alt="添加 SOCKS" className="h-[15rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+      - **Team server（团队服务端）**：监听器 API 端点（表单顶部的 host 与 port）
+      - **Type（类型）**：`socks`
+      - **Host tag（主机 tag）**：代理出站连接的植入体
+      - **Port target（目标端口）**：团队服务端上 SOCKS 监听器端口
+      - **User** / **Password**：可选，用于操作员代理认证
+
+      填写完成后点击 **Create**。
+    </Step>
+  </Steps>
+
+完成后，代理会出现在 Network 表中。将工具指向 `socks5://<team_server_host>:<port_target>/`；若配置了认证，请在 URI 中包含用户名与密码。

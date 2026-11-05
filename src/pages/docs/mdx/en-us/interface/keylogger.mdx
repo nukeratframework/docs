@@ -1,0 +1,53 @@
+---
+title: Keylogger
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { Keyboard, RefreshCw } from 'lucide-react';
+import keylogger from '@/assets/img/tutorial/keylogger.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+The keylogger tab, like the screenshot tab, is a passive feature. It only reads and edits keys already captured from a host.
+
+You can open the **Keylogger** tab from <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">the <Keyboard size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> icon</span> in the top bar, or from **Tabs** > **Keylogger**.
+
+<ImageZoom src={keylogger} alt="Keylogger" className="tutorial_img" />
+
+## How to use
+
+To use the keylogger tab, follow these steps:
+
+  <Steps>
+    <Step>
+      ### Start the keylogger
+      In the terminal, run `keylogger start` to start the keylogger. On Windows, use the `--method [keystate|boardstate]` flag to change the capture method.
+    </Step>
+    <Step>
+      ### Refresh the keylogger tab
+      The keylogger tab does not update automatically, so refresh it manually by clicking <RefreshCw size={18.5} className="w-4 ml-1.5 inline-flex items-center gap-1 whitespace-nowrap align-middle" />.
+    </Step>
+  </Steps>
+
+The keylogger tab does not require selecting a host or server. A request is already sent to all configured team servers.
+
+## How it works
+
+The keylogger runs in a separate background thread and sends captured keys to the server in batches.
+
+### Windows
+
+As noted above, the Windows keylogger supports two capture methods: one prioritizes OPSEC and the other prioritizes capture accuracy.
+
+- **keystate** uses a low level keyboard hook through `SetWindowsHookEx`. More visible to hook monitoring, but avoids broad polling.
+
+- **boardstate** is the default when you omit `--method`. It uses `GetAsyncKeyState` from `user32.dll` and polls key state in a loop. No hook is installed, but repeated polling can stand out.
+
+The core logic is in `implants/windows/stageless/capabilities/keylogger.nim`.
+
+### Linux
+
+Uses X11 (`libX11.so`) with `XOpenDisplay` and `XQueryKeymap`. Requires `DISPLAY`. The core logic is in `implants/linux/stageless/capabilities/keylogger.nim`.
+
+### MacOS
+
+This feature is not supported on MacOS.

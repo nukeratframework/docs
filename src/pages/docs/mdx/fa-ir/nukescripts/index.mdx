@@ -1,0 +1,69 @@
+---
+title: NukeScript
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import debuggerImage from '@/assets/img/tutorial/debugger.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+NukeScript سامانهٔ اسکریپت‌نویسی NukeRat است و سه کار اصلی دارد:
+
+1. خودکارسازی عملیات
+2. افزودن قابلیت‌های جدید
+3. تعامل با کلاینت NukeRat
+
+به‌طور خلاصه، NukeScript چیزی بیش از اسکریپت‌های Python با لایهٔ اضافه‌ای به نام **رویدادها (events)** نیست.
+
+وقتی سرور در حال اجراست، یک worker پایگاه دادهٔ NukeRat را زیر نظر دارد تا ببیند رویدادی رخ داده یا نه، و بر همان اساس اسکریپت‌های مربوط را اجرا می‌کند.
+
+## ساخت اسکریپت
+
+برای نمایش، اسکریپتی می‌سازیم که با اتصال میزبان جدید، `whoami` را اجرا کند:
+
+  <Steps>
+    <Step>
+      ### باز کردن تب NukeScript
+      به **NukeRat** > **NukeScripts** بروید و **Add** را بزنید.
+    </Step>
+    <Step>
+      ### انتخاب سرور
+      نامی دلخواه وارد کنید و team server‌ای را که اسکریپت روی آن اجرا می‌شود انتخاب کنید.
+    </Step>
+    <Step>
+      ### نوشتن اسکریپت
+      کد زیر را در فیلد اسکریپت بچسبانید:
+      ```python
+def on_new_host(row):
+        host = row["tag"]
+        output = cmd(host, "whoami")
+        echo(f"Output: {output}")
+
+event.new_host:on_new_host()
+      ```
+    </Step>
+    <Step>
+      ### فعال‌سازی اسکریپت
+      پس از ساخت، باید اسکریپت را فعال کنید تا واقعاً اجرا شود. اسکریپت را انتخاب کنید و **Enable** را بزنید.
+    </Step>
+    <Step>
+      ### آزمایش اسکریپت
+      برای بررسی، **NS Debugger** را با **Tabs** > **NS Debugger** باز کنید.
+
+      اگر همه‌چیز درست باشد، با اتصال میزبان جدید خروجی `whoami` را در **NS Debugger** می‌بینید.
+
+      <ImageZoom src={debuggerImage} alt="NS Debugger" className="h-[6rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+
+    </Step>
+  </Steps>
+
+
+## رویدادها و دستورات
+
+برای جزئیات رویدادها و دستورات:
+
+- [رویدادها](/docs/nukescripts/events)
+- [دستورات](/docs/nukescripts/commands)
+
+## نمونه‌ها
+
+چند نمونهٔ اسکریپت در [نمونه‌ها](/docs/nukescripts/examples).

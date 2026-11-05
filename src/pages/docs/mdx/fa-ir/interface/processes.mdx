@@ -1,0 +1,42 @@
+---
+title: فرایندها
+---
+
+import processes from '@/assets/img/tutorial/processes.png';
+import {
+  Bot,
+  ChevronsUpDown,
+  Cpu,
+  RefreshCw,
+  X,
+} from 'lucide-react';
+import { Callout } from '@/ui/custom/callout';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+تب فرایندها تحلیل و پایش فرایندهای در حال اجرا روی میزبان را ساده‌تر می‌کند.
+
+می‌توانید تب **Processes** را از <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">آیکون <Cpu size={18.5} className="shrink-0 ml-1.5 mr-1.5" /></span> در نوار بالا، یا از **Tabs** > **Processes** باز کنید.
+
+<Callout type="info">
+  پیش از استفاده از تب فرایندها، با کلیک روی **Host** کنار نام تب، میزبان هدف را انتخاب کنید.
+</Callout>
+
+مثل مرورگر فایل، پس از انتخاب میزبان کلاینت فهرست فرایند آن میزبان را درخواست می‌کند. پاسخ در بار اول تب فرایندها را پر می‌کند.
+
+<ImageZoom src={processes} alt="فرایندها" className="tutorial_img" />
+
+## نحوهٔ کار
+
+implant فرایندهای در حال اجرا را فهرست می‌کند و نتیجه را به قالب JSON سفارشی برای رندر در کلاینت تبدیل می‌کند.
+
+### Windows
+
+از `kernel32.dll` (`CreateToolhelp32Snapshot`, `Process32FirstW`, `Process32NextW`, `OpenProcess`, `QueryFullProcessImageNameW`) و `iphlpapi.dll` (`GetExtendedTcpTable`) استفاده می‌کند. منطق اصلی در `implants/windows/stageless/capabilities/process.nim` است.
+
+### Linux
+
+`/proc` (`stat`, `status`, `exe`) و `/proc/net/tcp` را می‌خواند. منطق اصلی در `implants/linux/stageless/capabilities/process.nim` است.
+
+### MacOS
+
+از ماژول `macapi` (`ListProcessIDs`, `ReadProcessStat`, `ReadProcessStatus`, `GetTcpPidMap`) استفاده می‌کند. منطق اصلی در `implants/mac/stageless/capabilities/process.go` است.

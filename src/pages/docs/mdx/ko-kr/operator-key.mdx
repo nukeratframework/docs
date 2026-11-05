@@ -1,0 +1,45 @@
+---
+title: 운영자 키
+---
+
+운영자 키는 팀 서버에 로그인하고 액세스 세션을 만들 때 사용하는 인증 키입니다.
+
+팀 서버 호스트에서 다음을 실행합니다.
+
+```bash
+nukerat server key add bill
+```
+
+키는 출력에 표시되며, 명령을 실행한 디렉터리에 `.key` 파일이 생성됩니다.
+
+생성된 키를 모두 보려면:
+
+```bash
+nukerat server key list
+```
+
+키를 제거하려면:
+
+```bash
+nukerat server key rem bill
+```
+
+## 키 구조
+
+```
+bill:1pDi0uSLlFKfCjjHPL9uZAlP:1789429491513043059V5Kua8T5ug3ZHcVt…
+```
+
+운영자 키는 콜론으로 구분된 세 부분으로 이루어집니다.
+
+1. 운영자 이름(식별용)
+2. 비밀번호(서버에서 bcrypt로 검증)
+3. Secret
+
+키를 사용할 때 클라이언트는 `user`, `pass`, `secret`을 POST `/auth/login` 요청으로 보내 세션 JWT를 받습니다.
+
+## 세션 기간
+
+기본적으로 JWT 세션은 7일 동안 유효합니다(서버 설정의 `server.keys.jwt.duration`, 기본값 `7d`). 만료되면 인증이 필요한 기능을 사용할 때 오류 토스트가 표시됩니다.
+
+세션을 갱신하려면 저장된 키로 다시 로그인하면 됩니다.

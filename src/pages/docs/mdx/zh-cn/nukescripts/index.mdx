@@ -1,0 +1,68 @@
+---
+title: NukeScript
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import debuggerImage from '@/assets/img/tutorial/debugger.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+NukeScript 是 NukeRat 的脚本系统，主要有三个用途：
+
+1. 自动化操作
+2. 扩展新功能
+3. 与 NukeRat 客户端交互
+
+简而言之，NukeScript 就是在 Python 脚本外再包一层 **events（事件）** 机制。
+
+服务端运行期间，会有 worker 监控 NukeRat 数据库中的事件触发情况，并据此执行对应脚本。
+
+## 创建脚本
+
+下面演示一个脚本：在新主机上线时执行 `whoami`：
+
+  <Steps>
+    <Step>
+      ### 打开 NukeScript 标签页
+      进入 **NukeRat** > **NukeScripts**，点击 **Add（添加）**。
+    </Step>
+    <Step>
+      ### 选择服务器
+      填写任意名称，并选择运行该脚本的 team server。
+    </Step>
+    <Step>
+      ### 编写脚本
+      将以下代码粘贴到脚本编辑区：
+      ```python
+def on_new_host(row):
+        host = row["tag"]
+        output = cmd(host, "whoami")
+        echo(f"Output: {output}")
+
+event.new_host:on_new_host()
+      ```
+    </Step>
+    <Step>
+      ### 启用脚本
+      创建后需启用脚本才会执行。选中脚本并点击 **Enable（启用）**。
+    </Step>
+    <Step>
+      ### 测试脚本
+      验证时打开 **NS Debugger**：点击 **Tabs（标签页）** > **NS Debugger**。
+
+      若配置正确，新主机连接时应在 **NS Debugger** 中看到 `whoami` 的输出。
+
+      <ImageZoom src={debuggerImage} alt="NS Debugger" className="h-[6rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+
+    </Step>
+  </Steps>
+
+
+## 事件与命令
+
+进一步了解事件与命令，请参阅：
+- [Events（事件）](/docs/nukescripts/events)
+- [Commands（命令）](/docs/nukescripts/commands)
+
+## 示例
+
+更多脚本示例见 [Examples（示例）](/docs/nukescripts/examples)。

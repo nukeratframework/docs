@@ -1,0 +1,49 @@
+---
+title: ファイルサーバー
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import fileServerForm from '@/assets/img/tutorial/file_server_form.png';
+import { Globe } from 'lucide-react';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+ファイルサーバーリスナーは、名前のとおりファイルサーバーです。ペイロードのホスト、ローダー用ステージの配信、シンプルなフィッシングアプリケーションのホストなど、さまざまな用途に使えます。
+
+各リスナーはチームサーバー上に専用のコンテンツフォルダーを持ちます。ファイルはリスナーアドレスから HTTP または HTTPS で、通常の URL パス（例: `http://host:port/payload.bin`）経由で配信されます。
+
+## ファイルサーバーの作成 [#creating-a-file-server]
+
+ファイルサーバーを作成するには、以下の手順に従います。
+
+
+  <Steps>
+    <Step>
+      ### リスナータブを開く
+      **NukeRat** > **Listeners** > **Add** を開きます。
+    </Step>
+    <Step>
+      ### フィールドを入力する
+      <ImageZoom src={fileServerForm} alt="File Server Form" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+      - **Name**: リスナーを識別しやすい名前を付けます。
+      - **Type**: **File server** を選択
+      - **Server**: リスナーを作成するチームサーバーを選択（事前に設定済みである必要があります）
+      - **Port to open**: 使用するポート
+    </Step>
+    <Step>
+      ### **Create** をクリック
+      作成後、トップバーの <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">(<Globe size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> アイコン)</span> または **Tabs** > **File Server** から **File Server** ワークスペースを開きます。リスナーを選び、**Upload** でファイルを追加します。
+    </Step>
+  </Steps>
+
+
+## SSL と証明書
+
+ファイルサーバーは HTTPS をサポートします。作成フォームで **SSL** にチェックを入れ、**Certificate** セクションで証明書を設定します。
+
+**Source** では自己署名または手動を選びます。自己署名証明書は NukeRat が `openssl` コマンドで自動生成し、チャネルリスナーと同じサブジェクトおよび鍵オプションが使えます。
+
+手動証明書の場合は、証明書と秘密鍵の PEM を貼り付けるかアップロードします。
+
+## カスタムレスポンスヘッダー
+
+**Advanced** > **Response headers** からレスポンスヘッダーも設定できます。

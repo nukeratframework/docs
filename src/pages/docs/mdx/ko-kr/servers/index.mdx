@@ -1,0 +1,22 @@
+---
+title: 서버
+---
+
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import keyAdd from '@/assets/img/tutorial/key_2.png';
+
+NukeRat 클라이언트는 여러 팀 서버를 동시에 관리할 수 있습니다. 클라이언트 인스턴스를 추가로 열지 않고도 서로 다른 서버의 임플란트에 명령을 실행할 수 있습니다.
+
+## 팀 서버 추가
+
+NukeRat 클라이언트에서 서버를 구성하려면 먼저 운영자 키가 필요합니다. 생성 방법은 [Operator key](/docs/operator-key)를 참고하세요.
+
+**NukeRat** > **Servers**로 이동해 **Add**를 클릭하고 **New Server** 패널을 채웁니다. **Key (.key)**에 운영자 키를 붙여 넣거나 **Upload .key**로 팀 서버 폴더의 파일을 불러옵니다. **Protocol**(http 또는 https), **Host**, **Port**를 설정한 뒤 **Auth**를 클릭합니다.
+
+<ImageZoom src={keyAdd} alt="Key Add" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+
+인증에 성공하면 해당 서버 항목에 JWT가 저장됩니다. 기본적으로 토큰은 7일 동안 유효합니다. 정확한 기간은 팀 서버의 `server.keys.jwt.duration`으로 제어합니다. [Operator key](/docs/operator-key)의 세션 기간 절을 참고하세요.
+
+세션이 만료되면 인증이 필요한 기능에서 오류 토스트가 표시됩니다. 서버를 선택하고 **Edit**를 열고 **Auth**를 클릭해 새 세션을 시작하세요. 편집 모드에서 **Clear Session**을 클릭하면 서버 항목을 삭제하지 않고 저장된 토큰만 제거할 수 있습니다.
+
+팀 서버 머신의 호스트, 포트, TLS, JWT 기간 및 `server.conf`의 나머지 설정은 [Configuration](/docs/servers/configuration)의 런처 명령을 사용하세요.

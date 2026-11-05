@@ -1,0 +1,52 @@
+---
+title: Скриншот
+---
+
+import screenshot from '@/assets/img/tutorial/screenshot.png';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { Camera } from 'lucide-react';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+Вкладка **Screenshot** — пассивный просмотрщик последнего снимка с выбранного хоста. Пока скриншот не сделан, на вкладке нечего показывать.
+
+Она удобна для динамического просмотра: вместе с режимом **loop** можно приблизиться к «живой» картинке.
+
+Вкладку можно открыть через значок <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle"><Camera size={20} className="shrink-0 ml-1.5 mr-1.5" /></span> на верхней панели или **Tabs** > **Screenshot**.
+
+<ImageZoom src={screenshot} alt="Screenshot" className="tutorial_img" />
+
+## Как пользоваться
+
+  <Steps>
+    <Step>
+      ### Выберите хост
+      Сначала укажите хост, чьи скриншоты нужно смотреть: нажмите **Host** рядом с названием вкладки.
+    </Step>
+    <Step>
+      ### Запустите цикл скриншотов
+      В терминале выполните `screenshot start`. Интервал между снимками задаётся аргументом `--delay <interval>` в секундах.
+    </Step>
+    <Step>
+      ### Дождитесь обновления картинки
+      По умолчанию вкладка опрашивает team server и обновляется при каждом новом снимке — вручную обновлять не нужно.
+    </Step>
+  </Steps>
+
+## Как это устроено
+
+Захват экрана работает в двух режимах:
+
+1. Одиночный снимок
+2. Цикл (**loop**): отдельный поток по заданному интервалу делает скриншот снова и снова.
+
+### Windows
+
+Снимок через GDI (`user32.dll` и `gdi32.dll`): `GetDC`, `BitBlt`, `CreateDIBSection`. Логика: `implants/windows/stageless/capabilities/screenshots.nim`.
+
+### Linux
+
+X11 (`libX11.so`), `XOpenDisplay` и `XGetImage` для root-окна. Нужна переменная `DISPLAY`. Логика: `implants/linux/stageless/capabilities/screenshots.nim`.
+
+### MacOS
+
+На MacOS функция не поддерживается.

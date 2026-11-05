@@ -1,0 +1,576 @@
+---
+title: 武器库
+---
+
+Armory（武器库）是一套现成的 543 个实用工具（BOF 与 .NET 可执行文件），便于在指定主机上快速下载并运行。
+
+所有工具均来自 NukeRat 官方 Armory 仓库：[**github.com/nukeratframework/armory**](https://github.com/nukeratframework/armory)
+
+预编译二进制会自动下载，也可手动构建：
+
+1. 自行构建并放入 `server/infra/bin/armory/` 目录
+2. 在 `server/server.conf` 的 `[server.armory]` 中将 `repository` 指向你自己的 GitHub Release 源
+
+## 命令
+
+默认情况下，NukeRat 不包含预编译的 Armory 二进制。在 team server 上使用 armory 命令安装：
+
+| 命令 | 作用 |
+| --- | --- |
+| `armory` | 列出可用工具及简要说明 |
+| `armory install all` | 从最新 release 包下载全部工具 |
+| `armory install &lt;tool&gt;` | 下载单个工具的文件 |
+| `armory update` | 从仓库刷新 Armory 索引（`armory.json`） |
+| `armory update &lt;tool&gt;` | 刷新索引并重新下载单个工具 |
+| `armory remove &lt;tool&gt;` | 删除该工具的缓存文件 |
+| `help &lt;command&gt;` | 显示某工具命令的帮助 |
+
+## 目录
+
+以下为全部 543 个 Armory 工具。名称与传给 `armory install` 的终端命令一致：
+
+| 名称 | 类别 | 说明 |
+| --- | --- | --- |
+| `bof-aadjoininfo` | bof | 显示设备的 Azure AD 或 Entra ID 加入信息。 |
+| `bof-adnet-enum` | bof | 枚举 Active Directory 证书服务（AD CS）。 |
+| `bof-adnet-enum-com2` | bof | 通过 IX509PolicyServerListManager COM 对象枚举 AD 中的 CA 与证书模板。 |
+| `bof-adnet-on-behalf` | bof | 使用带 XCN_OID_ENROLLMENT_AGENT 扩展的注册代理证书，代另一用户申请 AD CS 注册证书。 |
+| `bof-add-ace` | bof | 向对象 DACL 添加 ACE。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-add-attribute` | bof | 添加或追加属性值。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-add-computer` | bof | 创建新的计算机对象。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-add-defender-excl` | bof | 通过 COM 调用 MSFT_MpPreference WMI 类添加 Windows Defender 排除项。 |
+| `bof-add-delegation` | bof | 设置或替换委派 SPN。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-add-exclusion` | bof | 为文件夹、文件、进程或扩展名添加 Windows Defender 排除项。 |
+| `bof-add-firewall-rule` | bof | 通过 COM 添加入站或出站防火墙规则。 |
+| `bof-add-group` | bof | 创建新组。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-add-groupmember` | bof | 将用户加入组。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-add-local-cert` | bof | 将（自签名）证书添加到指定本地计算机证书存储。例如，将用于签名恶意样本的自签名证书加入目标机「受信任的根证书颁发机构」（ROOT）存储。 |
+| `bof-add-machine-account` | bof | 滥用默认 ms-DS-MachineAccountQuota 添加恶意计算机账户以进行后续攻击。 |
+| `bof-add-ou` | bof | 创建组织单位（OU）。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-add-rbcd` | bof | 配置 RBCD 委派。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-add-sidhistory` | bof | 向 sidHistory 添加 SID。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-add-spn` | bof | 添加 ServicePrincipalName。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-add-uac` | bof | 添加 UserAccountControl 标志。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-add-user` | bof | 创建新用户对象。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-add-user-by-samr` | bof | 通过 SAMR 将用户加入本地组。需要管理员权限。勿用于 Active Directory。 |
+| `bof-adduser` | bof | 添加本地或远程用户。 |
+| `bof-adduser-to-group` | bof | 将用户加入组。 |
+| `bof-addusertogroup` | bof | 将指定用户加入指定域组。 |
+| `bof-adv-audit-policies` | bof | 获取高级安全审核策略。 |
+| `bof-ai-surface` | bof | 映射 Windows 开发端点上的 AI 工具，并标出便于分诊的 AI Agent 与 MCP 工件（可能暴露工作流数据、本地状态与凭据）。 |
+| `bof-allow-firewall-rule` | bof | 添加入站或出站防火墙允许规则。 |
+| `bof-amsi-etw-detect` | bof | 通过已加载 DLL 与 ETW 相关导出检测当前进程中的 AMSI 与 ETW，便于选择安全监控较弱的目标。 |
+| `bof-app-count` | bof | 通过注册表统计已安装应用数量（去重后输出）。对大量 beacon 对比应用数量差异可推断设备特征。 |
+| `bof-applocker-policy` | bof | 扫描相关注册表项，枚举 AppLocker 策略、规则集与强制模式。 |
+| `bof-arp` | bof | 列出 ARP 表。 |
+| `bof-ask-mfa` | bof | 显示带指定编号的伪造 Microsoft Authenticator 批准对话框，30 秒后自动关闭。 |
+| `bof-askcreds` | bof | 通过 CredUIPromptForWindowsCredentialsName 收集凭据；在线程中最多等待 60 秒，等待期间 beacon 无响应。 |
+| `bof-asktgs` | bof | 使用 TGT 申请服务票据。 |
+| `bof-asktgt` | bof | 使用密码、哈希或无 preauth 申请 TGT。 |
+| `bof-asr-status` | bof | 从注册表枚举 Windows Defender 攻击面缩减（ASR）规则：已配置规则、强制状态（Block/Audit/Warn/Disabled）及策略来源（Intune/MDM 或组策略）。 |
+| `bof-asrenum` | bof | 通过 WMI 查询 MSFT_MpPreference，识别 ASR 规则、动作与排除路径。需要提升权限上下文。 |
+| `bof-asreproasting` | bof | 为未启用 Kerberos preauthentication 的用户请求 AS-REP。 |
+| `bof-authenticate-http` | bof | 从当前用户上下文向（ntlmrelayx）服务器强制发起 Windows 认证的 HTTP 请求，用于已认证的 LDAP 中继攻击。 |
+| `bof-backup-priv-sam` | bof | 通过远程注册表滥用 SeBackupPrivilege，转储远程系统的 SAM、SYSTEM、SECURITY 配置单元。 |
+| `bof-bitlocker-status` | bof | 扫描注册表，枚举 BitLocker 加密状态、策略配置与恢复密钥备份位置。 |
+| `bof-c-enumerate-defender` | bof | 通过 WMI 枚举 Windows Defender 排除项。需要提升权限的 beacon 上下文。 |
+| `bof-cacls` | bof | 列出指定文件的用户权限，支持通配符。 |
+| `bof-capture-net-ntlm` | bof | 捕获当前用户的 NetNTLMv2 哈希，通过模拟客户端与服务器之间的 NTLM 认证交换实现。 |
+| `bof-cdp-enable` | bof | 在运行中的 x64 Chrome 或 Edge 中启用 Chrome DevTools Protocol：运行时解析浏览器符号并在 UI 线程启动远程调试服务。仅 x64。 |
+| `bof-cdp-enable-iso` | bof | 在启用 Windows 进程隔离的 x64 Chrome 中启用 CDP：查询隔离进程的有限句柄并从本地 chrome.dll 解析符号。仅 x64。 |
+| `bof-certstore-loot` | bof | 枚举本地证书存储，查找可导出私钥的证书并提供导出路径。 |
+| `bof-change-pass` | bof | 在本地或远程主机上设置用户密码。 |
+| `bof-changepw` | bof | 通过 kpasswd 修改用户密码。 |
+| `bof-chrome-key` | bof | 从 Local State 解密 Base64 编码的 Chrome 密钥，用于离线解密浏览器 Cookie。 |
+| `bof-chromium-key-dump` | bof | 转储 Chrome/Edge 主密钥，并从浏览器配置文件下载 Cookie/Login Data 文件。 |
+| `bof-cicd-credential-hunt` | bof | 在当前 Windows 用户配置文件中查找常见 CI/CD、云与开发凭据工件；默认报告路径与大小。`.gitconfig` 与 `.ssh/config` 归类为配置而非凭据工件。 |
+| `bof-clipboard-grab` | bof | 通过 Win32 API 读取 Windows 剪贴板文本并回传。 |
+| `bof-clipboard-monitor` | bof | 异步 BOF：通过 GetClipboardSequenceNumber 监控剪贴板变化并在变更时输出内容。支持文本与图像（sync 模式下图像为 base64 BMP）。图像仅在 sync 模式可用。 |
+| `bof-clipboard-steal` | bof | 启用、禁用、检查与转储 Windows 剪贴板历史。 |
+| `bof-cloud-metadata-check` | bof | 从当前进程探测 AWS、Azure、GCP 本地元数据服务，可达时报告提供商身份、实例上下文及有限凭据片段。 |
+| `bof-cloudap-bof` | bof | 通过 LsaCallAuthenticationPackage 提取 Entra ID SSO Cookie、设备 SSO Cookie、AD FS 企业 SSO Cookie 及云提供商状态。需要已加入 Entra ID/Azure AD 且存在活跃云登录会话的设备。 |
+| `bof-com-probe` | bof | 探测给定 CLSID 能否实例化 COM 对象；先尝试进程内，再回退到 local server。 |
+| `bof-contact-harvester` | bof | 通过 COM 收集 Outlook 全局地址列表联系人。 |
+| `bof-cookie-graber` | bof | 通过 DPAPI 从 Chrome 与 Edge 的 Local State 提取 WebKit 主加密密钥；先 Edge 后 Chrome。主密钥配合 CookieProcessor.exe 离线解密磁盘 Cookie 数据库。 |
+| `bof-cookie-monster` | bof | 窃取 Chrome、Edge、Firefox 的 Cookie 与登录信息；提取 WebKit 主密钥与 App Bound 密钥，复制 Cookies/Login Data 句柄实现无文件下载。支持 SYSTEM 模式解密密钥且无需注入浏览器。下载的数据库用 decrypt.py 离线解密。 |
+| `bof-cred-man` | bof | 滥用 SeTrustedCredManAccess 转储 Windows 凭据管理器；从 winlogon.exe 窃取令牌以启用该权限。需要管理员权限。 |
+| `bof-cred-prompt` | bof | 启动 Windows 凭据提示以捕获用户输入；凭据作为输出返回。提示为持久式，受害者无法取消/关闭或提交空密码，相关尝试会显示在输出中。并设置定时器确保 beacon 最终会返回。 |
+| `bof-credui` | bof | 调用 CredUIPromptForWindowsCredentials 显示凭据对话框，并通过 LogonUser 验证提交凭据。 |
+| `bof-cross-s4u` | bof | 执行跨域 S4U 约束委派滥用。 |
+| `bof-cryptvortex` | bof | 加密或解密目录中的文件。 |
+| `bof-curl` | bof | 在不建立 SOCKS 代理的情况下发起 HTTP 请求。 |
+| `bof-cve-2022-26923` | bof | AD CS 域权限提升漏洞 CVE-2022-26923；基于 AddMachineAccount 并修改 dNSHostName 与 servicePrincipalName。 |
+| `bof-dcom-local-server32` | bof | 在指定主机上按 CLSID 实例化 DCOM/COM 类，启动关联的进程外 EXE 服务器。结合易受 DLL/COM 劫持的 EXE 及可向模块加载目录写入的权限，可实现（远程）代码执行与横向移动。 |
+| `bof-dcompotato-notify` | bof | 通过 SeImpersonate 向 PrintNotify DCOM 调用传入恶意 IUnknown 对象以获取 SYSTEM 权限。 |
+| `bof-defender-exclusions` | bof | 从注册表列出 Windows Defender 排除路径、进程与扩展名。 |
+| `bof-del-exclusion` | bof | 删除 Windows Defender 对文件夹、文件、进程或扩展名的排除项。 |
+| `bof-del-firewall-rule` | bof | 通过 COM 删除防火墙规则。 |
+| `bof-del-local-cert` | bof | 按唯一指纹从指定存储删除本地计算机证书。 |
+| `bof-del-machine-account` | bof | 删除在 Active Directory 中创建的恶意计算机账户。 |
+| `bof-del-task-scheduler` | bof | 删除本机或远程主机上的计划任务。 |
+| `bof-describe` | bof | 解析并描述 Kerberos 票据。 |
+| `bof-detect-hooks` | bof | 扫描 ntdll 导出的 Nt/Zw 函数中的异常指令模式以检测当前进程的内联 hook。 |
+| `bof-dir` | bof | 列出目录中的文件，支持通配符（如 `C:\Windows\S*`），与 Cobalt Strike 的 `ls` 不同。 |
+| `bof-disableuser` | bof | 在目标计算机上禁用指定用户账户。 |
+| `bof-dll-env-hijacking` | bof | 建立隐藏目录结构，将磁盘上的恶意 proxy DLL 移至新 system32 文件夹并隐藏，修改 SYSTEMROOT 环境变量，以伪造进程运行易受攻击二进制以加载恶意 DLL，最后恢复 SYSTEMROOT 以保证 beacon 正常工作。 |
+| `bof-dll-hijack-hunter` | bof | 从给定路径与 DLL 名遍历 SafeDllSearchMode 解析顺序；可选检查匹配文件是否可写。 |
+| `bof-domaininfo` | bof | 通过 Active Directory 域服务枚举域信息。 |
+| `bof-draugr` | bof | Draugr 栈欺骗与间接系统调用：NtAllocateVirtualMemory 分配内存，加载 User32.dll，以合成栈帧调用 MessageBoxA。 |
+| `bof-driversigs` | bof | 枚举已安装服务的 ImagePath，对照已知 AV/EDR 厂商检查签名证书。 |
+| `bof-dropspawn` | bof | 将 proxy DLL 落盘并伪造应用程序目录以影响 DLL 搜索顺序来创建新进程；支持 x86、x64 与跨架构。DLL 应在新进程加载后自删。 |
+| `bof-dump` | bof | 从登录会话提取 Kerberos 票据。 |
+| `bof-dump-procargs` | bof | 从 PEB 转储进程命令行参数。 |
+| `bof-edgedump` | bof | 从 msedge.exe 主进程内存提取 Edge 保存的凭据工件；扫描可读内存区域。不读取浏览器文件、SQLite 或 DPAPI。同用户上下文可读当前用户 Edge；提升权限可读其他已登录会话的 Edge 进程。 |
+| `bof-elevate-trusted` | bof | 通过 SetThreadToken 模拟将当前 beacon 提升至 SYSTEM 并获取 TrustedInstaller 组权限。 |
+| `bof-enableuser` | bof | 在目标计算机上启用并解锁指定用户账户。 |
+| `bof-entra-authcode-flow` | bof | 通过浏览器 OAuth 授权码 URL 获取 Microsoft Entra access/refresh 令牌；交换在端点完成，可绕过条件访问。流程：1）打开含 OAuth URL 的新标签 2）监控窗口标题中的授权码重定向 3）用授权码交换令牌。 |
+| `bof-enum-active-hosts` | bof | 枚举活跃主机或验证单个开放端口；主机名/IP 列表从操作员客户端加载。 |
+| `bof-enum-dll-sideloading` | bof | 对单个 .EXE、文件夹或递归所有文件夹枚举可执行文件中的 DLL 侧加载漏洞。 |
+| `bof-enum-drives` | bof | 枚举盘符及类型。 |
+| `bof-enum-exclusions` | bof | 枚举 Windows Defender 排除的文件、文件夹、扩展名与进程。 |
+| `bof-enum-files` | bof | 按词、扩展名或文件内容关键字搜索匹配文件，支持通配符。 |
+| `bof-enum-filter-driver` | bof | 枚举筛选器驱动。 |
+| `bof-enum-handles` | bof | 枚举进程间的 `process` 与 `thread` 类型句柄。 |
+| `bof-enum-lib` | bof | 在所有进程中查找指定已加载模块，或列出指定进程的全部模块。 |
+| `bof-enum-local-cert` | bof | 列出指定存储中的本地计算机证书。常见存储名：ROOT、MY、TRUST、CA、USERDS、AuthRoot、Disallowed。 |
+| `bof-enum-local-sessions` | bof | 枚举当前已连接的用户会话（本地与 RDP）。 |
+| `bof-enum-sec-products` | bof | 列出当前或远程主机上运行的 AV/EDR 等安全产品：将运行进程与约 130 种产品的硬编码列表比对。 |
+| `bof-enum-shares` | bof | 按预定义主机名/IP 列表列出域内发布的共享及访问级别；快速 TCP/445 检查跳过离线主机，并以隐蔽方式验证访问。 |
+| `bof-enum-task-scheduler` | bof | 枚举根文件夹中所有计划任务并列出基本信息。 |
+| `bof-enum-web-client` | bof | 按预定义主机名/IP 列表枚举运行 WebClient 服务的主机；列表从攻击端系统加载。 |
+| `bof-enumprotections` | bof | 枚举系统进程并报告保护级别、关联服务、用户、会话 ID 与路径；便于发现可能适合 DLL 劫持的未保护第三方服务进程。 |
+| `bof-env` | bof | 列出进程环境变量。 |
+| `bof-esc1-unpac` | bof | 完整 AD CS ESC1 攻击链：申请带任意 SAN（及 KB5014754  bypass 用 SID）的证书，PKINIT 认证，通过 UnPAC the hash 提取 NT 哈希。 |
+| `bof-etw` | bof | patch 并恢复 ntdll.dll 中的 EtwEventWrite 以降低 ETW 日志质量。 |
+| `bof-event-log-manage` | bof | 检查事件日志通道，管理 BOF 拥有的经典日志与源，通过已注册源写入文本/二进制事件，可选备份后清空通道。create/clear/destroy 需要 Administrator 或 SYSTEM。 |
+| `bof-execute-cross-session` | bof | 以其他用户上下文执行磁盘上的二进制；通过 IStandardActivator、ISpecialSystemProperties、IHxHelpPaneServer 跨会话交互，无需进程注入。 |
+| `bof-find-loaded-module` | bof | 查找加载了 *modulepart* 的进程，可选仅搜索 *procnamepart*。 |
+| `bof-find-module` | bof | 通过直接系统调用枚举加载特定模块（如 clr.dll、winhttp.dll、amsi.dll）的进程；便于选择 OPSEC 友好的 spawnto。 |
+| `bof-find-proc-handle` | bof | 枚举持有目标进程（如 lsass.exe）句柄的进程；可发现已有 LSASS 句柄以避免新开句柄。 |
+| `bof-firewall-rule` | bof | 通过 COM API（INetFwPolicy2）增删查 Windows 防火墙规则，不启动 netsh.exe/cmd.exe；适用于内网 pivot。 |
+| `bof-force-lock-screen` | bof | 强制锁定当前用户会话。 |
+| `bof-functionutil` | bof | 读取、对比并 patch 已加载模块 API 与磁盘 DLL 副本；用于检测 EPP/EDR hook 并 unhook。 |
+| `bof-get-acl` | bof | 查看对象 DACL/ACE。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-get-attribute` | bof | 读取指定 LDAP 属性。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-get-azure-token` | bof | 利用已保存的浏览器登录尝试完成针对 Azure 的 OAuth 授权码流程并输出令牌。 |
+| `bof-get-clipboard` | bof | 通过 Win32 剪贴板 API 输出剪贴板文本。 |
+| `bof-get-computers` | bof | 列出域内所有计算机。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-get-delegation` | bof | 查看委派配置。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-get-domain-info` | bof | 返回当前域与域控制器信息，含林名、域名、DC 名称、DC 地址与 DC 站点名。 |
+| `bof-get-domaininfo` | bof | 从 rootDSE 查询域信息。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-get-dpapi-system` | bof | 获取 DPAPI_SYSTEM 密钥与 bootkey。 |
+| `bof-get-groupmembers` | bof | 列出组成员。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-get-groups` | bof | 列出域内所有组。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-get-machacct-quota` | bof | 读取当前域的 ms-DS-MachineAccountQuota 值。 |
+| `bof-get-maq` | bof | 获取计算机账户配额。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-get-netntlm` | bof | 通过 SSPI 捕获 NetNTLMv2 哈希。 |
+| `bof-get-netsession` | bof | 枚举本地或指定计算机上的会话。 |
+| `bof-get-netsession2` | bof | 支持 BOFHound 的 `netsession` 修改版。 |
+| `bof-get-object` | bof | 转储对象全部属性。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-get-password-policy` | bof | 获取目标服务器或域的密码策略与锁定设置。 |
+| `bof-get-priv` | bof | 在当前进程上激活指定令牌权限。 |
+| `bof-get-rbcd` | bof | 查看基于资源的约束委派（RBCD）。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-get-session-info` | bof | 输出当前用户登录会话相关信息。 |
+| `bof-get-spn` | bof | 列出 ServicePrincipalName。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-get-uac` | bof | 查看 UserAccountControl 标志。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-get-usergroups` | bof | 列出用户所属组。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-get-users` | bof | 列出域内所有用户。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-get-webdav-status` | bof | 通过 DAV RPC SERVICE 命名管道探测远程系统是否运行 Web Client（WebDAV）；目标上无需管理员权限，但需要有效凭据（不可匿名）。 |
+| `bof-get-writable` | bof | 查找具有写权限的对象。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-getsystem` | bof | 复制 winlogon.exe 令牌以获取 SYSTEM。需要管理员权限。 |
+| `bof-ghost-task` | bof | 仅通过注册表创建或删除计划任务，不触发 Windows 事件 4698 与 106。需要 NT AUTHORITY\SYSTEM。 |
+| `bof-ghostkatz` | bof | 通过带 MmMapIoSpace 的已签名漏洞内核驱动读取物理内存转储 LSASS 凭据；支持 MSV1（logonpasswords）与 WDigest。需要管理员权限；驱动失败可能导致 BSOD。 |
+| `bof-global-unprotect` | bof | 定位、解密并下载 GlobalProtect VPN 配置与 HIP 设置。 |
+| `bof-handle-finder` | bof | 枚举目标进程中的打开句柄。 |
+| `bof-handle-stealer` | bof | 查找 Chrome/Edge NetworkService 进程，复制 Cookies SQLite 数据库句柄并保存到 %LOCALAPPDATA%&lt;pid&gt;.db；自动扫描 chrome.exe/msedge.exe。 |
+| `bof-hash` | bof | 由密码生成 Kerberos 密钥哈希。 |
+| `bof-hide-file` | bof | 修改属性为系统文件+隐藏以隐藏目录或文件。 |
+| `bof-ide-extension-surface` | bof | 从各用户配置根目录枚举 VS Code、Cursor、Windsurf、Zed、Insiders、OSS 及 server/remote 扩展清单，汇总扩展身份、激活事件与能力信号。 |
+| `bof-idle-time` | bof | 根据用户最后输入检查活动状态；返回 HH:MM:SS 格式时间。 |
+| `bof-ipconfig` | bof | 列出 IPv4 地址、主机名与 DNS 服务器。 |
+| `bof-kerb-hash` | bof | 将密码哈希为 Kerberos 密钥：rc4_hmac、aes128_cts_hmac_sha1、aes256_cts_hmac_sha1、des_cbc_md5。 |
+| `bof-kerberoast` | bof | 为给定 SPN 申请 Kerberos 服务票据（AP-REQ）并输出 Base64 票据供离线破解；可用 apreq2hashcat.py 转换。 |
+| `bof-kerberoasting` | bof | 列出启用 SPN 的账户或申请 TGS-REP 供 Hashcat 离线破解；票据在 TICKET 标签间；用 TicketToHashcat.py 转换。 |
+| `bof-kerberos-bof` | bof | 通过 LsaCallAuthenticationPackage 列出、转储并清除缓存 Kerberos 票据，不触碰 LSASS 内存。 |
+| `bof-kerbeus-asktgs` | bof | 使用 TGT 申请服务票据。 |
+| `bof-kerbeus-asktgt` | bof | 使用密码、哈希或无 preauth 申请 TGT。 |
+| `bof-kerbeus-asreproasting` | bof | 为未启用 Kerberos preauthentication 的用户请求 AS-REP。 |
+| `bof-kerbeus-changepw` | bof | 通过 kpasswd 修改用户密码。 |
+| `bof-kerbeus-cross_s4u` | bof | 执行跨域 S4U 约束委派滥用。 |
+| `bof-kerbeus-describe` | bof | 解析并描述 Kerberos 票据。 |
+| `bof-kerbeus-dump` | bof | 从登录会话提取 Kerberos 票据。 |
+| `bof-kerbeus-hash` | bof | 由密码生成 Kerberos 密钥哈希。 |
+| `bof-kerbeus-kerberoasting` | bof | 申请 Kerberos 服务票据供离线破解。 |
+| `bof-kerbeus-klist` | bof | 列出 Kerberos 票据及详细信息。 |
+| `bof-kerbeus-ptt` | bof | 将票据提交到当前或指定登录会话。 |
+| `bof-kerbeus-purge` | bof | 从当前或指定登录会话清除 Kerberos 票据。 |
+| `bof-kerbeus-renew` | bof | 续订 TGT。 |
+| `bof-kerbeus-s4u` | bof | 执行 S4U2self 与 S4U2proxy 约束委派滥用。 |
+| `bof-kerbeus-tgtdeleg` | bof | 通过 GSS API 委派滥用获取可用 TGT。 |
+| `bof-kerbeus-triage` | bof | 以表格形式列出 Kerberos 票据。 |
+| `bof-klist` | bof | 显示当前缓存的 Kerberos 票据；支持列出、清除及按 SPN 申请服务票据。 |
+| `bof-koh-client` | bof | 通过 Koh 命名管道通信，列出、筛选、模拟并释放捕获的令牌；模拟捕获令牌需要 SeImpersonatePrivilege。 |
+| `bof-ksl-lsa` | bof | 通过 KslD.sys BYOVD 物理内存读取原语从 LSASS 提取凭据；不对 lsass 调用 OpenProcess、NtReadVirtualMemory 或 MiniDumpWriteDump。提取 MSV1_0 NT 哈希、WDigest 明文（启用时）与 LSA 加密密钥。需要管理员权限。 |
+| `bof-lapsdump` | bof | 从 Active Directory 中指定计算机转储 LAPS 密码。需要提升的 AD 权限。 |
+| `bof-lastpass` | bof | 在 Chrome 或 Brave 进程内存中搜索 LastPass 密码与数据。 |
+| `bof-ldap-sign-check` | bof | 扫描域控制器是否修改 LdapEnforceChannelBinding 或 LdapServerIntegrity 以缓解 LDAP 中继；测试 LDAP（389）与 LDAPS（636）绑定。 |
+| `bof-ldapsearch` | bof | 执行 LDAP 搜索（注意：若需全部属性及 Base64 编码 ACL，请将属性参数设为 *,ntsecuritydescriptor，可用 BOFHound 解析；可能影响分页，测试中通常正常。） |
+| `bof-ldapsecuritycheck` | bof | 检查域控制器上的 LDAP 签名与通道绑定要求。 |
+| `bof-lin-arp` | bof | （linux）从 /proc/net/arp 显示 ARP 表并解析主机名。 |
+| `bof-lin-awk` | bof | （linux）精简 awk（仅打印列）。 |
+| `bof-lin-base64` | bof | （linux）Base64 编解码。 |
+| `bof-lin-basename` | bof | （linux）从路径提取文件名。 |
+| `bof-lin-cat` | bof | （linux）连接并打印文件。 |
+| `bof-lin-chmod` | bof | （linux）修改文件权限。 |
+| `bof-lin-chown` | bof | （linux）修改文件所有者。 |
+| `bof-lin-cp` | bof | （linux）复制文件。 |
+| `bof-lin-cut` | bof | （linux）提取字段/列。 |
+| `bof-lin-date` | bof | （linux）打印当前日期/时间。 |
+| `bof-lin-df` | bof | （linux）磁盘空间使用情况。 |
+| `bof-lin-diff` | bof | （linux）比较两个文件。 |
+| `bof-lin-dirname` | bof | （linux）从路径提取目录部分。 |
+| `bof-lin-dmesg` | bof | （linux）打印内核环形缓冲区。 |
+| `bof-lin-du` | bof | （linux）估算磁盘占用。 |
+| `bof-lin-env` | bof | （linux）从 /proc/self/environ 打印环境变量。 |
+| `bof-lin-find` | bof | （linux）搜索文件。 |
+| `bof-lin-free` | bof | （linux）显示内存使用。 |
+| `bof-lin-grep` | bof | （linux）搜索文件内容。 |
+| `bof-lin-groups` | bof | （linux）打印组成员关系。 |
+| `bof-lin-head` | bof | （linux）输出文件开头部分。 |
+| `bof-lin-hostname` | bof | （linux）打印主机名。 |
+| `bof-lin-id` | bof | （linux）打印用户/组 ID。 |
+| `bof-lin-ifconfig` | bof | （linux）显示网络接口。 |
+| `bof-lin-kill` | bof | （linux）向进程发送信号。 |
+| `bof-lin-ln` | bof | （linux）创建链接。 |
+| `bof-lin-logger` | bof | （linux）向 syslog 写入消息。 |
+| `bof-lin-ls` | bof | （linux）列出目录内容。 |
+| `bof-lin-lsmod` | bof | （linux）列出已加载内核模块。 |
+| `bof-lin-md5sum` | bof | （linux）计算 MD5 哈希。 |
+| `bof-lin-mkdir` | bof | （linux）创建目录。 |
+| `bof-lin-mount` | bof | （linux）列出挂载点。 |
+| `bof-lin-mv` | bof | （linux）移动/重命名文件。 |
+| `bof-lin-netstat` | bof | （linux）从 /proc/net 显示 TCP/UDP 连接（标志：-tlnpu）。 |
+| `bof-lin-nl` | bof | （linux）为文件行编号。 |
+| `bof-lin-nslookup` | bof | （linux）通过 getaddrinfo 进行 DNS 查询。 |
+| `bof-lin-od` | bof | （linux）八进制转储。 |
+| `bof-lin-paste` | bof | （linux）合并文件行。 |
+| `bof-lin-ping` | bof | （linux）测试主机可达性。 |
+| `bof-lin-ps` | bof | （linux）列出进程。 |
+| `bof-lin-pwd` | bof | （linux）打印工作目录。 |
+| `bof-lin-rev` | bof | （linux）反转文件行顺序。 |
+| `bof-lin-rm` | bof | （linux）删除文件/目录。 |
+| `bof-lin-rmdir` | bof | （linux）删除空目录。 |
+| `bof-lin-route` | bof | （linux）显示路由表。 |
+| `bof-lin-sed` | bof | （linux）流编辑器（s/old/new/g）。 |
+| `bof-lin-sha256sum` | bof | （linux）计算 SHA-256 哈希。 |
+| `bof-lin-sort` | bof | （linux）排序文件行。 |
+| `bof-lin-stat` | bof | （linux）显示文件状态。 |
+| `bof-lin-strings` | bof | （linux）查找可打印字符串。 |
+| `bof-lin-sysctl` | bof | （linux）读/写内核参数。 |
+| `bof-lin-tail` | bof | （linux）输出文件末尾部分。 |
+| `bof-lin-tar` | bof | （linux）创建、列出并解压 tar 归档。 |
+| `bof-lin-touch` | bof | （linux）创建文件或更新时间戳。 |
+| `bof-lin-tr` | bof | （linux）转换/删除字符。 |
+| `bof-lin-traceroute` | bof | （linux）追踪到主机的路由。 |
+| `bof-lin-tree` | bof | （linux）递归目录树列表。 |
+| `bof-lin-uname` | bof | （linux）打印系统信息。 |
+| `bof-lin-uniq` | bof | （linux）删除相邻重复行。 |
+| `bof-lin-uptime` | bof | （linux）打印系统 uptime、平均负载与当前时间。 |
+| `bof-lin-wc` | bof | （linux）字、行、字节计数。 |
+| `bof-lin-wget` | bof | （linux）HTTP GET 下载。 |
+| `bof-lin-whoami` | bof | （linux）打印有效用户名。 |
+| `bof-lin-xxd` | bof | （linux）十六进制转储。 |
+| `bof-list-chrome-cookies` | bof | 列出可用于 Cookie 转储的浏览器子进程；将返回的 PID 用于 bof-cookie-katz。仅 x64。 |
+| `bof-list-firewall-rules` | bof | 列出 Windows 防火墙规则。 |
+| `bof-list-process-handles` | bof | 列出进程中的打开句柄。 |
+| `bof-listdns` | bof | 列出 DNS 缓存项并尝试查询、解析每一项。 |
+| `bof-listmods` | bof | 列出进程模块（DLL）；PID 为空则针对当前进程。与 driversigs 配合判断进程是否被 AV/EDR 注入。 |
+| `bof-locale` | bof | 列出系统区域语言、区域 ID、日期、时间与国家/地区。 |
+| `bof-make-token-cert` | bof | 使用 PFX 证书进行模拟。 |
+| `bof-md5` | bof | 对文件计算 MD5 哈希。 |
+| `bof-mdm-policy-artifacts` | bof | 用评分模型评估 Windows MDM 注册态势：加入状态、计划任务、策略配置与注册工件等。 |
+| `bof-mem-read` | bof | 读取已加载 DLL 导出函数的前若干字节。 |
+| `bof-mem-search` | bof | 在进程内存中搜索字符串。 |
+| `bof-memreader` | bof | 在目标进程内存中搜索指定字符串模式并返回所有匹配到 beacon 输出。 |
+| `bof-move-object` | bof | 将对象移到其他 OU。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-msi-lateral-mv` | bof | 通过 DCOM 使用 MSI Server，经 Custom Action Server 安装配置 ODBC 驱动以实现横向移动。所有参数为宽字符串。 |
+| `bof-msi-search` | bof | 扫描 C:\Windows\Installer\ 中的缓存 MSI 并列出关联软件名；便于研究 MSI 修复漏洞的本地提权。 |
+| `bof-msv1-0-bof` | bof | 通过 LsaCallAuthenticationPackage 恢复 DPAPI 凭据密钥并生成 NTLMv1 响应，无需打开 LSASS 句柄；可在 PPL 与 Credential Guard 下恢复凭据密钥。 |
+| `bof-nanorobeus` | bof | Kerberos 票据管理：列出 LUID、会话、票据，转储、导入（ptt）、清除、TGT 委派与 Kerberoasting。 |
+| `bof-netgroup` | bof | 列出默认或指定域的域组或组成员。 |
+| `bof-netjoin-query` | bof | 查询 Windows 域加入信息与工作站详情，判断是域加入还是工作组。 |
+| `bof-netlocalgroup` | bof | 列出本地或指定计算机上的本地组或成员。 |
+| `bof-netlocalgroup2` | bof | 支持 BOFHound 的 `netLocalGroupListMembers` 修改版。 |
+| `bof-netloggedon` | bof | 返回本地或远程计算机上已登录用户。 |
+| `bof-netloggedon2` | bof | 支持 BOFHound 的 `netloggedon` 修改版。 |
+| `bof-netshares` | bof | 列出本地或远程计算机上的共享。 |
+| `bof-netstat` | bof | 列出 TCP 与 UDP IPv4 端口。 |
+| `bof-nettime` | bof | 显示远程计算机时间。 |
+| `bof-netuptime` | bof | 返回本地或远程计算机启动时间信息。 |
+| `bof-netuser` | bof | 获取指定用户信息；若指定 domainname 则从域拉取。 |
+| `bof-netuserenum` | bof | 枚举本地计算机或当前域上的用户账户。 |
+| `bof-netview` | bof | 列出当前域内可达计算机。 |
+| `bof-nonpagedldapsearch` | bof | 执行无分页的 LDAP 搜索。 |
+| `bof-notepad` | bof | 查找打开的 Notepad/Notepad++ 窗口并从编辑控件抓取文本。 |
+| `bof-notepad-grab` | bof | 通过读内存直接从打开的 Notepad 提取并返回纯文本，可恢复未保存或仅存在于内存的笔记。 |
+| `bof-notethief` | bof | 定位 Notepad 编辑控件并通过 WM_GETTEXT 读取打开的 Notepad 内容。 |
+| `bof-nslookup` | bof | 发起 DNS 查询。DNS server 为要查询的服务器（省略或 0 为默认）。记录类型如 A、AAAA、ANY 等；部分情况可能因崩溃受限。 |
+| `bof-office-tokens` | bof | 从指定 Office 进程内存收集 Office JWT access 令牌。 |
+| `bof-p-sremote` | bof | 获取远程主机上所有运行进程列表。 |
+| `bof-password-spray-a-d` | bof | 使用 LDAP、LDAPS、GC 或 GCS simple bind 对多个账户验证同一密码。 |
+| `bof-password-spray-local` | bof | 使用 SMB（IPC$）对主机名列表验证单个本地用户名与密码。 |
+| `bof-patchit` | bof | 对 x64 进程 patch、检查并恢复 AMSI 与 ETW；对比 AmsiScanBuffer 与 EtwEventWrite 前 10+ 字节。若当前进程未加载 amsi.dll 则不会加载。仅 x64。 |
+| `bof-port-scan` | bof | 通过 Winsock 扫描单个 IPv4 主机的开放 TCP/UDP 端口；端口列表与超时受限，输出简洁。 |
+| `bof-power-state` | bof | 通过 SMBIOS 机箱数据（辅以电源状态）识别主机形态：笔记本、台式、平板、服务器、嵌入式或未知。 |
+| `bof-powershell-history` | bof | 从默认 PSReadLine 与 transcript 位置收集 PowerShell 历史工件；便于发现凭据或基础设施。 |
+| `bof-privkit-autorun-check` | bof | 检查可修改的 autorun 注册表项。 |
+| `bof-privkit-cred-check` | bof | 检查 Windows 凭据管理器中的保存凭据。 |
+| `bof-privkit-elev-check` | bof | 检查 HKCU 与 HKLM 中的 AlwaysInstallElevated。 |
+| `bof-privkit-hijack-check` | bof | 检查可被劫持的 PATH 项。 |
+| `bof-privkit-logon-check` | bof | 检查注册表中的 AutoLogon 凭据。 |
+| `bof-privkit-pshist-check` | bof | 检查 PowerShell 命令历史文件。 |
+| `bof-privkit-service-check` | bof | 检查可修改的 Windows 服务。 |
+| `bof-privkit-token-check` | bof | 检查当前令牌权限的可滥用性。 |
+| `bof-privkit-uac-check` | bof | 检查 UAC 配置状态。 |
+| `bof-privkit-unquoted-svc` | bof | 检查未加引号的服务路径。 |
+| `bof-probe` | bof | 检查指定端口是否开放。 |
+| `bof-proc-version` | bof | 获取进程主模块文件版本。 |
+| `bof-procargs` | bof | 提取指定进程的命令行参数。 |
+| `bof-procdump` | bof | 使用 MiniDumpWriteDump 将指定进程转储到文件；先启用 SeDebugPrivilege。 |
+| `bof-process-destroy` | bof | 关闭指定进程中的某个或全部句柄。 |
+| `bof-process-list-handles` | bof | 列出指定进程的全部打开句柄。 |
+| `bof-process-tokens-list` | bof | 枚举运行进程的可访问令牌：用户上下文、令牌类型（primary/impersonation）、模拟级别；可按 PID 或进程名过滤。默认关闭 SeDebugPrivilege 以利于 OPSEC。 |
+| `bof-procinfo` | bof | 显示进程可执行文件的版本信息（名称、版本、公司等）。 |
+| `bof-prockill` | bof | 按 PID 终止目标进程。 |
+| `bof-procsearch` | bof | 在可读进程内存中搜索字符串并显示周围 ASCII 上下文。 |
+| `bof-proxy-enum` | bof | 枚举 Windows 代理配置：WinINET、WinHTTP、策略键、环境变量、WPAD 指示、Chrome 设置与 .NET defaultProxy。 |
+| `bof-psw` | bof | 显示有活动 Windows 的进程的窗口标题。 |
+| `bof-ptt` | bof | 将票据提交到当前或指定登录会话。 |
+| `bof-purge` | bof | 从当前或指定登录会话清除 Kerberos 票据。 |
+| `bof-recon-ad` | bof | 通过 ADSI 查询 AD 对象与属性；支持自定义 LDAP 过滤器、用户/计算机/组查询、Kerberos 加密通信与全局编录搜索；单二进制四种查询模式。 |
+| `bof-reg-del` | bof | 删除注册表键或值。 |
+| `bof-reg-delete` | bof | 在本地或远程系统删除注册表键或值。 |
+| `bof-reg-query` | bof | 查询注册表值或枚举单个键；支持远程计算机。 |
+| `bof-reg-query-recursive` | bof | 从指定路径递归枚举注册表键；支持远程计算机。 |
+| `bof-reg-save` | bof | 将注册表键导出到文件。 |
+| `bof-reg-set` | bof | 在本地或远程主机创建或设置注册表值。 |
+| `bof-regsave` | bof | 获取必要权限并转储 SAM、SYSTEM、SECURITY 注册表键供离线解析与哈希提取。需要管理员权限。 |
+| `bof-regsession` | bof | 通过枚举 HKEY_USERS 返回已登录用户 SID。兼容 BOFHound。 |
+| `bof-remotereg` | bof | 通过远程注册表 API 查询远程服务器、VDI 或域控制器上的已登录用户。 |
+| `bof-remove-ace` | bof | 从 DACL 移除 ACE。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-remove-attribute` | bof | 移除属性值。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-remove-delegation` | bof | 清除委派 SPN。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-remove-groupmember` | bof | 从组中移除用户。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-remove-object` | bof | 删除 AD 对象。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-remove-rbcd` | bof | 清除 RBCD 配置。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-remove-spn` | bof | 移除指定 SPN。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-remove-uac` | bof | 移除 UAC 标志。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-renew` | bof | 续订 TGT。 |
+| `bof-resources` | bof | 列出内存使用与主硬盘可用空间。 |
+| `bof-routeprint` | bof | 列出 IPv4 路由。 |
+| `bof-runpe` | bof | 通过 process herpaderping 部分实现，在牺牲进程中执行任意 PE：创建远程文件、写入 PE，执行前用 0x82 0x7f 0x76 0x7c 覆盖文件内容。 |
+| `bof-s4u` | bof | 执行 S4U2self 与 S4U2proxy 约束委派滥用。 |
+| `bof-sc-config` | bof | 配置本地或远程系统上的现有 Windows 服务。 |
+| `bof-sc-create` | bof | 在本地或远程系统创建新 Windows 服务。 |
+| `bof-sc-delete` | bof | 删除现有 Windows 服务。 |
+| `bof-sc-description` | bof | 设置现有 Windows 服务的描述。 |
+| `bof-sc-enum` | bof | 枚举服务的 qc、query、qfailure、qtriggers 信息。 |
+| `bof-sc-failure` | bof | 配置现有 Windows 服务的失败操作。 |
+| `bof-sc-qc` | bof | BOF 实现的 sc qc。 |
+| `bof-sc-qdescription` | bof | BOF 实现的 sc qdescription。 |
+| `bof-sc-qfailure` | bof | 查询服务的失败条件。 |
+| `bof-sc-qtriggerinfo` | bof | 查询服务的触发条件。 |
+| `bof-sc-query` | bof | BOF 实现的 sc query。 |
+| `bof-sc-start` | bof | 启动现有 Windows 服务。 |
+| `bof-sc-stop` | bof | 停止现有 Windows 服务。 |
+| `bof-schtask-enum` | bof | 通过任务计划程序 COM 接口枚举 Windows 计划任务；汇总状态、计划与配置，避免大量 XML 淹没 beacon。 |
+| `bof-schtasks-del` | bof | 删除计划任务或文件夹。 |
+| `bof-schtasks-run` | bof | 运行计划任务。 |
+| `bof-schtasks-stop` | bof | 停止正在运行的计划任务。 |
+| `bof-schtaskscreate` | bof | 从 XML 任务定义文件创建或更新计划任务。 |
+| `bof-schtasksdelete` | bof | 删除计划任务或文件夹。 |
+| `bof-schtasksenum` | bof | 枚举本地或远程计算机上的计划任务。 |
+| `bof-schtasksquery` | bof | 查询本地或远程计算机上的指定任务。 |
+| `bof-schtasksrun` | bof | 立即启动计划任务。 |
+| `bof-schtasksstop` | bof | 停止正在运行的计划任务。 |
+| `bof-screenshot` | bof | 通过 WinAPI 截图，无 fork-and-run；支持 JPEG 压缩、灰度、质量、缩放与最小化窗口捕获。 |
+| `bof-self-delete` | bof | 使用 NTFS 备用数据流重命名技术从磁盘删除被锁定或正在运行的可执行文件。 |
+| `bof-service-control` | bof | 通过 SCM 管理本地 Windows 服务：query（限量列表或单项）、create、start、stop、delete 与失败操作配置；变更通常需提升权限。 |
+| `bof-session-view` | bof | 枚举 Windows 终端服务会话：会话 ID、用户名、域、连接状态与会话 LUID。 |
+| `bof-set-attribute` | bof | 替换属性值。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-set-delegation` | bof | 替换委派配置。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-set-owner` | bof | 更改对象所有者。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-set-password` | bof | 更改用户密码。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-set-spn` | bof | 替换全部 SPN。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-set-uac` | bof | 设置 UAC 标志（替换）。支持带签名/密封的标准 LDAP（389）与 LDAPS（636）。 |
+| `bof-setuserpass` | bof | 设置指定用户账户密码。 |
+| `bof-sha1` | bof | 对文件计算 SHA1 哈希。 |
+| `bof-sha256` | bof | 对文件计算 SHA256 哈希。 |
+| `bof-shadowcreds` | bof | 向目标 msDS-KeyCredentialLink 写入 KeyCredential，PKINIT 认证，通过 UnPAC the hash 提取 NT 哈希，再移除 shadow credential。需要对 msDS-KeyCredentialLink 的写权限。 |
+| `bof-sharefolder` | bof | 创建全局可读写的共享文件夹，或删除空文件夹。 |
+| `bof-shutdown` | bof | 发起本地或远程系统关机。 |
+| `bof-signal-key` | bof | 在已安装并使用 Signal Desktop 的 Windows 主机上获取 Signal Desktop 数据库解密密钥。 |
+| `bof-silentchrome` | bof | 通过修改 Preferences 与 Secure Preferences 在 Chrome/Edge 中静默安装或回滚浏览器扩展。SharpSilentChrome 移植。 |
+| `bof-silentharvest` | bof | 仅通过注册表转储凭据：从 HKLM\\SECURITY\\Policy\\Secrets 提取 SAM 哈希与机密；仅需 SeBackupPrivilege（无需 SYSTEM）。 |
+| `bof-slack-cookie` | bof | 从指定 Slack 进程内存收集 Slack 认证 Cookie。 |
+| `bof-slack-key` | bof | 从 %APPDATA%\Slack\Local State 解密 Base64 编码的 Slack 密钥以解密 Cookie。 |
+| `bof-sleeper` | bof | 调用 SetThreadExecutionState 防止主机进入睡眠。 |
+| `bof-smbinfo` | bof | 通过 NetWkstaGetInfo 收集远程系统版本信息（Windows 版本、域等），无需端口扫描。 |
+| `bof-sprayad` | bof | 使用 LogonUserSSPI 对 Active Directory 进行 LDAP 或 Kerberos 密码喷洒；可跳过禁用账户、锁定账户及 BadPwdCount 过大的用户。 |
+| `bof-sql-1434udp` | bof | 通过 UDP 1434 上的 SQL Server Browser 服务枚举 SQL Server 连接信息。 |
+| `bof-sql-adsi` | bof | 从 ADSI 链接服务器获取 ADSI 凭据。 |
+| `bof-sql-agentcmd` | bof | 通过 SQL Server Agent 作业执行系统命令。 |
+| `bof-sql-agentstatus` | bof | 枚举服务器上的 SQL Agent 状态与作业。 |
+| `bof-sql-checkrpc` | bof | 枚举链接服务器及其 RPC 状态。 |
+| `bof-sql-clr` | bof | 通过 CLR 集成在 SQL 存储过程中加载并执行 .NET 程序集。 |
+| `bof-sql-columns` | bof | 枚举 SQL 服务器上表内的列。 |
+| `bof-sql-databases` | bof | 枚举 SQL 服务器上的数据库。 |
+| `bof-sql-impersonate` | bof | 枚举服务器上可被模拟的 SQL 登录名。 |
+| `bof-sql-info` | bof | 收集远程 SQL 服务器信息。 |
+| `bof-sql-links` | bof | 枚举链接的 SQL 服务器。 |
+| `bof-sql-olecmd` | bof | 在 SQL 服务器上通过 OLE 自动化过程执行系统命令。 |
+| `bof-sql-query` | bof | 在远程 SQL 服务器上执行自定义 SQL 查询。 |
+| `bof-sql-rows` | bof | 返回 SQL 服务器上表的行数。 |
+| `bof-sql-search` | bof | 在数据库各表中搜索列名。 |
+| `bof-sql-smb` | bof | 通过 xp_dirtree 指向 UNC  listener 强制 SQL Server 发起 NetNTLM 认证。 |
+| `bof-sql-tables` | bof | 枚举 SQL 服务器数据库中的表。 |
+| `bof-sql-togglemodule` | bof | 启用或禁用 SQL Server 功能：RPC、CLR、xp_cmdshell 或 OLE 自动化。 |
+| `bof-sql-users` | bof | 枚举 SQL 服务器上有数据库访问权限的用户。 |
+| `bof-sql-whoami` | bof | 收集服务器上已登录用户、映射用户与 SQL 角色。 |
+| `bof-sql-xpcmd` | bof | 在 SQL 服务器上通过 xp_cmdshell 执行系统命令。 |
+| `bof-sspi-uac-bypass` | bof | 通过伪造 SSPI 数据报上下文令牌模拟并 CreateSvcRpc 创建 SYSTEM 服务以绕过 UAC。 |
+| `bof-start-web-client` | bof | 通过服务触发器以用户上下文编程启动 WebClient；在未运行该服务的系统上用于基于 WebDAV 的 PetitPotam 强制。 |
+| `bof-static-syscalls-dump` | bof | unhook NtReadVirtualMemory 并用 MiniDumpWriteDump 创建进程内存转储。仅 x64。 |
+| `bof-suspendresume` | bof | 按 PID 挂起或恢复进程；1 挂起，0 恢复。 |
+| `bof-syscallsdump` | bof | unhook NtReadVirtualMemory 并用 MiniDumpWriteDump 创建进程内存转储。仅 x64。 |
+| `bof-tasklist` | bof | 列出运行进程，含 PID、PPID 与 CommandLine（WMI）。 |
+| `bof-teams-cookies` | bof | 在 ms-teams.exe 进程内运行以窃取 Microsoft Teams Cookie；提取加密密钥并无文件下载 Cookies 数据库。 |
+| `bof-tgtdeleg` | bof | 通过 GSS API 委派滥用获取可用 TGT。 |
+| `bof-toastnotify` | bof | 使用借用的 Application User Model ID 发送 Windows Toast 通知；支持标准 Toast 与带 action、protocol 链接的自定义 XML。 |
+| `bof-token-vault` | bof | 内存中存储窃取或复制的 Windows 访问令牌，便于复用而无需重复 duplicate，也可暂存供后续使用。 |
+| `bof-token2cert` | bof | 通过令牌模拟滥用 ESC1 漏洞模板，提取任意域用户 NT 哈希：窃取有注册权限用户的令牌、申请任意 SAN 证书、PKINIT、UnPAC the hash。仅 x64，需提升权限。 |
+| `bof-tray-scout` | bof | 报告任务栏宿主可执行文件并枚举系统托盘通知图标 tooltip；可选输出宿主与各图标所属进程的完整映像路径。 |
+| `bof-triage` | bof | 以表格形式列出 Kerberos 票据。 |
+| `bof-unexpire-user` | bof | 将用户账户设为永不过期。 |
+| `bof-unexpireuser` | bof | 将用户账户设为永不过期。 |
+| `bof-uptime` | bof | 列出系统启动时间及已运行时长。 |
+| `bof-user-idle` | bof | 获取自最后输入以来的用户空闲时间及当前进程的 GDI/USER 句柄占用，用于时机判断。 |
+| `bof-useridletime` | bof | 显示用户空闲时长（秒、分、时、天）。 |
+| `bof-veeam-dumper` | bof | 从 Veeam Backup and Replication 或 Veeam One 数据库提取加密凭据；sqlcmd/psql 查询 blob，从注册表取 salt，DPAPI 解密。 |
+| `bof-vssenum` | bof | 在部分 Server 2012+ 服务器上枚举卷影副本。 |
+| `bof-wallpaper-enum` | bof | 通过 IDesktopWallpaper COM 枚举各显示器当前桌面壁纸路径；集中壁纸可能暴露网络路径、域信任与策略。 |
+| `bof-wd-toggle` | bof | 启用 WDigest 凭据缓存并在启用时绕过 Credential Guard；通过 direct syscall patch LSASS 中的 wdigest!g_fParameter_UseLogonCredential 与 wdigest!g_IsCredGuardEnabled。重启后不持久；偏移随 Windows 版本变化。 |
+| `bof-webcam-bof` | bof | 从默认摄像头捕获单帧；可保存到磁盘或通过 beacon 以文件或截图下载。 |
+| `bof-wef-detect` | bof | 检测 Windows 事件转发（WEF）配置，表明存在集中日志；若存在则安全事件会转发到中央服务器。 |
+| `bof-wer-dump` | bof | 使用 WerFaultSecure.exe 转储受保护的 LSASS；将 WerFaultSecure 写入临时随机文件名，转储保存为同目录 .dll。 |
+| `bof-wer-resume` | bof | 运行 bof-wer-dump 前恢复被挂起的 lsass.exe；须在与 WerDump 不同的 beacon 进程中执行（进程保护策略）。 |
+| `bof-wevt-channel-enum` | bof | 枚举本地 Windows 事件日志通道，可选不区分大小写的子串过滤、输出上限与详细访问/发布元数据；勿在无过滤且通道极多的主机上运行。 |
+| `bof-wevt-logon-enum` | bof | 通过 wevtapi 枚举 Security 日志中近期成功/失败登录（4624、4625、4672），输出远程工作站名/IP 与目标用户名。需 Security 日志读权限（通常 admin 或 SYSTEM）。 |
+| `bof-whoami` | bof | 列出 whoami /all。 |
+| `bof-wi-fi-passwords` | bof | 从本地系统提取已保存的 Wi-Fi 密码。 |
+| `bof-wifi-dump` | bof | 枚举 WiFi 接口并转储明文 WiFi 配置文件凭据；WlanGetProfile 与 WLAN_PROFILE_GET_PLAINTEXT_KEY 获取含密码的 profile XML。 |
+| `bof-win-version` | bof | 查询注册表与系统 API，简要详述 Windows 安装信息。 |
+| `bof-window-handles-enum` | bof | 枚举全系统进程窗口句柄，并用合法窗口句柄访问剪贴板。 |
+| `bof-window-list` | bof | 枚举当前用户桌面上所有可见窗口标题，可选包含 PID。 |
+| `bof-windowlist` | bof | 列出当前用户会话中的可见窗口。 |
+| `bof-winver` | bof | 显示 Windows 版本、内部版本号与补丁发布（UBR，Update Build Revision）。 |
+| `bof-wmi-query` | bof | 运行 WMI 查询并以 CSV 格式显示结果。 |
+| `bof-wsc-status` | bof | 查询 Windows 安全中心健康状态：防病毒、防火墙、反间谍软件、WSC 服务、自动更新、Internet 设置与 UAC。 |
+| `bof-xpipe` | bof | 列出活动命名管道；可选返回指定管道的所有者与 DACL 权限。 |
+| `net-abandoned-com-keys` | dotnet | 枚举已废弃的 COM InprocServer32 键（引用的 DLL 已不存在）。可通过 rundll32.exe -sta `\{CLSID\}` 持久化。 |
+| `net-ad-collector` | dotnet | ADCollector：轻量 AD 环境枚举以识别攻击向量，侧重高价值目标的属性、ACL 而非全量对象；S.DS 从 DC 取域/林信息，S.DS.P 用于 LDAP 搜索。 |
+| `net-adcspwn` | dotnet | ADCSPwn：通过强制计算机账户认证（PetitPotam）并中继到证书服务在 AD 网络中提权。 |
+| `net-adsearch` | dotnet | 高效 AD 查询：域管理员列表、自定义 LDAP、LDAPS、JSON 输出及通用查询的自定义属性。 |
+| `net-certify` | dotnet | C# 工具：枚举并滥用 AD CS 错误配置；CA/模板发现、漏洞评估、证书申请与下载。 |
+| `net-cheese-dcom` | dotnet | 通过 DCOM 执行命令与横向移动；需特权用户上下文。支持 MMC20.Application、ShellWindows 等多种 DCOM 方法；target 为 `.` 时本地执行。 |
+| `net-cheese-exec` | dotnet | 类 PsExec：通过创建 Windows 服务远程执行与横向移动；需特权用户；支持远程服务的 create/start/stop/delete/restart。 |
+| `net-cheese-ps` | dotnet | 基于 System.Management.Automation.PowerShell 的 PowerShell 执行与横向移动；WS Management 远程/本地，内置 CLM/AMSI/WLDP  bypass、模块导入、加密载荷与反射 PE 注入；无 target 时本地；Remoting 需特权。 |
+| `net-cheese-rdp` | dotnet | 反射 DLL 注入 mstsc.exe 窃取 RDP 凭据；需特权用户或 SeImpersonatePrivilege。基于 RdpThief。 |
+| `net-cheese-sql` | dotnet | MSSQL 信任滥用：域 SPN、链接服务器、模拟、xp_cmdshell、OLE、CLR、OPENQUERY 等。`net-cheese-sql &lt;command&gt; /help` 查看各命令参数。 |
+| `net-cimplant` | dotnet | 文件、注册表、服务、进程管理、横向移动辅助与系统枚举；需目标本地管理员权限。 |
+| `net-com-hunter` | dotnet | 通过 WMI 枚举 LocalServer32 与 InProcServer32 中注册的 COM 服务器。 |
+| `net-cred-phisher` | dotnet | 使用 CredUIPromptForWindowsCredentials 向当前用户索要凭据。 |
+| `net-crop` | dotnet | 创建指向 WebDAV 的 LNK、URL、library-ms 或 searchConnector-ms；用户浏览含该文件的文件夹时 Explorer 可能向 WebDAV 认证并向 Farmer 泄露 NetNTLM。 |
+| `net-driver-query` | dotnet | 收集已加载驱动详情；可选仅非 Microsoft 签名驱动。 |
+| `net-edd` | dotnet | 类 PowerView 的 .NET 域枚举：林、域、计算机、用户及链式 admin 发现与共享狩猎。 |
+| `net-encrypted-zip` | dotnet | 压缩文件/目录并用 AES256 CFB 加密 ZIP；RtlZeroMemory 清除内存中的密钥。 |
+| `net-etw-event-subscription` | dotnet | 类 WMI 事件的 ETW 订阅；在用户登录或进程启动时触发。 |
+| `net-farmer` | dotnet | 本地 WebDAV 服务器，在 Windows 域中收集 NetNTLM；客户端经 WebDAV Mini Redirector 认证。与 Crop 或 Fertiliser 配合诱使受害者连接。 |
+| `net-fertiliser` | dotnet | 在现有 Office 文档（当前 .docx）中植入恶意域代码，打开时触发 WebDAV 连接并向 Farmer 泄露 NetNTLM。 |
+| `net-forge-cert` | dotnet | 使用窃取的 CA 私钥（.pfx/.p12）伪造 AD 认证证书；Certified Pre-Owned 的 DPERSIST1；输出 .pfx 可用于 Rubeus PKINIT 或 NT 哈希恢复。 |
+| `net-gmsa-password-reader` | dotnet | 通过 LDAP 读取 gMSA 的 msDS-ManagedPassword blob 并解析为可复用的 NTLM 哈希。 |
+| `net-god-potato-dotnet` | dotnet | SeImpersonatePrivilege → NT AUTHORITY\SYSTEM 的 DCOM Potato 提权；Server 2012–2022、Windows 8–11。 |
+| `net-gopher` | dotnet | 在工作站搜索易获取的凭据工件与提权信息；无参数运行全部内置检查。 |
+| `net-gps-coordinates` | dotnet | 若启用定位服务，跟踪系统 GPS 坐标（约 1 km 精度）；Windows 10+。 |
+| `net-group3r` | dotnet | 枚举 AD 组策略并识别可利用错误配置；LDAP 查询 DC，解析 SYSVOL 中 GPO 及共享上的脚本、MSI 等。 |
+| `net-harvest-crop` | dotnet | 解密启用 Farmer 输出加密时写入的 AES 加密 Farmer 日志。 |
+| `net-hijack-hunter` | dotnet | 解析 PE 头查找可劫持的链接 DLL 及对应滥用技术。 |
+| `net-hook-detector` | dotnet | 检测当前进程中 Native API 的 hook（EDR 指示）。仅 x64。 |
+| `net-implant-ssp` | dotnet | 安装用户提供的 SSP DLL 供 LSA 启动时加载；须导出 SpLsaModeInitialize。 |
+| `net-inspect-assembly` | dotnet | 检查 .NET 程序集 CIL 中的反序列化调用与 .NET Remoting 用法以分诊提权。 |
+| `net-internal-monologue` | dotnet | Internal Monologue：不触碰 LSASS 获取 NTLM 哈希；降低 NetNTLM 设置、模拟 non-network logon 令牌，经本地 SSPI/NTLM 包诱出 NetNTLMv1。 |
+| `net-junction-folder` | dotnet | 在 Windows 附件「启动」文件夹创建 junction（Vault 7）；verclsid.exe 加载 DLL。 |
+| `net-kee-thief` | dotnet | 从内存提取 KeePass 2.x 密钥材料；CLR MD 附加 KeePass.exe，定位 PwDatabase/CompositeKey，注入 shellcode 解密 RtlEncryptMemory 保护的 blob。 |
+| `net-koh` | dotnet | Koh 服务器：通过 token/登录会话泄漏捕获用户凭据材料；SSPI 协商并存储供后续模拟；捕获需 SYSTEM 与 SeTcbPrivilege。 |
+| `net-krb-relay-up` | dotnet | KrbRelay + Rubeus 封装：在未强制 LDAP 签名的域中自动化本地提权；强制机器 Kerberos、中继 LDAP/ADCS、建立 RBCD/Shadow Credentials/ADCS 控制并 spawn SYSTEM 服务。 |
+| `net-ldap-sign-check-dotnet` | dotnet | 枚举 DC 并检查 LDAP 签名/通道绑定以评估中继风险；对每个 DC 测试 LDAP 与 LDAPS。 |
+| `net-lock-less` | dotnet | 枚举打开的文件句柄并通过复制锁定进程的句柄复制被锁文件；NtQuerySystemInformation、MapViewOfFile 等，无需终止锁定进程。 |
+| `net-mlokit` | dotnet | MLOps 攻击工具包：经 REST 攻击 Azure ML、BigML、Vertex AI、MLFlow、Palantir、SageMaker 等；侦察、训练数据/模型窃取、投毒、笔记本攻击。 |
+| `net-moriarty` | dotnet | 扩展 Watson/Sherlock 的 .NET 提权扫描：缺失 KB、已知漏洞与 Windows 10/11、Server 2016/2019/2022 的 LPE 建议。 |
+| `net-nopowershell` | dotnet | 无 System.Management.Automation.dll 的类 PowerShell 内存执行；管道、AD、WMI、注册表、网络、压缩等，避免 PowerShell 日志。 |
+| `net-pass-the-cert` | dotnet | 不支持 PKINIT 时通过 Schannel 客户端证书绑定 LDAP/LDAPS；提权、RBCD、SPN 操纵、创建域计算机账户等。 |
+| `net-phantom-service` | dotnet | 查找并可选择删除内置工具无法删除的非 ASCII「幽灵」服务。 |
+| `net-port-bender` | dotnet | 通过 beacon 将本地端口重定向到远程主机。 |
+| `net-restricted-admin` | dotnet | 经 WMI StdRegProv 远程启用/禁用 RDP pass-the-hash 的 Restricted Admin Mode（DisableRestrictedAdmin）。 |
+| `net-rubeus` | dotnet | C# 原始 Kerberos 交互与滥用：票据申请/续订、S4U、golden/silver/diamond、Kerberoast、AS-REP roast、喷洒与票据管理。 |
+| `net-runas-cs` | dotnet | 以其他用户凭据运行进程；改进版 runas.exe：登录类型、UAC bypass、远程 I/O、CreateProcess 自动选择。 |
+| `net-safety-katz` | dotnet | LSASS minidump + 内存 Mimikatz 提取 logonpasswords/ekeys 后删除转储文件。 |
+| `net-sauron-eye` | dotnet | 红队文件搜索：目录与网络驱动器关键字匹配，可选内容搜索、Office 解析、VBA 与 regex。 |
+| `net-search-outlook` | dotnet | 在运行中的 Outlook 全部账户与子文件夹中搜索含指定关键字邮件。 |
+| `net-seatbelt` | dotnet | C# 主机枚举：攻防向安全检查；系统、用户、网络与凭据工件。 |
+| `net-session-searcher` | dotnet | 在所有已连接驱动器搜索 PuTTY .ppk 与 RDP 文件并解析凭据。 |
+| `net-shadow-spray` | dotnet | 对所有域用户与计算机喷洒 Shadow Credentials；GenericWrite/GenericAll 添加 KeyCredentials，PKINIT + UnPACTheHash 获取 NT 哈希。 |
+| `net-sharp-chrome` | dotnet | 通过 .NET 程序集提取 Chrome 浏览器数据。 |
+| `net-sharp-cloud` | dotnet | C#：在用户配置中搜索 AWS、Azure、GCP 相关云凭据文件。 |
+| `net-sharp-cookie-monster` | dotnet | 经 Chrome/Edge 远程调试转储全部站点 Cookie（含 httpOnly、secure、session）。 |
+| `net-sharp-dpapi` | dotnet | 解密 DPAPI 主密钥、凭据、保险库、证书、RDG、KeePass、SCCM 机密及 Chrome/Edge 数据。 |
+| `net-sharp-dump` | dotnet | C# 版 Out-Minidump.ps1：MiniDumpWriteDump 压缩 minidump（默认 LSASS），gzip 后删除原始转储。 |
+| `net-sharp-edr-checker` | dotnet | C# EDR/AV 检测：进程、DLL、安装目录、服务、驱动及元数据隐藏的 EDR。 |
+| `net-sharp-exec` | dotnet | C# 横向移动：PSExec、WMI、WMIExec、SMBExec 远程执行与半交互 shell。 |
+| `net-sharp-exfiltrate` | dotnet | 模块化 C# 经可信云通道外泄文件/目录；上传前压缩加密；扩展名与大小过滤。 |
+| `net-sharp-gpo-abuse` | dotnet | 滥用 GPO 编辑权：用户权限、本地管理员、登录/启动脚本、立即计划任务等。 |
+| `net-sharp-hide` | dotnet | 持久化：NtSetValueKey 在 UNICODE_STRING 值名加 null 字节前缀创建隐藏 Run 键，规避常规枚举。 |
+| `net-sharp-hound` | dotnet | BloodHound AD 采集：用户、组、会话、ACL、信任、GPO、证书服务等，导入 BloodHound CE。 |
+| `net-sharp-hound3` | dotnet | 旧版 BloodHound ingestor（已弃用）；与 BloodHound 4.1+ 不兼容。 |
+| `net-sharp-katz` | dotnet | LSASS 凭据、DCSync、pass-the-hash、Zerologon、PrintNightmare、HiveNightmare。 |
+| `net-sharp-laps` | dotnet | 从 AD ms-mnet-AdmPwd 读取 LAPS 密码；需计算机对象 ExtendedRight/GenericAll 或域管。 |
+| `net-sharp-map-exec` | dotnet | 原生 CrackMapExec 替代：Kerberos/NTLM，CIM、Reg32、SMB、WinRM、LDAP 与域喷洒。 |
+| `net-sharp-move` | dotnet | 认证远程执行：WMI、SCM、DCOM、任务计划、服务 DLL 劫持、DCOM 服务器劫持及修改现有服务/任务。 |
+| `net-sharp-no-ps-exec` | dotnet | 无文件横向移动：临时替换已停止 LocalSystem 服务的二进制路径执行载荷，5 秒后恢复。 |
+| `net-sharp-persist` | dotnet | Windows 持久化：注册表、计划任务、启动 LNK、KeePass 后门、服务、Tortoise SVN hooks、任务后门；增删查列。 |
+| `net-sharp-printer` | dotnet | ListNetworks 控制台版：枚举当前用户可访问的网络打印机。 |
+| `net-sharp-rdp` | dotnet | RDP 控制台远程执行：经 Win+R 运行命令。 |
+| `net-sharp-rdp-hijack` | dotnet | RDP 会话劫持 PoC：WTSConnectSession/WTSDisconnectSession 接管已断开交互会话。 |
+| `net-sharp-roast` | dotnet | 申请服务票据并输出 hashcat 格式可破解 TGS 哈希。 |
+| `net-sharp-sccm` | dotnet | SCCM/MECM 后渗透：横向移动、凭据收集、滥用 client push 强制 NTLM。 |
+| `net-sharp-sec-dump` | dotnet | .NET secretsdump.py：RPC 远程/本地 SAM 与 LSA Secrets。 |
+| `net-sharp-shares` | dotnet | 多线程枚举域内可访问网络共享；LDAP 定目标并检测读写。 |
+| `net-sharp-smb-exec` | dotnet | 通过 SMB 使用 NTLM 哈希（pass-the-hash）在远程目标执行命令。 |
+| `net-sharp-sphere` | dotnet | vSphere 攻击：VMware Tools 与 Web Services API 对来宾 VM 执行、传文件、内存转储。 |
+| `net-sharp-stay` | dotnet | .NET 持久化：提升/非提升注册表、计划任务、服务、WMI 事件、COM handler 劫持、LNK 后门。 |
+| `net-sharp-token-finder` | dotnet | 枚举 M365 Desktop Office 应用中的明文认证令牌以危及用户 M365 身份。 |
+| `net-sharp-up` | dotnet | 审计本地系统常见 Windows 提权错误配置。 |
+| `net-sharp-view` | dotnet | .NET PowerView：域枚举、ACL、共享、会话与 Kerberoasting。 |
+| `net-sharp-wifi-grabber` | dotnet | Win32 WLAN API 获取所有已保存 WLAN 配置文件的明文 Wi-Fi 密码。 |
+| `net-sharp-wmi` | dotnet | C# WMI：本地/远程枚举、创建进程、事件订阅 VBS、上传、防火墙与进程管理。 |
+| `net-sharp-wsus` | dotnet | 经 WSUS 横向移动：创建、批准并向目标部署恶意更新。 |
+| `net-sharpsh` | dotnet | RunspaceFactory 执行 C# PowerShell：编码命令、远程脚本、剪贴板脚本；适合 inline assembly。 |
+| `net-sigma-potato` | dotnet | 增强 GodPotato：服务账户 → SYSTEM；磁盘、反射、PowerShell 与内置反弹 shell。 |
+| `net-snaffler` | dotnet | AD 文件共享爬虫：按规则与 regex 在域计算机上查找凭据与敏感文件。 |
+| `net-sql-recon` | dotnet | SQL Server 进攻侦察与后渗透：枚举、模拟、链接服务器、SCCM 模块执行。 |
+| `net-stand-in` | dotnet | 小型 AD 后渗透：LDAP、ACL、Kerberoast、AS-REP、委派、GPO、ADCS 与计算机账户操作。 |
+| `net-sweet-potato` | dotnet | 服务账户 → SYSTEM 的原生提权集合：RottenPotato、JuicyPotato、PrintSpoofer、EfsRpc。 |
+| `net-unquoted-path` | dotnet | 列出 System32/SysWow64 外适合 planting PE 的未加引号服务路径（T1034）。 |
+| `net-webdav-status` | dotnet | 多线程 C# WebDAV 状态检查：经 DAV RPC SERVICE 管道探测 Web Client；目标无需 admin，需有效凭据。 |
+| `net-winpeas` | dotnet | WinPEAS：错误配置、脆弱服务、凭据、AV/EDR、网络、AD 与提权向量。 |
+| `net-winrmdll` | dotnet | 通过 WinRM 在远程主机执行命令。 |

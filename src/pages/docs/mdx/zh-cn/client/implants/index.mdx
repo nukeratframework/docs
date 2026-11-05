@@ -1,0 +1,179 @@
+---
+title: 植入体
+---
+
+植入体是在已控主机上运行的程序。在其他框架中，也常被称为「beacon」。
+
+可直接通过 NukeRat 客户端创建。创建步骤见 [Creation（创建）](/docs/client/implants/creation)。
+
+## 植入体设计理念
+
+NukeRat 植入体强调灵活定制，便于打造独一无二的样本。主要体现在：
+
+- **植入体创建**：可在 NukeRat 客户端中自定义 PE 头、preface 代码、PE 字符串等选项。
+- **植入体 API**：植入体签到与任务流量走 [listener 植入体 API](/docs/rest-api/implants)（在通道 `endpointPath` 上的加密 HTTP **POST**），而非 team server 管理 REST 路由 `/api/...`。
+
+
+## 检测规避
+
+NukeRat 植入体包含多种面向现代场景的规避技术，其中间接系统调用与 sleep masking 是核心能力。
+
+多数规避功能针对 Windows 植入体。Linux 与 macOS 植入体目前支持字符串混淆（Off、Xor 或 RC4）；PE artifact 选项仅 Windows 可用。
+
+## 兼容性
+
+NukeRat 植入体支持以下平台：
+
+<div className="not-prose">
+
+<table style={{ borderCollapse: 'collapse', width: '70%', border: '1px solid #3a3a3a' }}>
+  <thead>
+    <tr>
+      <th style={{ padding: '2px 12px', textAlign: 'left', border: '1px solid #3a3a3a' }}>平台</th>
+      <th style={{ padding: '2px 12px', textAlign: 'center', border: '1px solid #3a3a3a' }}>x86（32 位）</th>
+      <th style={{ padding: '2px 12px', textAlign: 'center', border: '1px solid #3a3a3a' }}>x64（AMD64）</th>
+      <th style={{ padding: '2px 12px', textAlign: 'center', border: '1px solid #3a3a3a' }}>ARM</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style={{ padding: '2px 12px', border: '1px solid #3a3a3a' }}>Windows</td>
+      <td style={{ padding: '2px 12px', textAlign: 'center', border: '1px solid #3a3a3a' }}><span style={{ color: '#f87171' }}>否</span></td>
+      <td style={{ padding: '2px 12px', textAlign: 'center', border: '1px solid #3a3a3a' }}><span style={{ color: '#4ade80' }}>✓</span></td>
+      <td style={{ padding: '2px 12px', textAlign: 'center', border: '1px solid #3a3a3a' }}><span style={{ color: '#f87171' }}>否</span></td>
+    </tr>
+    <tr>
+      <td style={{ padding: '2px 12px', border: '1px solid #3a3a3a' }}>Linux</td>
+      <td style={{ padding: '2px 12px', textAlign: 'center', border: '1px solid #3a3a3a' }}><span style={{ color: '#f87171' }}>否</span></td>
+      <td style={{ padding: '2px 12px', textAlign: 'center', border: '1px solid #3a3a3a' }}><span style={{ color: '#4ade80' }}>✓</span></td>
+      <td style={{ padding: '2px 12px', textAlign: 'center', border: '1px solid #3a3a3a' }}><span style={{ color: '#4ade80' }}>✓</span></td>
+    </tr>
+    <tr>
+      <td style={{ padding: '2px 12px', border: '1px solid #3a3a3a' }}>macOS</td>
+      <td style={{ padding: '2px 12px', textAlign: 'center', border: '1px solid #3a3a3a' }}><span style={{ color: '#f87171' }}>否</span></td>
+      <td style={{ padding: '2px 12px', textAlign: 'center', border: '1px solid #3a3a3a' }}><span style={{ color: '#4ade80' }}>✓</span></td>
+      <td style={{ padding: '2px 12px', textAlign: 'center', border: '1px solid #3a3a3a' }}><span style={{ color: '#4ade80' }}>✓</span></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+## 功能
+
+NukeRat 植入体包含许多当前场景所需的能力。下面是 Windows 植入体命令参考（在会话中运行 `help` 可查看实时列表）。平台相关命令请用 `help -os linux` 或 `help -os mac`。
+
+```text-plain
+植入体命令（Windows）：
+=============================
+
+[ 常规 ]
+
+help      help                                                     显示本帮助信息
+          help arp                                                 显示命令详情与示例
+          help -os [linux|mac]                                     显示兼容指定 OS 的命令
+config    config                                                   查看植入体配置
+delay     delay 4                                                  设置植入体回连间隔（秒）
+kill      kill                                                     终止植入体进程（ExitProcess）
+tasks     tasks                                                    显示正在运行的任务 ID
+          tasks kill 3912                                          按 ID 终止正在运行的任务
+
+[ 文件系统 ]
+
+pwd       pwd                                                      显示当前目录
+cd        cd /home/user                                            切换目录
+ls        ls /etc                                                  列出文件与目录
+cat       cat /etc/hosts                                           显示文件内容
+preview   preview file.txt --size-limit 4096                       读取文件开头若干字节
+fileinfo  fileinfo file.exe                                        文件元数据（大小、时间、属性）
+acl       acl /some/path                                           路径的 DACL 与所有者
+echo      echo hello world                                         向输出打印文本
+          echo $PATH                                               查看环境变量
+cp        cp /tmp/a.txt /tmp/b.txt                                 复制文件
+mv        mv /tmp/a /tmp/b                                         移动或重命名文件
+rm        rm /tmp/a.txt                                             删除文件
+ren       ren C:\\Temp\\old.txt C:\\Temp\\new.txt                  重命名文件
+mkdir     mkdir /tmp/newfolder                                     创建目录
+rmdir     rmdir /tmp/newfolder                                     删除目录
+upload    upload -f file.exe -o C:/file.exe                        上传文件到目标
+download  download -f C:/file.exe -o file.exe                      从目标下载文件
+reg       reg <mode> [..args]                                      原生 Windows 注册表操作
+search    search --path C:\\Users --content password               搜索文件内容
+
+[ 信息收集 ]
+
+whoami    whoami                                                   当前用户信息
+systeminfo systeminfo                                              操作系统与硬件详细信息
+env       env                                                      列出全部环境变量
+tasklist  tasklist ROOT\\CIMV2                                      通过 WMI 列出运行中的进程
+enumdrives enumdrives                                               列出可用盘符
+ifconfig  ifconfig                                                 网络适配器配置
+route     route                                                    路由表
+arp       arp                                                      ARP 缓存表
+netstat   netstat TCP                                              活动连接
+hooks     hooks                                                    对比导出序言（内存 vs 磁盘）
+
+[ 执行 ]
+
+shell     shell whoami                                             执行 shell 命令
+powershell powershell ps aux                                        执行 PowerShell 脚本
+shellcode shellcode -f file.bin                                    执行原始 shellcode
+bof       bof -f file.o --- <args>                                 执行内置 BOF
+dotnet    dotnet -f file.exe --- <args>                            执行 .NET 程序集
+load-dll  load-dll -f file.dll                                     将 DLL 加载到内存
+load-so   load-so -f file.so                                       将 SO 加载到内存
+load-dylib load-dylib -f file.dylib                                 将 DYLIB 加载到内存
+
+[ 注入 ]
+
+migrate   migrate 4919 [--alloc <mode>]                            将植入体 shellcode 注入进程
+spawn     spawn -t cmd.exe --- <args>                              创建进程并捕获输出
+          spawn suspend -t C:\\Windows\\System32\\notepad.exe      创建挂起进程（不恢复）
+inj       inj shellcode -f file.bin -p 2300 --- <args>             向进程注入 shellcode
+          inj dll-reflective -f file.dll -p 2300                   向进程注入反射 DLL
+          inj donut -f file -p 2300 --- <args>                     通过 donut 注入多种载荷
+          --alloc section / --alloc stomping [--stomp-dll name.dll]  分配模式（inj、migrate）
+          --encoder sgn                                            SGN 编码器（inj donut/shellcode）
+
+[ 进程 ]
+
+proc      proc info                                                当前进程摘要
+          proc info [modules|privileges|full]                      显示指定进程信息
+          proc [kill|suspend|resume] --pid <pid>                   按 PID 更改进程状态
+tokens    tokens                                                   当前令牌
+          tokens grab --pid 1000                                   从进程抓取令牌存入 vault
+          tokens list                                              列出已保存的 vault 令牌
+          tokens impersonate --id 0                                模拟 vault 令牌
+          tokens revert                                            停止模拟（RevertToSelf）
+runas     runas --domain name -u jhon -p 123 --path cmd.exe --- <args>  以其他用户身份运行
+
+[ 跳板 ]
+
+relay     relay                                                    显示 relay 列表
+          relay create -c tcp -l 8888 -t [implant|server]://10.1.1.5:9090 [--tls]  创建 TCP relay
+          relay create -c smb -l 445 -t [implant|server]://10.1.1.5:9090 --pipe test [--tls]  创建 SMB relay
+          relay delete --id 445                                    按 id 删除 relay
+
+(*) SOCKS5 与端口转发位于 NukeRat > Network。
+
+[ 实用工具 ]
+
+getsystem getsystem --method [inject|token|com]                    尝试提权至 SYSTEM
+keylogger keylogger [start|stop] --method [keystate|boardstate]    启动或停止键盘记录
+screenshot screenshot                                              截取单张屏幕截图
+          screenshot [start|stop] --delay 15 (seconds)             启动或停止截图循环
+
+[ Armory 与 lolbins ]
+
+armory    armory                                                   显示全部可用 Armory 工具
+          armory [install|remove] seatbelt                         安装或移除 Armory 工具
+          armory update                                            更新 Armory 工具
+lolbins   lolbins [<category>]                                     按类别显示 lolbins
+          lolbins check <category>                                 检查主机上是否存在该类二进制
+
+[ 修饰符 ]
+
+-bg       shell -bg dir                                            后台运行
+-w        shell -w 30 ping 127.0.0.1 -n 10                         自定义最长等待时间（秒）
+prefix    prefix powershell                                        为每条命令附加固定前缀
+          prefix clear                                             清除当前前缀
+```

@@ -1,0 +1,118 @@
+---
+title: Relay
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+Relay قابلیتی در implant است که implantها را درون یک شبکه به هم وصل می‌کند. وقتی میزبان به اینترنت دسترسی ندارد یا شبکه قفل است، به‌درد می‌خورد.
+
+Relay از **SMB** و **TCP** پشتیبانی می‌کند. SMB فقط روی Windows است.
+
+## نحوهٔ استفاده
+
+برای روشن‌تر شدن، این سناریو را در نظر بگیرید:
+
+میزبان A را دارید و در همان شبکه میزبان B بدون مسیر به بیرون است و مستقیم به team server نمی‌رسد.
+
+در این حالت مراحل زیر را انجام دهید:
+
+  <Steps>
+    <Step>
+      ### implant از پیش پیکربندی‌شده
+      اول مطمئن شوید میزبان B از قبل implantی دارد که برای ارتباط relay از پیش پیکربندی شده است.
+
+      برای ساخت implant relay به [Relay stageless implant](/docs/client/implants/creation#relay-stageless-implant) مراجعه کنید.
+    </Step>
+    <Step>
+      ### راه‌اندازی relay روی میزبان A
+
+      relay TCP:
+        ```
+        relay create --listen 8888 --target implant://192.168.15.10:9090 --channel tcp
+        ```
+      relay SMB (فقط Windows):
+        ```
+        relay create -l 445 --target server://192.168.15.10:9090 -c smb --pipe test --tls
+        ```
+    پارامترها:
+        - `--listen` / `-l`: پورتی که implant باز می‌کند و روی آن listen می‌کند (همچنین به‌عنوان relay id پیش‌فرض)
+        - `--target` / `-t`: endpoint پایین‌دست به‌صورت `implant://host:port` یا `server://host:port`
+        - `--channel` / `-c`: `tcp` یا `smb`
+        - `--pipe`: named pipe SMB؛ نام کوتاه مثل `test` یا مسیر کامل `\\pipe\\name` در Windows
+        - `--tls`: وقتی target از `server://` است، POST به team server روی HTTPS به‌جای HTTP
+        - `--id`: شناسه relay برای `relay delete` یا جایگزینی شناسهٔ پیش‌فرض پورت listen
+    </Step>
+    <Step>
+      ### مدیریت relayها
+      `relay` را بدون آرگومان اجرا کنید تا relayهای فعال (پورت listen، target، حالت، وضعیت) فهرست شوند.
+
+      برای توقف relay:
+        ```
+        relay delete --id 8888
+        ```
+    </Step>
+    <Step>
+      ### آزمایش relay
+      بعد از آن implant B باید کاملاً عملیاتی باشد.
+    </Step>
+  </Steps>
+
+
+### پیشوند target
+
+پارامتر `target` همیشه پیشوند `implant://` یا `server://` می‌گیرد. به implant می‌گوید چه موقع ترافیک را به HTTP تبدیل کند تا به team server برسد.
+
+انتخاب ساده است: اگر پرش بعدی team server است از `server://` استفاده کنید — نقطهٔ خروج شماست. اگر ترافیک را به implant دیگری می‌فرستید از `implant://` استفاده کنید.
+
+### تأخیر تجمعی
+
+relayها همیشه ترافیک را با رعایت delay پیکربندی‌شدهٔ هر implant عبور می‌دهند. اگر ترافیک از چند میزبان رد شود، این تأخیرها جمع می‌شوند و زمان پاسخ به‌طور محسوسی بیشتر می‌شود.
+
+## نحوهٔ کار
+
+پس از ساخت relay، روی پورت پیکربندی‌شده listen می‌کند.
+
+وقتی ترافیک می‌آید، implant payload را رمزگشایی می‌کند، tag میزبان خود را به `chain` اضافه می‌کند، دوباره رمز می‌کند و به target می‌فرستد.
+
+JSON forwardشده این ساختار را دارد:
+
+```json
+{
+  "source": "hostB",
+  "content": [
+    {
+      "option": "output",
+      "type": "terminal",
+      "task_tag": "k7F2a9",
+      "output": "desktop\\user\r\n"
+    }
+  ],
+  "chain": ["hostB", "hostA"]
+}
+```
+
+وقتی target implant دیگری است، payload همان‌طور relay می‌شود. وقتی target team server است، implant ترافیک را به HTTP تبدیل و به سمت سرور می‌فرستد.
+
+### رمزنگاری ارتباط
+
+همهٔ ترافیک relay با کلید master AES که در زمان کامپایل در هر implant جاسازی شده رمز می‌شود. همهٔ implantهای ساخته‌شده برای یک team server کلید یکسان دارند.
+
+به این ترتیب implantها برای تبادل کلید به handshake قبلی نیاز ندارند و امضای آن نوع ترافیک کمتر می‌شود.
+
+برای تغییر کلید master AES، در `server.conf` بخش `[implants]` مقدار `relay_aes_key` را تنظیم کنید. مقدار باید حداقل ۳۲ بایت decode شود (base64 یا hexadecimal). پس از تغییر implantها را دوباره بسازید.
+
+**توجه:** تغییر کلید master AES ارتباط با هر implantی که هنوز کلید قدیمی دارد قطع می‌شود.
+
+### Windows
+
+- **TCP** از `WSAStartup`, `socket`, `bind`, `listen`, `accept`, `connect`, `send`, `recv`, `closesocket`, `getaddrinfo` و `freeaddrinfo` در `ws2_32.dll` استفاده می‌کند.
+
+- **SMB** از `CreateNamedPipeA`, `ConnectNamedPipe`, `CreateFileA`, `WaitNamedPipeA`, `PeekNamedPipe`, `ReadFile`, `WriteFile`, `DisconnectNamedPipe` و `CloseHandle` در `kernel32.dll` استفاده می‌کند.
+
+### Linux
+
+از socketهای POSIX (`sys/socket.h`) با `socket`, `bind`, `listen`, `accept`, `connect`, `send`, `recv`, `setsockopt` و `getaddrinfo` / `freeaddrinfo`. SMB پشتیبانی نمی‌شود.
+
+### macOS
+
+از `net.Listen`, `net.Accept`, `net.Dial` و `io.Copy` در stdlib Go استفاده می‌کند. SMB پشتیبانی نمی‌شود.

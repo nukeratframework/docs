@@ -1,0 +1,576 @@
+---
+title: Armory
+---
+
+Armory は 543 個のユーティリティ（BOF と .NET 実行ファイル）が揃ったセットで、特定ホスト上ですばやくダウンロードして実行できます。
+
+すべてのユーティリティは公式 NukeRat Armory リポジトリ [**github.com/nukeratframework/armory**](https://github.com/nukeratframework/armory) からダウンロードされます。
+
+プリコンパイル済みが自動でダウンロードされますが、手動ビルドも可能です。その場合:
+
+1. 手動でビルドし、`server/infra/bin/armory/` フォルダに追加する
+2. `server/server.conf` の `[server.armory]` 下の `repository` を、独自の GitHub リリースホストを指すように設定する
+
+## コマンド
+
+デフォルトでは NukeRat に Armory バイナリは同梱されません。チームサーバーへインストールするには armory コマンドを使います:
+
+| コマンド | 操作 |
+| --- | --- |
+| `armory` | 利用可能なユーティリティと短い説明を一覧表示 |
+| `armory install all` | 最新リリースバンドルからすべてのユーティリティをダウンロード |
+| `armory install &lt;tool&gt;` | 1 つのユーティリティのファイルをダウンロード |
+| `armory update` | リポジトリから Armory インデックス（`armory.json`）を更新 |
+| `armory update &lt;tool&gt;` | インデックスを更新し、1 つのユーティリティを再ダウンロード |
+| `armory remove &lt;tool&gt;` | そのユーティリティのキャッシュファイルを削除 |
+| `help &lt;command&gt;` | ユーティリティコマンドのヘルプを表示 |
+
+## カタログ
+
+以下は 543 個すべての Armory ユーティリティの一覧です。ツール名は `armory install` に渡すターミナルコマンドと一致します:
+
+| 名前 | カテゴリ | 説明 |
+| --- | --- | --- |
+| `bof-aadjoininfo` | bof | デバイスの Azure AD または Entra ID 参加情報を表示します。 |
+| `bof-adnet-enum` | bof | Active Directory Certificate Services を列挙します。 |
+| `bof-adnet-enum-com2` | bof | IX509PolicyServerListManager COM オブジェクトで AD 内の CA とテンプレートを列挙します。 |
+| `bof-adnet-on-behalf` | bof | XCN_OID_ENROLLMENT_AGENT 拡張付き登録エージェント証明書を使い、別ユーザーの代わりに AD CS 登録証明書を要求します。 |
+| `bof-add-ace` | bof | オブジェクト DACL に ACE を追加します。署名/シーリング付き標準 LDAP（389）および LDAPS（636）をサポートします。 |
+| `bof-add-attribute` | bof | 属性値を追加/追記します。署名/シーリング付き標準 LDAP（389）および LDAPS（636）をサポートします。 |
+| `bof-add-computer` | bof | 新しいコンピューターオブジェクトを作成します。署名/シーリング付き標準 LDAP（389）および LDAPS（636）をサポートします。 |
+| `bof-add-defender-excl` | bof | COM 経由で MSFT_MpPreference WMI クラスを使い Windows Defender 除外を追加します。 |
+| `bof-add-delegation` | bof | 委任 SPN を設定/置換します。署名/シーリング付き標準 LDAP（389）および LDAPS（636）をサポートします。 |
+| `bof-add-exclusion` | bof | フォルダ、ファイル、プロセス、拡張子向けに Windows Defender 除外を追加します。 |
+| `bof-add-firewall-rule` | bof | COM を使い新しいインバウンドまたはアウトバウンドファイアウォールルールを追加します。 |
+| `bof-add-group` | bof | 新しいグループを作成します。署名/シーリング付き標準 LDAP（389）および LDAPS（636）をサポートします。 |
+| `bof-add-groupmember` | bof | ユーザーをグループに追加します。署名/シーリング付き標準 LDAP（389）および LDAPS（636）をサポートします。 |
+| `bof-add-local-cert` | bof | 指定ローカルコンピューター証明書ストアに（自己署名）証明書を追加します。例: 悪意あるバイナリの署名にも使った自己署名証明書を、ターゲットの「信頼されたルート認証局」（ROOT）に追加します。 |
+| `bof-add-machine-account` | bof | 既定の AD マシンアカウントクォータ（ms-DS-MachineAccountQuota）を悪用し、ローグマシンアカウントを追加して後続攻撃に備えます。 |
+| `bof-add-ou` | bof | 組織単位を作成します。署名/シーリング付き標準 LDAP（389）および LDAPS（636）をサポートします。 |
+| `bof-add-rbcd` | bof | RBCD 委任を設定します。署名/シーリング付き標準 LDAP（389）および LDAPS（636）をサポートします。 |
+| `bof-add-sidhistory` | bof | sidHistory に SID を追加します。署名/シーリング付き標準 LDAP（389）および LDAPS（636）をサポートします。 |
+| `bof-add-spn` | bof | ServicePrincipalName を追加します。署名/シーリング付き標準 LDAP（389）および LDAPS（636）をサポートします。 |
+| `bof-add-uac` | bof | UserAccountControl フラグを追加します。署名/シーリング付き標準 LDAP（389）および LDAPS（636）をサポートします。 |
+| `bof-add-user` | bof | 新しいユーザーオブジェクトを作成します。署名/シーリング付き標準 LDAP（389）および LDAPS（636）をサポートします。 |
+| `bof-add-user-by-samr` | bof | SAMR でユーザーをローカルグループに追加します。管理者権限が必要です。Active Directory では使用しないでください。 |
+| `bof-adduser` | bof | ローカルまたはリモートにユーザーを追加します。 |
+| `bof-adduser-to-group` | bof | ユーザーをグループに追加します。 |
+| `bof-addusertogroup` | bof | 指定ユーザーを指定ドメイングループに追加します。 |
+| `bof-adv-audit-policies` | bof | 高度なセキュリティ監査ポリシーを取得します。 |
+| `bof-ai-surface` | bof | Windows 開発者エンドポイント上の AI ツールをマップし、トリアージ向けに、ワークフローデータ、ローカル状態、資格情報を露出し得る AI エージェントおよび MCP アーティファクトを強調表示します。 |
+| `bof-allow-firewall-rule` | bof | インバウンドまたはアウトバウンドのファイアウォール許可ルールを追加します。 |
+| `bof-amsi-etw-detect` | bof | 読み込まれた DLL と ETW 関連エクスポートを検出し、現在プロセス内の AMSI と ETW の有無を確認します。セキュリティ活動が少ないターゲット選定に有用です。 |
+| `bof-app-count` | bof | レジストリ経由でインストール済みアプリ数を数え、重複を除いて出力します。多数のビーコンに適用すると、アプリ数の差からデバイスを推測できます。 |
+| `bof-applocker-policy` | bof | 関連レジストリキーを走査し、AppLocker ポリシー設定、ルールコレクション、強制モードを列挙します。 |
+| `bof-arp` | bof | ARP テーブルを一覧表示します。 |
+| `bof-ask-mfa` | bof | 指定番号付きの偽 Microsoft Authenticator 承認ダイアログを表示します。30 秒後に自動で閉じます。 |
+| `bof-askcreds` | bof | CredUIPromptForWindowsCredentialsName で資格情報を収集します。スレッドで実行し、最大 60 秒ユーザー入力を待ちます。待機中ビーコンは応答しません。 |
+| `bof-asktgs` | bof | TGT からサービスチケットを要求します。 |
+| `bof-asktgt` | bof | パスワード、ハッシュ、または preauth なしで TGT を要求します。 |
+| `bof-asr-status` | bof | レジストリから Windows Defender Attack Surface Reduction（ASR）ルールを列挙し、設定ルール、強制状態（Block/Audit/Warn/Disabled）、ポリシー源（Intune/MDM vs グループポリシー）を特定します。 |
+| `bof-asrenum` | bof | WMI 経由で MSFT_MpPreference を問い合わせ、ASR ルール、アクション、除外場所を特定します。昇格コンテキストが必要です。 |
+| `bof-asreproasting` | bof | Kerberos preauthentication がないユーザー向けに AS-REP を要求します。 |
+| `bof-authenticate-http` | bof | 現在のユーザーコンテキストから Windows 認証済み HTTP リクエストを（ntlmrelayx）サーバーへ強制し、認証済み（LDAP）リレー攻撃に使えます。 |
+| `bof-backup-priv-sam` | bof | リモートレジストリ経由で SeBackupPrivilege を悪用し、リモートシステムから SAM、SYSTEM、SECURITY ハイブをダンプします。 |
+| `bof-bitlocker-status` | bof | レジストリキーを走査し、BitLocker 暗号化状態、ポリシー設定、回復キーバックアップ場所を列挙します。 |
+| `bof-c-enumerate-defender` | bof | WMI 経由で Windows Defender 除外を列挙します。昇格ビーコンコンテキストが必要です。 |
+| `bof-cacls` | bof | 指定ファイルのユーザー権限を一覧表示します。ワイルドカード対応。 |
+| `bof-capture-net-ntlm` | bof | 現在ユーザーの NetNTLMv2 ハッシュを取得します。クライアントとサーバー間の NTLM 認証交換をシミュレートしてハッシュを取得します。 |
+| `bof-cdp-enable` | bof | 実行中の x64 Chrome または Edge で Chrome DevTools Protocol を有効化します。実行時にブラウザ内部シンボルを解決し、UI スレッドでリモートデバッグサーバーを開始します。x64 のみ。 |
+| `bof-cdp-enable-iso` | bof | Windows Process Isolation 付き x64 Chrome で Chrome DevTools Protocol を有効化します。分離プロセスへの限定ハンドルクエリとローカル chrome.dll からのシンボル解決を使用します。x64 のみ。 |
+| `bof-certstore-loot` | bof | ローカル証明書ストアを列挙し、エクスポート可能な秘密鍵付き証明書を見つけ、エクスポートパスを示します。 |
+| `bof-change-pass` | bof | ローカルまたはリモートホスト上でユーザーパスワードを設定します。 |
+| `bof-changepw` | bof | kpasswd 経由でユーザーパスワードを変更します。 |
+| `bof-chrome-key` | bof | Local State から base64 エンコードされた Chrome 鍵を復号し、ブラウザ Cookie のオフライン復号に使用します。 |
+| `bof-chromium-key-dump` | bof | Chrome/Edge のマスターキーをダンプし、ブラウザプロファイルから Cookie/Login Data ファイルをダウンロードします。 |
+| `bof-cicd-credential-hunt` | bof | 現在の Windows ユーザープロファイル内の一般的な CI/CD、クラウド、開発者向け資格情報アーティファクトを検索します。既定ではパスとサイズを報告します。.gitconfig と .ssh/config は資格情報ではなく設定として分類されます。 |
+| `bof-clipboard-grab` | bof | Win32 API で Windows クリップボードからテキストを取得し、コールバックへ返します。 |
+| `bof-clipboard-monitor` | bof | GetClipboardSequenceNumber でクリップボード変更を監視する非同期 BOF。変更検知時に内容を出力します。テキストと画像（同期モードでは base64 BMP）をサポート。画像取得は同期モードのみ。 |
+| `bof-clipboard-steal` | bof | Windows クリップボード履歴の有効化、無効化、確認、ダンプ機能。 |
+| `bof-cloud-metadata-check` | bof | 現在プロセスから AWS、Azure、GCP のクラウドローカルメタデータサービスをプローブし、到達可能な場合はプロバイダー識別、インスタンスコンテキスト、限定された資格情報スニペットを報告します。 |
+| `bof-cloudap-bof` | bof | LsaCallAuthenticationPackage 経由で Entra ID SSO Cookie、デバイス SSO Cookie、AD FS エンタープライズ SSO Cookie、クラウドプロバイダー状態を抽出します。Entra ID/Azure AD 参加デバイスでアクティブなクラウドログオンセッションが必要です。 |
+| `bof-com-probe` | bof | 指定 CLSID から COM オブジェクトをインスタンス化できるかプローブします。インプロセスを先に試し、ローカルサーバーにフォールバックします。 |
+| `bof-contact-harvester` | bof | COM 経由で Outlook グローバルアドレスリストの連絡先を収集します。 |
+| `bof-cookie-graber` | bof | DPAPI 経由で Chrome と Edge の Local State から WebKit マスター暗号化鍵を抽出します。Edge 鍵を先にダンプし、次に Chrome 鍵。マスター鍵は CookieProcessor.exe でオンディスク DB から Cookie をオフライン復号する際に使用します。 |
+| `bof-cookie-monster` | bof | Chrome、Edge、Firefox の Cookie とログイン情報を窃取します。WebKit マスター鍵と App Bound 暗号化鍵を抽出し、Cookies と Login Data ファイルへのハンドルを複製してファイルレスダウンロード。ブラウザ注入なしの SYSTEM モード鍵復号をサポート。ダウンロードした DB は decrypt.py でオフライン復号。 |
+| `bof-cred-man` | bof | SeTrustedCredManAccess 権限を悪用して Windows 資格情報マネージャーをダンプします。winlogon.exe からトークンを窃取して権限を有効化。管理者権限が必要です。 |
+| `bof-cred-prompt` | bof | Windows 資格情報プロンプトを起動してユーザー資格情報取得を試みます。入力された資格情報は出力として返されます。プロンプトは持続的で、被害者はキャンセル/閉じるや空パスワード入力ができません。その試みは出力に表示されます。最後にタイマーでビーコンがいずれ返るようにします。 |
+| `bof-credui` | bof | Windows API CredUIPromptForWindowsCredentials で資格情報プロンプトを起動し、LogonUser で送信資格情報を検証します。 |
+| `bof-cross-s4u` | bof | クロスドメイン S4U 制約付き委任悪用を実行します。 |
+| `bof-cryptvortex` | bof | ディレクトリ内のファイルを暗号化または復号します。 |
+| `bof-curl` | bof | SOCKS プロキシを確立せずに HTTP リクエストを送信します。 |
+| `bof-cve-2022-26923` | bof | AD CS ドメイン権限昇格 exploit CVE-2022-26923。dNSHostName と servicePrincipalName 属性を変更した AddMachineAccount ベース。 |
+| `bof-dcom-local-server32` | bof | 指定ホスト上で提供 CLSID に基づき DCOM/COM クラスをインスタンス化し、関連アウトオブプロセス EXE サーバーを起動して別プロセスを作成します。DLL/COM ハイジャックに弱い EXE とモジュール読み込みディレクトリへの書き込み権限を組み合わせると（リモート）コード実行と横移動に有効です。 |
+| `bof-dcompotato-notify` | bof | 悪意ある IUnknown オブジェクトを PrintNotify DCOM 呼び出しに渡し、SeImpersonate で SYSTEM 権限を取得します。 |
+| `bof-defender-exclusions` | bof | レジストリから Windows Defender 除外パス、プロセス、拡張子を一覧表示します。 |
+| `bof-del-exclusion` | bof | フォルダ、ファイル、プロセス、拡張子向けの Windows Defender 除外を削除します。 |
+| `bof-del-firewall-rule` | bof | COM でファイアウォールルールを削除します。 |
+| `bof-del-local-cert` | bof | 一意のサムプリントに基づき、指定ストアからローカルコンピューター証明書を削除します。 |
+| `bof-del-machine-account` | bof | Active Directory に作成したローグマシンアカウントを削除します。 |
+| `bof-del-task-scheduler` | bof | 現在のシステムまたはリモートホスト上のスケジュールタスクを削除します。 |
+| `bof-describe` | bof | Kerberos チケットを解析して説明します。 |
+| `bof-detect-hooks` | bof | ntdll エクスポート Nt/Zw 関数をスキャンし、予期しない命令パターンでインラインフックを検出します。 |
+| `bof-dir` | bof | ディレクトリ内ファイルを一覧表示します。ワイルドカード対応（例: \"C:\\Windows\\S*\"）。CobaltStrike の `ls` とは異なります。 |
+| `bof-disableuser` | bof | ターゲットコンピューター上の指定ユーザーアカウントを無効化します。 |
+| `bof-dll-env-hijacking` | bof | 隠しファイル構造をセットアップし、既存の悪意あるプロキシ DLL を新 system32 フォルダへ移動、プロキシ DLL を隠し、SYSTEMROOT 環境変数を変更、脆弱バイナリをスプーフプロセスとして実行して悪意 DLL を実行し、元の SYSTEMROOT に戻してビーコン動作を維持します。 |
+| `bof-dll-hijack-hunter` | bof | 指定パスと DLL 名から SafeDllSearchMode の DLL 解決順を走査します。オプションで一致ファイルへの書き込み可能か確認します。 |
+| `bof-domaininfo` | bof | Active Directory Domain Services でドメイン情報を列挙します。 |
+| `bof-draugr` | bof | 間接システムコール付き Draugr スタックスプーフィング。NtAllocateVirtualMemory でメモリ確保、User32.dll 読み込み、合成スタックフレームで MessageBoxA を呼び出します。 |
+| `bof-driversigs` | bof | インストール済みサービスの ImagePath を列挙し、署名証明書を既知 AV/EDR ベンダーと照合します。 |
+| `bof-dropspawn` | bof | プロキシ DLL をディスクにドロップし、アプリケーションディレクトリをスプーフして DLL 検索順で新プロセスを生成します。x86、x64、クロスアーキテクチャ対応。ドロップ DLL は新プロセス読み込み後に自削除する想定です。 |
+| `bof-dump` | bof | ログオンセッションから Kerberos チケットを抽出します。 |
+| `bof-dump-procargs` | bof | PEB からプロセスコマンドライン引数をダンプします。 |
+| `bof-edgedump` | bof | メイン msedge.exe プロセスメモリから Microsoft Edge 保存資格情報アーティファクトを抽出します。読み取り可能メモリ領域でパターンをスキャン。ブラウザファイル、SQLite、DPAPI は使用しません。同一ユーザーコンテキストで現在ユーザーの Edge を読み取れます。昇格コンテキストではログオンセッション横断で Edge を読み取れます。 |
+| `bof-elevate-trusted` | bof | 現在のビーコンを SYSTEM に昇格し、SetThreadToken なりすましで TrustedInstaller グループ権限を取得します。 |
+| `bof-enableuser` | bof | ターゲットコンピューター上の指定ユーザーアカウントを有効化・アンロックします。 |
+| `bof-entra-authcode-flow` | bof | OAuth 認可コードフロー URL でブラウザを起動し Microsoft Entra アクセス/リフレッシュトークンを取得します。トークン交換をエンドポイント上に保持し、条件付きアクセスを回避できる場合があります。手順: 1. OAuth 認可 URL で新タブ起動 2. 認可コードを含むリダイレクトのウィンドウタイトルを監視 3. コードをアクセス/リフレッシュトークンに交換 |
+| `bof-enum-active-hosts` | bof | アクティブホストを列挙するか、単一オープンポートを検証します。事前定義ホスト名/IP リストを受け付け、オペレータークライアントから読み込みます。 |
+| `bof-enum-dll-sideloading` | bof | 単一 .EXE、フォルダ、または再帰的全フォルダを走査し、実行ファイルの DLL サイドロード脆弱性を特定します。 |
+| `bof-enum-drives` | bof | ドライブ文字と種類を列挙します。 |
+| `bof-enum-exclusions` | bof | Windows Defender の除外対象（ファイル、フォルダ、拡張子、プロセス）を列挙します。 |
+| `bof-enum-files` | bof | ファイル内容の単語、拡張子、キーワードで一致ファイルを検索します。ワイルドカード対応。 |
+| `bof-enum-filter-driver` | bof | フィルタードライバーを列挙します。 |
+| `bof-enum-handles` | bof | プロセス間の `process` と `thread` ハンドル型を列挙します。 |
+| `bof-enum-lib` | bof | 全プロセスで特定モジュールを検索するか、特定プロセスの全読み込みモジュールを一覧します。 |
+| `bof-enum-local-cert` | bof | 指定ストアからローカルコンピューター証明書を一覧します。一般的なストア名: ROOT、MY、TRUST、CA、USERDS、AuthRoot、Disallowed。 |
+| `bof-enum-local-sessions` | bof | ローカルおよび RDP 経由の現在接続ユーザーセッションを列挙します。 |
+| `bof-enum-sec-products` | bof | 現在またはリモートホストで動作中の AV/EDR 等セキュリティ製品のリストを取得します。130 製品のハードコードリストと実行プロセスを照合します。 |
+| `bof-enum-shares` | bof | 事前定義ホスト名/IP リストでドメイン内公開共有とアクセスレベルを一覧します。TCP/445 でオフラインホストをスキップし、ステルス属性チェックでアクセスを確認します。 |
+| `bof-enum-task-scheduler` | bof | ルートフォルダ内の全スケジュールタスクについて基本情報を列挙・一覧します。 |
+| `bof-enum-web-client` | bof | 事前定義ホスト名/IP リストで WebClient サービスが動作するホストを列挙します。リストは攻撃者側システムから読み込みます。 |
+| `bof-enumprotections` | bof | システムプロセスを列挙し、保護レベル、サービス関係、ユーザー、セッション ID、ファイルパスを報告します。DLL ハイジャック候補となり得る保護なしサードパーティサービスプロセスの特定に有用です。 |
+| `bof-env` | bof | プロセス環境変数を一覧表示します。 |
+| `bof-esc1-unpac` | bof | 完全な ADCS ESC1 攻撃チェーンを実行します。任意 SAN（KB5014754 回避用 SID 付き）の証明書を要求、PKINIT で認証、UnPAC the hash で NT ハッシュを抽出します。 |
+| `bof-etw` | bof | ntdll.dll の EtwEventWrite をパッチ/復元し、ETW ベースログを劣化させます。 |
+| `bof-event-log-manage` | bof | Event Log チャネルを検査し、BOF 所有のクラシックログとソースを管理、登録ソース経由でテキスト/バイナリイベントを書き込み、オプション付きバックアップでチャネルをクリアします。create、clear、destroy は昇格 Administrator または SYSTEM が必要です。 |
+| `bof-execute-cross-session` | bof | 別ユーザーコンテキストでディスク上のバイナリを実行します。IStandardActivator、ISpecialSystemProperties、IHxHelpPaneServer COM によるクロスセッション操作で、別ログオンユーザー代わりの実行にプロセス注入は不要です。 |
+| `bof-find-loaded-module` | bof | *modulepart* が読み込まれたプロセスを検索。オプションで *procnamepart* のみ検索。 |
+| `bof-find-module` | bof | 直接システムコールで特定モジュール（例: clr.dll、winhttp.dll、amsi.dll）を読み込むプロセスを列挙。opsec 安全な spawnto 候補選定に有用。 |
+| `bof-find-proc-handle` | bof | ターゲットプロセス（例: lsass.exe）へのハンドルを保持するプロセスを列挙。新規 LSASS オープン回避の既存ハンドル特定に使えます。 |
+| `bof-firewall-rule` | bof | COM API（INetFwPolicy2）で Windows ファイアウォールルールを追加/削除/照会。netsh.exe や cmd.exe を起動しません。ネットワーク内ピボットに有用。 |
+| `bof-force-lock-screen` | bof | 現在ユーザーセッションのロック画面を強制します。 |
+| `bof-functionutil` | bof | 読み込みモジュール API 関数をオンディスク DLL コピーと比較・パッチ。EPP/EDR フック検出とアンフックに使用。 |
+| `bof-get-acl` | bof | オブジェクト DACL/ACE を表示。署名/シーリング付き標準 LDAP（389）および LDAPS（636）。 |
+| `bof-get-attribute` | bof | 特定 LDAP 属性を読み取り。署名/シーリング付き標準 LDAP（389）および LDAPS（636）。 |
+| `bof-get-azure-token` | bof | 保存ブラウザログインで Azure に対し OAuth 認可コードフローを完了し、返却トークンを出力します。 |
+| `bof-get-clipboard` | bof | Win32 クリップボード API でクリップボード上のテキストを出力します。 |
+| `bof-get-computers` | bof | 全ドメインコンピューターを一覧。署名/シーリング付き標準 LDAP（389）および LDAPS（636）。 |
+| `bof-get-delegation` | bof | 委任設定を表示。署名/シーリング付き標準 LDAP（389）および LDAPS（636）。 |
+| `bof-get-domain-info` | bof | 現在ドメインと DC の情報（フォレスト名、ドメイン名、DC 名、DC アドレス、DC サイト名）を返します。 |
+| `bof-get-domaininfo` | bof | rootDSE からドメイン情報をクエリ。署名/シーリング付き標準 LDAP（389）および LDAPS（636）。 |
+| `bof-get-dpapi-system` | bof | DPAPI_SYSTEM 鍵と bootkey を取得します。 |
+| `bof-get-groupmembers` | bof | グループメンバーを一覧。署名/シーリング付き標準 LDAP（389）および LDAPS（636）。 |
+| `bof-get-groups` | bof | 全ドメイングループを一覧。署名/シーリング付き標準 LDAP（389）および LDAPS（636）。 |
+| `bof-get-machacct-quota` | bof | 現在ドメインの ms-DS-MachineAccountQuota を読み取ります。 |
+| `bof-get-maq` | bof | マシンアカウントクォータを取得。署名/シーリング付き標準 LDAP（389）および LDAPS（636）。 |
+| `bof-get-netntlm` | bof | SSPI 経由で NetNTLMv2 ハッシュを取得します。 |
+| `bof-get-netsession` | bof | ローカルまたは指定コンピューターのセッションを列挙します。 |
+| `bof-get-netsession2` | bof | BOFHound 対応の `netsession` 改変版。 |
+| `bof-get-object` | bof | オブジェクトの全属性をダンプ。署名/シーリング付き標準 LDAP（389）および LDAPS（636）。 |
+| `bof-get-password-policy` | bof | ターゲットサーバーまたはドメインのパスワードポリシーとロックアウト設定を取得します。 |
+| `bof-get-priv` | bof | 現在プロセスで指定トークン権限を有効化します。 |
+| `bof-get-rbcd` | bof | Resource-Based Constrained Delegation を表示。署名/シーリング付き標準 LDAP（389）および LDAPS（636）。 |
+| `bof-get-session-info` | bof | 現在ユーザーのログオンセッション関連情報を出力します。 |
+| `bof-get-spn` | bof | ServicePrincipalName を一覧。署名/シーリング付き標準 LDAP（389）および LDAPS（636）。 |
+| `bof-get-uac` | bof | UserAccountControl フラグを表示。署名/シーリング付き標準 LDAP（389）および LDAPS（636）。 |
+| `bof-get-usergroups` | bof | ユーザーが属するグループを一覧。署名/シーリング付き標準 LDAP（389）および LDAPS（636）。 |
+| `bof-get-users` | bof | 全ドメインユーザーを一覧。署名/シーリング付き標準 LDAP（389）および LDAPS（636）。 |
+| `bof-get-webdav-status` | bof | DAV RPC SERVICE 名前付きパイプをプローブし、リモートシステムの Web Client（WebDAV）サービス稼働を確認します。ターゲット管理者権限は不要ですが有効な資格情報が必要（匿名不可）。 |
+| `bof-get-writable` | bof | 書き込みアクセス可能オブジェクトを検索。署名/シーリング付き標準 LDAP（389）および LDAPS（636）。 |
+| `bof-getsystem` | bof | winlogon.exe トークンを複製して SYSTEM を取得。管理者権限が必要です。 |
+| `bof-ghost-task` | bof | レジストリのみでスケジュールタスクを作成/削除し、Windows イベント 4698 と 106 を発生させません。NT AUTHORITY\\SYSTEM が必要です。 |
+| `bof-ghostkatz` | bof | MmMapIoSpace プリミティブ付き署名済み脆弱カーネルドライバーで物理メモリを読み LSASS 資格情報をダンプ。MSV1（logonpasswords）と WDigest 抽出をサポート。管理者権限が必要。ドライバー失敗時 BSOD の可能性あり。 |
+| `bof-global-unprotect` | bof | GlobalProtect VPN 設定と HIP 設定を特定、復号、ダウンロードします。 |
+| `bof-handle-finder` | bof | ターゲットプロセスのオープンハンドルを列挙します。 |
+| `bof-handle-stealer` | bof | Chrome または Edge NetworkService プロセスを検索し、Cookies SQLite DB へのオープンハンドルを複製して %LOCALAPPDATA%&lt;pid&gt;.db に保存。chrome.exe と msedge.exe を自動スキャン。 |
+| `bof-hash` | bof | パスワードから Kerberos 鍵ハッシュを生成します。 |
+| `bof-hide-file` | bof | 属性を systemfile + hidden に設定し、ディレクトリまたはファイルを目立たなくします。 |
+| `bof-ide-extension-surface` | bof | ユーザー別プロファイルルートから VS Code、Cursor、Windsurf、Zed、Insiders、OSS、server/remote の拡張マニフェストを列挙し、拡張 ID、アクティベーションイベント、ケーパビリティシグナルを要約します。 |
+| `bof-idle-time` | bof | ユーザー最終入力に基づき現在ユーザーのアクティビティを確認。HH:MM:SS 形式で時間を返します。 |
+| `bof-ipconfig` | bof | IPv4 アドレス、ホスト名、DNS サーバーを一覧表示します。 |
+| `bof-kerb-hash` | bof | パスワードを Kerberos 鍵にハッシュ: rc4_hmac、aes128_cts_hmac_sha1、aes256_cts_hmac_sha1、des_cbc_md5。 |
+| `bof-kerberoast` | bof | 指定 SPN 向け Kerberos サービスチケット（AP-REQ）を要求し、オフラインクラック用 base64 チケットを出力。apreq2hashcat.py で変換。 |
+| `bof-kerberoasting` | bof | SPN 有効ユーザー/サービスアカウントを一覧するか、Hashcat 用オフラインクラック向けサービスチケット（TGS-REP）を要求。TICKET タグ間にチケット出力。TicketToHashcat.py で変換。 |
+| `bof-kerberos-bof` | bof | LSASS メモリに触れず LsaCallAuthenticationPackage でキャッシュ Kerberos チケットを一覧、ダンプ、パージ。 |
+| `bof-kerbeus-asktgs` | bof | TGT からサービスチケットを要求します。 |
+| `bof-kerbeus-asktgt` | bof | パスワード、ハッシュ、または preauth なしで TGT を要求します。 |
+| `bof-kerbeus-asreproasting` | bof | Kerberos preauthentication がないユーザー向け AS-REP を要求します。 |
+| `bof-kerbeus-changepw` | bof | kpasswd 経由でユーザーパスワードを変更します。 |
+| `bof-kerbeus-cross_s4u` | bof | クロスドメイン S4U 制約付き委任悪用を実行します。 |
+| `bof-kerbeus-describe` | bof | Kerberos チケットを解析して説明します。 |
+| `bof-kerbeus-dump` | bof | ログオンセッションから Kerberos チケットを抽出します。 |
+| `bof-kerbeus-hash` | bof | パスワードから Kerberos 鍵ハッシュを生成します。 |
+| `bof-kerbeus-kerberoasting` | bof | オフラインクラック用 Kerberos サービスチケットを要求します。 |
+| `bof-kerbeus-klist` | bof | 詳細情報付きで Kerberos チケットを一覧します。 |
+| `bof-kerbeus-ptt` | bof | 現在または指定ログオンセッションにチケットを投入します。 |
+| `bof-kerbeus-purge` | bof | 現在または指定ログオンセッションから Kerberos チケットをパージします。 |
+| `bof-kerbeus-renew` | bof | TGT を更新します。 |
+| `bof-kerbeus-s4u` | bof | S4U2self と S4U2proxy 制約付き委任悪用を実行します。 |
+| `bof-kerbeus-tgtdeleg` | bof | GSS API 委任悪用で利用可能 TGT を取得します。 |
+| `bof-kerbeus-triage` | bof | 表形式で Kerberos チケットを一覧します。 |
+| `bof-klist` | bof | 現在キャッシュされている Kerberos チケットを表示。一覧、パージ、指定 SPN 向けサービスチケット要求をサポート。 |
+| `bof-koh-client` | bof | Koh 名前付きパイプ経由で通信し、取得トークンの一覧、フィルタ、なりすまし、解放。キャプチャトークンのなりすましに SeImpersonatePrivilege が必要。 |
+| `bof-ksl-lsa` | bof | KslD.sys BYOVD 物理メモリ読み取りプリミティブで LSASS メモリから資格情報を抽出。lsass への OpenProcess、NtReadVirtualMemory、MiniDumpWriteDump は呼びません。MSV1_0 NT ハッシュ、WDigest 平文（有効時）、LSA 暗号化鍵を抽出。管理者権限が必要。 |
+| `bof-lapsdump` | bof | Active Directory 内の指定コンピューターから LAPS パスワードをダンプ。昇格 AD 権限が必要。 |
+| `bof-lastpass` | bof | Chrome または Brave プロセスメモリで LastPass パスワードとデータを検索します。 |
+| `bof-ldap-sign-check` | bof | DC をスキャンし LdapEnforceChannelBinding または LdapServerIntegrity が LDAP リレー緩和のため変更されているか確認。LDAP（389）と LDAPS（636）バインディングをテスト。 |
+| `bof-ldapsearch` | bof | LDAP 検索を実行（注意: 全属性 + オブジェクト ACL の base64 が必要なら属性パラメータに *,ntsecuritydescriptor を指定。BOFHound で解決可能。ページネーションを壊す可能性ありだがテストでは問題なし）。 |
+| `bof-ldapsecuritycheck` | bof | ドメインコントローラーで LDAP 署名とチャネルバインディング要件を確認します。 |
+| `bof-lin-arp` | bof | （linux）/proc/net/arp から ARP テーブルをホスト名解決付きで表示。 |
+| `bof-lin-awk` | bof | （linux）最小 awk（列の print のみ）。 |
+| `bof-lin-base64` | bof | （linux）Base64 エンコード/デコード。 |
+| `bof-lin-basename` | bof | （linux）パスからディレクトリ部分を除去。 |
+| `bof-lin-cat` | bof | （linux）ファイルを連結して表示。 |
+| `bof-lin-chmod` | bof | （linux）ファイル権限を変更。 |
+| `bof-lin-chown` | bof | （linux）ファイル所有者を変更。 |
+| `bof-lin-cp` | bof | （linux）ファイルをコピー。 |
+| `bof-lin-cut` | bof | （linux）フィールド/列を抽出。 |
+| `bof-lin-date` | bof | （linux）現在日時を表示。 |
+| `bof-lin-df` | bof | （linux）ディスク使用量。 |
+| `bof-lin-diff` | bof | （linux）2 ファイルを比較。 |
+| `bof-lin-dirname` | bof | （linux）パスからファイル名部分を除去。 |
+| `bof-lin-dmesg` | bof | （linux）カーネルリングバッファを表示。 |
+| `bof-lin-du` | bof | （linux）ディスク使用量を推定。 |
+| `bof-lin-env` | bof | （linux）/proc/self/environ から環境変数を表示。 |
+| `bof-lin-find` | bof | （linux）ファイルを検索。 |
+| `bof-lin-free` | bof | （linux）メモリ使用量を表示。 |
+| `bof-lin-grep` | bof | （linux）ファイル内容を検索。 |
+| `bof-lin-groups` | bof | （linux）グループメンバーシップを表示。 |
+| `bof-lin-head` | bof | （linux）ファイル先頭部分を出力。 |
+| `bof-lin-hostname` | bof | （linux）ホスト名を表示。 |
+| `bof-lin-id` | bof | （linux）ユーザー/グループ ID を表示。 |
+| `bof-lin-ifconfig` | bof | （linux）ネットワークインターフェースを表示。 |
+| `bof-lin-kill` | bof | （linux）プロセスにシグナルを送信。 |
+| `bof-lin-ln` | bof | （linux）リンクを作成。 |
+| `bof-lin-logger` | bof | （linux）syslog にメッセージを書き込み。 |
+| `bof-lin-ls` | bof | （linux）ディレクトリ内容を一覧。 |
+| `bof-lin-lsmod` | bof | （linux）読み込みカーネルモジュールを一覧。 |
+| `bof-lin-md5sum` | bof | （linux）md5 ハッシュを計算。 |
+| `bof-lin-mkdir` | bof | （linux）ディレクトリを作成。 |
+| `bof-lin-mount` | bof | （linux）マウントポイントを一覧。 |
+| `bof-lin-mv` | bof | （linux）ファイルを移動/名前変更。 |
+| `bof-lin-netstat` | bof | （linux）/proc/net から TCP/UDP 接続を表示（フラグ: -tlnpu）。 |
+| `bof-lin-nl` | bof | （linux）ファイルに行番号を付与。 |
+| `bof-lin-nslookup` | bof | （linux）getaddrinfo による DNS ルックアップ。 |
+| `bof-lin-od` | bof | （linux）8 進ダンプ。 |
+| `bof-lin-paste` | bof | （linux）ファイル行をマージ。 |
+| `bof-lin-ping` | bof | （linux）ホスト到達性をテスト。 |
+| `bof-lin-ps` | bof | （linux）プロセスを一覧。 |
+| `bof-lin-pwd` | bof | （linux）作業ディレクトリを表示。 |
+| `bof-lin-rev` | bof | （linux）ファイル行を反転。 |
+| `bof-lin-rm` | bof | （linux）ファイル/ディレクトリを削除。 |
+| `bof-lin-rmdir` | bof | （linux）空ディレクトリを削除。 |
+| `bof-lin-route` | bof | （linux）ルーティングテーブルを表示。 |
+| `bof-lin-sed` | bof | （linux）ストリームエディタ（s/old/new/g）。 |
+| `bof-lin-sha256sum` | bof | （linux）sha-256 ハッシュを計算。 |
+| `bof-lin-sort` | bof | （linux）ファイル行をソート。 |
+| `bof-lin-stat` | bof | （linux）ファイルステータスを表示。 |
+| `bof-lin-strings` | bof | （linux）印字可能文字列を検索。 |
+| `bof-lin-sysctl` | bof | （linux）カーネルパラメータを読み書き。 |
+| `bof-lin-tail` | bof | （linux）ファイル末尾部分を出力。 |
+| `bof-lin-tar` | bof | （linux）tar アーカイブの作成、一覧、展開。 |
+| `bof-lin-touch` | bof | （linux）ファイル作成またはタイムスタンプ更新。 |
+| `bof-lin-tr` | bof | （linux）文字の変換/削除。 |
+| `bof-lin-traceroute` | bof | （linux）ホストへの経路をトレース。 |
+| `bof-lin-tree` | bof | （linux）再帰的ディレクトリツリー一覧。 |
+| `bof-lin-uname` | bof | （linux）システム情報を表示。 |
+| `bof-lin-uniq` | bof | （linux）隣接重複行を削除。 |
+| `bof-lin-uptime` | bof | （linux）稼働時間、ロードアベレージ、現在時刻を表示。 |
+| `bof-lin-wc` | bof | （linux）単語、行、バイト数をカウント。 |
+| `bof-lin-wget` | bof | （linux）HTTP GET ダウンロード。 |
+| `bof-lin-whoami` | bof | （linux）実効ユーザー名を表示。 |
+| `bof-lin-xxd` | bof | （linux）16 進ダンプ。 |
+| `bof-list-chrome-cookies` | bof | Cookie ダンプ対象のブラウザサブプロセスを一覧。bof-cookie-katz 用 PID を返す。x64 のみ。 |
+| `bof-list-firewall-rules` | bof | Windows ファイアウォールルールを一覧します。 |
+| `bof-list-process-handles` | bof | プロセス内のオープンハンドルを一覧します。 |
+| `bof-listdns` | bof | DNS キャッシュエントリを一覧。各エントリのクエリと解決を試行。 |
+| `bof-listmods` | bof | プロセスモジュール（DLL）を一覧。PID 空なら現在プロセス。driversigs の補完で AV/EDR 注入検出。 |
+| `bof-locale` | bof | システムロケール言語、ロケール ID、日付、時刻、国を一覧。 |
+| `bof-make-token-cert` | bof | PFX 証明書でなりすましを実行します。 |
+| `bof-md5` | bof | md5 でファイル名をハッシュします。 |
+| `bof-mdm-policy-artifacts` | bof | 参加状態、スケジュールタスク、ポリシー設定、登録アーティファクト等の指標で Windows 上の MDM 登録 posture をスコアリングモデルで評価します。 |
+| `bof-mem-read` | bof | 読み込み DLL からエクスポート関数の先頭バイトを読み取ります。 |
+| `bof-mem-search` | bof | プロセスメモリで文字列を検索します。 |
+| `bof-memreader` | bof | ターゲットプロセスメモリで特定文字列パターンを検索し、一致をすべて Beacon 出力へ返します。 |
+| `bof-move-object` | bof | オブジェクトを別 OU へ移動。署名/シーリング付き標準 LDAP（389）および LDAPS（636）。 |
+| `bof-msi-lateral-mv` | bof | DCOM 経由 MSI Server で ODBC ドライバーを Custom Action Server 経由インストール・設定し横移動。全引数はワイド文字列。 |
+| `bof-msi-search` | bof | C:\\Windows\\Installer\\ のキャッシュ MSI をスキャンし、関連ソフト名と一覧。MSI リペア脆弱性による LPE 調査に有用。 |
+| `bof-msv1-0-bof` | bof | LsaCallAuthenticationPackage で DPAPI 資格情報鍵を回復し NTLMv1 応答を生成。lsass ハンドルを開かない。PPL と Credential Guard 下でも資格情報鍵回復に動作。 |
+| `bof-nanorobeus` | bof | Kerberos チケット管理。LUID、セッション、チケット一覧、ダンプ、インポート（ptt）、パージ、TGT 委任、Kerberoasting をサポート。 |
+| `bof-netgroup` | bof | 既定または指定ドメインからドメイングループまたはメンバーを一覧。 |
+| `bof-netjoin-query` | bof | Windows ドメイン参加情報とワークステーション詳細をクエリし、ドメイン参加かワークグループかを特定。 |
+| `bof-netlocalgroup` | bof | ローカルまたは指定コンピューターのローカルグループまたはメンバーを一覧。 |
+| `bof-netlocalgroup2` | bof | BOFHound 対応の `netLocalGroupListMembers` 改変版。 |
+| `bof-netloggedon` | bof | ローカルまたはリモートコンピューターにログオン中のユーザーを返します。 |
+| `bof-netloggedon2` | bof | BOFHound 対応の `netloggedon` 改変版。 |
+| `bof-netshares` | bof | ローカルまたはリモートコンピューターの共有を一覧。 |
+| `bof-netstat` | bof | TCP と UDP IPv4 のポート一覧。 |
+| `bof-nettime` | bof | リモートコンピューターの時刻を表示。 |
+| `bof-netuptime` | bof | ローカルまたはリモートコンピューターの起動時間情報を返します。 |
+| `bof-netuser` | bof | 特定ユーザー情報を取得。domainname 指定時はドメインから取得。 |
+| `bof-netuserenum` | bof | ローカルコンピューターまたは現在ドメインのユーザーアカウントを列挙。 |
+| `bof-netview` | bof | 現在ドメイン内の到達可能コンピューターを一覧。 |
+| `bof-nonpagedldapsearch` | bof | ページングなしで LDAP 検索を実行します。 |
+| `bof-notepad` | bof | 開いている Notepad と Notepad++ ウィンドウを検索し、エディタコントロールからテキストを取得。 |
+| `bof-notepad-grab` | bof | 開いている Notepad ウィンドウからメモリ読み取りでプレーンテキストを抽出・返却。未保存やメモリ内ノートの回収に使えます。 |
+| `bof-notethief` | bof | Notepad Edit コントロールを検索し WM_GETTEXT でテキストを読み取り、開いている Notepad の内容を窃取。 |
+| `bof-nslookup` | bof | DNS クエリを実行。DNS サーバーはクエリ先（未指定または 0 で既定）。レコード型は A、AAAA、ANY 等。クラッシュ観測により一部状況は制限あり。 |
+| `bof-office-tokens` | bof | 指定 Office プロセスのメモリから Office JWT アクセストークンを収集。 |
+| `bof-p-sremote` | bof | リモートホストで動作中の全プロセスのリストを取得。 |
+| `bof-password-spray-a-d` | bof | LDAP、LDAPS、GC、GCS シンプルバインドで複数アカウントに単一パスワードを検証。 |
+| `bof-password-spray-local` | bof | SMB 認証（IPC$）で単一ローカルユーザー名とパスワードをターゲットホスト名リストに対して検証。 |
+| `bof-patchit` | bof | x64 プロセスの AMSI と ETW をパッチ、確認、復元。AmsiScanBuffer と EtwEventWrite の先頭 10+ バイトを比較。amsi.dll が未読み込みなら読み込まない。x64 のみ。 |
+| `bof-port-scan` | bof | Winsock で単一 IPv4 ホストの TCP/UDP オープンポートをスキャン。ポートリスト、タイムアウト、簡潔な出力。 |
+| `bof-power-state` | bof | SMBIOS シャーシデータと電源状態フォールバックでホスト形態（Laptop、Desktop、Tablet、Server、Embedded、Unknown）を特定。 |
+| `bof-powershell-history` | bof | 既定 PSReadLine と transcript 場所から PowerShell 履歴アーティファクトを収集。資格情報やインフラ特定に有用。 |
+| `bof-privkit-autorun-check` | bof | 変更可能な autorun レジストリキーを確認。 |
+| `bof-privkit-cred-check` | bof | Windows 資格情報マネージャーの保存資格情報を確認。 |
+| `bof-privkit-elev-check` | bof | HKCU と HKLM の AlwaysInstallElevated を確認。 |
+| `bof-privkit-hijack-check` | bof | ハイジャック可能な PATH エントリを確認。 |
+| `bof-privkit-logon-check` | bof | レジストリの AutoLogon 資格情報を確認。 |
+| `bof-privkit-pshist-check` | bof | PowerShell コマンド履歴ファイルを確認。 |
+| `bof-privkit-service-check` | bof | 変更可能な Windows サービスを確認。 |
+| `bof-privkit-token-check` | bof | 悪用可能性のある現在トークン権限を確認。 |
+| `bof-privkit-uac-check` | bof | UAC 設定状態を確認。 |
+| `bof-privkit-unquoted-svc` | bof | 引用符なしサービスパスを確認。 |
+| `bof-probe` | bof | 特定ポートが開いているか確認。 |
+| `bof-proc-version` | bof | プロセスのメインモジュールファイルバージョンを取得。 |
+| `bof-procargs` | bof | 指定プロセスのコマンドライン引数を抽出。 |
+| `bof-procdump` | bof | MiniDumpWriteDump で指定プロセスをファイルにダンプ。先に SeDebugPrivilege を有効化。 |
+| `bof-process-destroy` | bof | 指定プロセス内の特定ハンドルまたは全ハンドルを閉じます。 |
+| `bof-process-list-handles` | bof | 指定プロセス内の全オープンハンドルを一覧。 |
+| `bof-process-tokens-list` | bof | 実行プロセスからアクセス可能トークンを列挙。ユーザーコンテキスト、トークン型（primary/impersonation）、なりすましレベルを表示。PID またはプロセス名でフィルタ可能。OPSEC のため SeDebugPrivilege は既定無効。 |
+| `bof-procinfo` | bof | プロセス実行ファイルのファイルバージョン情報（名前、バージョン、会社等）を表示。 |
+| `bof-prockill` | bof | PID でターゲットプロセスを終了。 |
+| `bof-procsearch` | bof | 読み取り可能プロセスメモリで文字列を検索し、周辺 ASCII コンテキストを表示。 |
+| `bof-proxy-enum` | bof | WinINET、WinHTTP、ポリシーキー、環境変数、WPAD 指標、Chrome 設定、.NET defaultProxy 値で Windows プロキシ設定状態を列挙。 |
+| `bof-psw` | bof | アクティブ Windows を持つプロセスのウィンドウタイトルを表示。 |
+| `bof-ptt` | bof | 現在または指定ログオンセッションにチケットを投入。 |
+| `bof-purge` | bof | 現在または指定ログオンセッションから Kerberos チケットをパージ。 |
+| `bof-recon-ad` | bof | ADSI 経由で Active Directory オブジェクトと属性をクエリ。カスタム LDAP フィルタ、ユーザー/コンピューター/グループクエリ、Kerberos 暗号化通信、Global Catalog 検索をサポート。1 バイナリで 4 クエリモード。 |
+| `bof-reg-del` | bof | レジストリキーまたは値を削除。 |
+| `bof-reg-delete` | bof | ローカルまたはリモートシステムのレジストリキーまたは値を削除。 |
+| `bof-reg-query` | bof | レジストリ値をクエリまたは単一キーを列挙。リモートコンピューター対応。 |
+| `bof-reg-query-recursive` | bof | パスからレジストリキーを再帰列挙。リモートコンピューター対応。 |
+| `bof-reg-save` | bof | レジストリキーをファイルにエクスポート。 |
+| `bof-reg-set` | bof | ローカルまたはリモートホストでレジストリ値を作成/設定。 |
+| `bof-regsave` | bof | 必要権限を取得し SAM、SYSTEM、SECURITY レジストリキーをダンプ。オフライン解析とハッシュ抽出用。管理者権限が必要。 |
+| `bof-regsession` | bof | HKEY_USERS 列挙でログオン済みユーザー SID を返す。BOFHound 互換。 |
+| `bof-remotereg` | bof | リモートレジストリ API でリモートサーバー、VDI、DC 上のログオンユーザーをクエリ。 |
+| `bof-remove-ace` | bof | DACL から ACE を削除。署名/シーリング付き標準 LDAP（389）および LDAPS（636）。 |
+| `bof-remove-attribute` | bof | 属性値を削除。署名/シーリング付き標準 LDAP（389）および LDAPS（636）。 |
+| `bof-remove-delegation` | bof | 委任 SPN をクリア。署名/シーリング付き標準 LDAP（389）および LDAPS（636）。 |
+| `bof-remove-groupmember` | bof | グループからユーザーを削除。署名/シーリング付き標準 LDAP（389）および LDAPS（636）。 |
+| `bof-remove-object` | bof | AD オブジェクトを削除。署名/シーリング付き標準 LDAP（389）および LDAPS（636）。 |
+| `bof-remove-rbcd` | bof | RBCD 設定をクリア。署名/シーリング付き標準 LDAP（389）および LDAPS（636）。 |
+| `bof-remove-spn` | bof | 特定 SPN を削除。署名/シーリング付き標準 LDAP（389）および LDAPS（636）。 |
+| `bof-remove-uac` | bof | UAC フラグを削除。署名/シーリング付き標準 LDAP（389）および LDAPS（636）。 |
+| `bof-renew` | bof | TGT を更新します。 |
+| `bof-resources` | bof | メモリ使用量とプライマリハードドライブの空きディスク容量を一覧。 |
+| `bof-routeprint` | bof | IPv4 ルートを一覧。 |
+| `bof-runpe` | bof | プロセス herpaderping の部分実装で犠牲プロセス内に任意 PE を実行。第 1 引数のリモートファイルを作成し PE を書き込み、実行前に 0x82 0x7f 0x76 0x7c パターンで上書き。 |
+| `bof-s4u` | bof | S4U2self と S4U2proxy 制約付き委任悪用を実行。 |
+| `bof-sc-config` | bof | ローカルまたはリモートシステムの既存 Windows サービスを設定。 |
+| `bof-sc-create` | bof | ローカルまたはリモートシステムに新 Windows サービスを作成。 |
+| `bof-sc-delete` | bof | 既存 Windows サービスを削除。 |
+| `bof-sc-description` | bof | 既存 Windows サービスの説明を設定。 |
+| `bof-sc-enum` | bof | qc、query、qfailure、qtriggers 情報のサービス列挙。 |
+| `bof-sc-failure` | bof | 既存 Windows サービスの失敗アクションを設定。 |
+| `bof-sc-qc` | bof | BOF 版 sc qc 実装。 |
+| `bof-sc-qdescription` | bof | BOF 版 sc qdescription 実装。 |
+| `bof-sc-qfailure` | bof | サービスの失敗条件をクエリ。 |
+| `bof-sc-qtriggerinfo` | bof | サービスのトリガー条件をクエリ。 |
+| `bof-sc-query` | bof | BOF 版 sc query 実装。 |
+| `bof-sc-start` | bof | 既存 Windows サービスを開始。 |
+| `bof-sc-stop` | bof | 既存 Windows サービスを停止。 |
+| `bof-schtask-enum` | bof | Task Scheduler COM で Windows スケジュールタスクを列挙。状態、スケジュール、設定の要約。XML でビーコンを圧迫しません。 |
+| `bof-schtasks-del` | bof | スケジュールタスクまたはフォルダを削除。 |
+| `bof-schtasks-run` | bof | スケジュールタスクを実行。 |
+| `bof-schtasks-stop` | bof | 実行中スケジュールタスクを停止。 |
+| `bof-schtaskscreate` | bof | XML タスク定義ファイルからスケジュールタスクを作成または更新。 |
+| `bof-schtasksdelete` | bof | スケジュールタスクまたはフォルダを削除。 |
+| `bof-schtasksenum` | bof | ローカルまたはリモートコンピューターのスケジュールタスクを列挙。 |
+| `bof-schtasksquery` | bof | ローカルまたはリモートコンピューターで指定タスクをクエリ。 |
+| `bof-schtasksrun` | bof | スケジュールタスクを即時開始。 |
+| `bof-schtasksstop` | bof | 実行中スケジュールタスクを停止。 |
+| `bof-screenshot` | bof | fork-and-run なしで WinAPI スクリーンショット。JPEG 圧縮、グレースケール、品質、スケール、最小化ウィンドウキャプチャ対応。 |
+| `bof-self-delete` | bof | NTFS 代替データストリームリネームでロック/実行中実行ファイルをディスクから削除。 |
+| `bof-service-control` | bof | SCM 経由でローカル Windows サービス管理: クエリ（上限リストまたは単一）、作成、開始、停止、削除、失敗アクション設定。変更には通常昇格権限が必要。 |
+| `bof-session-view` | bof | Windows Terminal Services セッションを列挙。セッション ID、ユーザー名、ドメイン、接続状態、セッション LUID を表示。 |
+| `bof-set-attribute` | bof | 属性値を置換。署名/シーリング付き標準 LDAP（389）および LDAPS（636）。 |
+| `bof-set-delegation` | bof | 委任設定を置換。署名/シーリング付き標準 LDAP（389）および LDAPS（636）。 |
+| `bof-set-owner` | bof | オブジェクト所有者を変更。署名/シーリング付き標準 LDAP（389）および LDAPS（636）。 |
+| `bof-set-password` | bof | ユーザーパスワードを変更。署名/シーリング付き標準 LDAP（389）および LDAPS（636）。 |
+| `bof-set-spn` | bof | 全 SPN を置換。署名/シーリング付き標準 LDAP（389）および LDAPS（636）。 |
+| `bof-set-uac` | bof | UAC フラグを設定（置換）。署名/シーリング付き標準 LDAP（389）および LDAPS（636）。 |
+| `bof-setuserpass` | bof | 指定ユーザーアカウントのパスワードを設定。 |
+| `bof-sha1` | bof | sha1 でファイル名をハッシュ。 |
+| `bof-sha256` | bof | sha256 でファイル名をハッシュ。 |
+| `bof-shadowcreds` | bof | ターゲット msDS-KeyCredentialLink に KeyCredential を書き込み、PKINIT で認証、UnPAC the hash で NT ハッシュを抽出後 shadow credential を削除。msDS-KeyCredentialLink への書き込み権限が必要。 |
+| `bof-sharefolder` | bof | 誰でも読み書き可能な共有フォルダを作成、または空フォルダを削除。 |
+| `bof-shutdown` | bof | ローカルまたはリモートシステムのシャットダウンを開始。 |
+| `bof-signal-key` | bof | Signal Desktop がインストールされ使用された Windows ホストで Signal Desktop データベースの復号鍵を取得。 |
+| `bof-silentchrome` | bof | Preferences と Secure Preferences を変更し Chrome または Edge にブラウザ拡張をサイレントインストール/復元。SharpSilentChrome の移植。 |
+| `bof-silentharvest` | bof | レジストリのみの資格情報ダンパー。HKLM\\SECURITY\\Policy\\Secrets から SAM ハッシュとシークレットを抽出。SeBackupPrivilege のみ（SYSTEM 不要）。 |
+| `bof-slack-cookie` | bof | 指定 Slack プロセスメモリから Slack 認証 Cookie を収集。 |
+| `bof-slack-key` | bof | %APPDATA%\\Slack\\Local State から base64 エンコード Slack 鍵を復号し Cookie 復号に使用。 |
+| `bof-sleeper` | bof | SetThreadExecutionState でホストのスリープを防止。 |
+| `bof-smbinfo` | bof | NetWkstaGetInfo API でリモートシステムバージョン情報を収集。ポートスキャナーなしで Windows バージョン、ドメイン等を取得。 |
+| `bof-sprayad` | bof | LogonUserSSPI で Active Directory に LDAP または Kerberos ベースのパスワードスプレーを実行。無効、ロック、BadPwdCount 大のアカウントをスキップ可能。 |
+| `bof-sql-1434udp` | bof | UDP 1434 の SQL Server Browser サービス経由で SQL Server 接続情報を列挙。 |
+| `bof-sql-adsi` | bof | ADSI リンクサーバーから ADSI 資格情報を取得。 |
+| `bof-sql-agentcmd` | bof | SQL Server エージェントジョブでシステムコマンドを実行。 |
+| `bof-sql-agentstatus` | bof | サーバー上の SQL エージェント状態とジョブを列挙。 |
+| `bof-sql-checkrpc` | bof | リンクサーバーと RPC 状態を列挙。 |
+| `bof-sql-clr` | bof | CLR 統合で SQL ストアドプロシージ内に .NET アセンブリを読み込み実行。 |
+| `bof-sql-columns` | bof | SQL サーバー上のテーブル内列を列挙。 |
+| `bof-sql-databases` | bof | SQL サーバー上のデータベースを列挙。 |
+| `bof-sql-impersonate` | bof | サーバー上でなりすまし可能な SQL ログインを列挙。 |
+| `bof-sql-info` | bof | リモート SQL サーバーについて情報を収集。 |
+| `bof-sql-links` | bof | リンク SQL サーバーを列挙。 |
+| `bof-sql-olecmd` | bof | SQL サーバー上で OLE オートメーションプロシージャでシステムコマンドを実行。 |
+| `bof-sql-query` | bof | リモート SQL サーバーでカスタム SQL クエリを実行。 |
+| `bof-sql-rows` | bof | SQL サーバー上テーブルの行数を返す。 |
+| `bof-sql-search` | bof | データベース内テーブル横断で列名を検索。 |
+| `bof-sql-smb` | bof | xp_dirtree で SQL サーバーから UNC リスナーへ NetNTLM 認証を強制。 |
+| `bof-sql-tables` | bof | SQL サーバー上データベース内テーブルを列挙。 |
+| `bof-sql-togglemodule` | bof | SQL サーバー機能 RPC、CLR、xp_cmdshell、OLE オートメーションを有効/無効化。 |
+| `bof-sql-users` | bof | SQL サーバー上でデータベースアクセス権を持つユーザーを列挙。 |
+| `bof-sql-whoami` | bof | ログインユーザー、マップユーザー、SQL ロールを収集。 |
+| `bof-sql-xpcmd` | bof | SQL サーバー上で xp_cmdshell 経由でシステムコマンドを実行。 |
+| `bof-sspi-uac-bypass` | bof | 偽造 SSPI データグラムコンテキストトークンなりすましと CreateSvcRpc による SYSTEM サービス作成で UAC バイパス。 |
+| `bof-start-web-client` | bof | サービストリガーでユーザーコンテキストから WebClient サービスをプログラム的に開始。サービス未稼働環境での WebDAV ベース PetitPotam 強制に必要。 |
+| `bof-static-syscalls-dump` | bof | NtReadVirtualMemory をアンフックし MiniDumpWriteDump でプロセスメモリダンプ。x64 のみ。 |
+| `bof-suspendresume` | bof | PID でプロセスを suspend/resume。1 で suspend、0 で resume。 |
+| `bof-syscallsdump` | bof | NtReadVirtualMemory をアンフックし MiniDumpWriteDump でプロセスメモリダンプ。x64 のみ。 |
+| `bof-tasklist` | bof | 実行プロセスを PID、PPID、ComandLine 付きで一覧（wmi 使用）。 |
+| `bof-teams-cookies` | bof | ms-teams.exe プロセス内で実行し Microsoft Teams Cookie を窃取。暗号化鍵抽出と Cookies DB のファイルレスダウンロード。 |
+| `bof-tgtdeleg` | bof | GSS API 委任悪用で利用可能 TGT を取得。 |
+| `bof-toastnotify` | bof | 借用 Application User Model ID で Windows トースト通知を送信。標準トーストとアクション/プロトコルリンク付きカスタム XML ペイロード対応。 |
+| `bof-token-vault` | bof | 窃取/複製 Windows アクセストークンのインメモリ保管。再複製なし再利用と後使用のための保存。 |
+| `bof-token2cert` | bof | トークンなりすましで ESC1 脆弱テンプレートを悪用し任意ドメインユーザーの NT ハッシュを抽出。登録権限ユーザーのトークン窃取、任意 SAN 証明書要求、PKINIT、UnPAC the hash。x64 のみ。昇格権限が必要。 |
+| `bof-tray-scout` | bof | タスクバーホスト実行ファイルを報告し、システムトレイ通知アイコンのツールチップを列挙。ホストと各アイコン所有プロセスの完全イメージパスをオプション表示。 |
+| `bof-triage` | bof | 表形式で Kerberos チケットを一覧。 |
+| `bof-unexpire-user` | bof | ユーザーアカウントを無期限に設定。 |
+| `bof-unexpireuser` | bof | ユーザーアカウントを無期限に設定。 |
+| `bof-uptime` | bof | システム起動時刻と稼働時間を一覧。 |
+| `bof-user-idle` | bof | 最終入力からのユーザーアイドル時間と現在プロセスの GUI リソース使用量（GDI/USER ハンドル）を取得。タイミングインテリジェンス用。 |
+| `bof-useridletime` | bof | ユーザーのアイドル時間を秒、分、時間、日で表示。 |
+| `bof-veeam-dumper` | bof | Veeam Backup and Replication または Veeam One DB から暗号化資格情報を抽出。sqlcmd/psql で blob クエリ、レジストリから salt 取得、DPAPI で復号。 |
+| `bof-vssenum` | bof | 一部 Server 2012+ サーバーで Shadow Copy を列挙。 |
+| `bof-wallpaper-enum` | bof | モダン IDesktopWallpaper COM で各接続モニターの現在デスクトップ壁紙パスを列挙。集中管理壁紙はネットワークパス、ドメイントラスト、ポリシー強制を示すことがある。 |
+| `bof-wd-toggle` | bof | WDigest 資格情報キャッシュを有効化し Credential Guard 有効時も回避。直接システムコールで LSASS 内 wdigest!g_fParameter_UseLogonCredential と wdigest!g_IsCredGuardEnabled をパッチ。再起動非永続。Windows ビルドでオフセットが異なる。 |
+| `bof-webcam-bof` | bof | 既定 Web カメラから 1 枚キャプチャ。ディスク保存またはビーコン経由 file/screenshot ダウンロード対応。 |
+| `bof-wef-detect` | bof | 集中ログを示す Windows Event Forwarding（WEF）設定を検出。検出時はセキュリティイベントが中央サーバーへ転送されている可能性。 |
+| `bof-wer-dump` | bof | WerFaultSecure.exe で保護 LSASS をダンプ。WerFaultSecure をランダム名で temp に書き、同ディレクトリに .dll としてダンプ保存。 |
+| `bof-wer-resume` | bof | bof-wer-dump 前に suspend された lsass.exe を再開。プロセス保護ポリシーのため WerDump とは別ビーコンプロセスから実行必須。 |
+| `bof-wevt-channel-enum` | bof | ローカル Windows Event Log チャネルを列挙。大文字小文字無視部分文字列フィルタ、出力上限、オプション verbose アクセス/公開メタデータ。低シグナルチャネル数百のホストではフィルタなし実行非推奨。 |
+| `bof-wevt-logon-enum` | bof | wevtapi API で Security ログの成功/失敗ログオン（4624、4625、4672）を列挙し、リモートワークステーション名/IP とターゲットユーザー名を出力。Security ログ読み取り権限が必要（通常 admin または SYSTEM）。 |
+| `bof-whoami` | bof | whoami /all を一覧。 |
+| `bof-wi-fi-passwords` | bof | ローカルシステムから保存 Wi-Fi パスワードを抽出。 |
+| `bof-wifi-dump` | bof | WiFi インターフェースを列挙し平文 WiFi プロファイル資格情報をダンプ。WlanGetProfile と WLAN_PROFILE_GET_PLAINTEXT_KEY でパスワード含むプロファイル XML を取得。 |
+| `bof-win-version` | bof | レジストリとシステム API をクエリし Windows インストールの簡潔かつ詳細な概要を提供。 |
+| `bof-window-handles-enum` | bof | 全システムプロセスのウィンドウハンドルを列挙し、正当なウィンドウハンドルでクリップボードにアクセス。 |
+| `bof-window-list` | bof | 現在ユーザーデスクトップの全可視ウィンドウタイトルを列挙。オプションで PID 含む。 |
+| `bof-windowlist` | bof | 現在ユーザーセッションの可視ウィンドウを一覧。 |
+| `bof-winver` | bof | 実行 Windows のバージョン、ビルド番号、パッチリリース（Update Build Revision）を表示。 |
+| `bof-wmi-query` | bof | WMI クエリを実行し結果を CSV 形式で表示。 |
+| `bof-wsc-status` | bof | Windows Security Center の健全性（Anti Virus、Firewall、Anti Spyware、WSC Service、Auto Update、Internet Settings、User Account Control）をクエリ。 |
+| `bof-xpipe` | bof | アクティブな名前付きパイプを一覧。オプションで特定パイプの所有者と DACL 権限を返す。 |
+| `net-abandoned-com-keys` | dotnet | 参照 DLL が存在しない abandoned COM InprocServer32 キーを列挙。rundll32.exe -sta `\{CLSID\}` による永続化に有用。 |
+| `net-ad-collector` | dotnet | ADCollector は Active Directory 環境を列挙し攻撃ベクトルを特定する軽量ツール。全属性列挙ではなく高価値ターゲットから有用属性・プロパティ・ACL を抽出。S.DS で DC からドメイン/フォレスト情報、S.DS.P で LDAP 検索。 |
+| `net-adcspwn` | dotnet | ADCSPwn はマシンアカウント認証強制（Petitpotam）と証明書サービスへのリレーで AD ネットワーク権限昇格するツール。 |
+| `net-adsearch` | dotnet | Active Directory を効率的にクエリするツール。ドメイン管理者一覧、カスタム LDAP 検索、LDAPS、JSON 出力、汎用クエリのカスタム属性取得をサポート。 |
+| `net-certify` | dotnet | Active Directory Certificate Services（AD CS）の誤設定列挙・悪用 C# ツール。CA 列挙、証明書テンプレート発見、脆弱性評価、証明書要求・ダウンロード。 |
+| `net-cheese-dcom` | dotnet | DCOM 経由のコマンド実行と横移動。特権ユーザーコンテキスト必須。MMC20.Application、ShellWindows 等複数 DCOM メソッド。ターゲット . でローカル実行。 |
+| `net-cheese-exec` | dotnet | PsExec 風の Windows サービス作成によるコマンド実行と横移動。特権ユーザーコンテキスト必須。リモートサービスの create、start、stop、delete、restart。 |
+| `net-cheese-ps` | dotnet | System.Management.Automation.PowerShell による PowerShell 実行と横移動。WS Management リモート実行、CLM/AMSI/WLDP バイパス、モジュール読み込み、暗号化ペイロード、reflective PE 注入。ターゲットなしでローカル。Remoting 時は特権ユーザー必須。 |
+| `net-cheese-rdp` | dotnet | mstsc.exe への reflective DLL 注入による RDP 資格情報窃取。特権ユーザーまたは SeImpersonatePrivilege 必須。RdpThief ベース。 |
+| `net-cheese-sql` | dotnet | MSSQL 信頼悪用によるコマンド実行と横移動。ドメイン SPN 発見、リンクサーバー列挙、なりすまし、xp_cmdshell、OLE、CLR、OPENQUERY。`net-cheese-sql &lt;command&gt; /help` で引数詳細。 |
+| `net-cimplant` | dotnet | ファイル操作、レジストリ、サービス、プロセス管理、横移動支援、システム列挙。ターゲットでローカル管理者権限が必要。 |
+| `net-com-hunter` | dotnet | WMI で LocalServer32 と InProcServer32 に登録された COM サーバーを列挙。 |
+| `net-cred-phisher` | dotnet | CredUIPromptForWindowsCredentials で現在ユーザーに資格情報入力を促す。 |
+| `net-crop` | dotnet | WebDAV サーバーを指す LNK、URL、library-ms、searchConnector-ms を作成。ユーザーがフォルダを閲覧すると Explorer が WebDAV 認証し Farmer へ NetNTLM ハッシュが漏れる可能性。 |
+| `net-driver-query` | dotnet | 読み込みドライバーの詳細を収集。オプションで非 Microsoft 署名ドライバーのみフィルタ。 |
+| `net-edd` | dotnet | PowerView に似た .NET ドメイン列挙。フォレスト、ドメイン、コンピューター、ユーザーデータ列挙。連鎖管理者発見と共有ハンティング。 |
+| `net-encrypted-zip` | dotnet | ファイル/ディレクトリを圧縮し AES256 CFB で ZIP 暗号化。RtlZeroMemory でメモリから鍵をクリア。 |
+| `net-etw-event-subscription` | dotnet | WMI イベントに似た ETW イベント購読。ユーザーログオンまたはプロセス開始でトリガー。 |
+| `net-farmer` | dotnet | Windows ドメインで NetNTLM ハッシュ収集用ローカル WebDAV サーバー。WebDAV Mini Redirector で認証。Crop または Fertiliser と併用。 |
+| `net-fertiliser` | dotnet | 既存 Office 文書（現状 .docx）を悪意フィールドコードで毒化。開くと WebDAV 接続がトリガーされ Farmer リスナーへ NetNTLM ハッシュが漏れる。 |
+| `net-forge-cert` | dotnet | 窃取 CA 秘密鍵（.pfx/.p12）で Active Directory 認証証明書を偽造。Certified Pre-Owned の DPERSIST1。出力 .pfx は Rubeus で PKINIT または NT ハッシュ回復に使用。 |
+| `net-gmsa-password-reader` | dotnet | LDAP 経由 gMSA の msDS-ManagedPassword blob を読み NTLM ハッシュにパースして再利用。 |
+| `net-god-potato-dotnet` | dotnet | DCOM ベース Potato で SeImpersonatePrivilege から NT AUTHORITY\\SYSTEM へ昇格。Windows Server 2012–2022、Windows 8–11。 |
+| `net-gopher` | dotnet | ローカルワークステーションで入手しやすい資格情報アーティファクトと昇格に有用な情報を検索。引数なしで全組み込みチェックを実行。 |
+| `net-gps-coordinates` | dotnet | Location Services 有効時にシステム GPS 座標（約 1km 精度）を追跡。Windows 10+。 |
+| `net-group3r` | dotnet | Active Directory グループポリシー設定を列挙し悪用可能誤設定を特定。LDAP で DC クエリ、SYSVOL から GPO ファイル解析、共有上のスクリプト/MSI 等を検査。 |
+| `net-harvest-crop` | dotnet | Farmer 出力暗号化有効時に書き込まれた AES 暗号化 Farmer ログファイルを復号。 |
+| `net-hijack-hunter` | dotnet | PE ヘッダーを解析しハイジャック脆弱リンク DLL と各悪用手法を特定。 |
+| `net-hook-detector` | dotnet | 現在プロセスのフック済み Native API を検出（EDR 存在の指標）。x64 のみ。 |
+| `net-implant-ssp` | dotnet | 起動時 LSA 読み込み用ユーザー提供 SSP DLL をシステムにインストール。DLL は SpLsaModeInitialize をエクスポート必須。 |
+| `net-inspect-assembly` | dotnet | .NET アセンブリ CIL でデシリアライザ呼び出しと .NET remoting 使用を検査し権限昇格トリアージ。 |
+| `net-internal-monologue` | dotnet | Internal Monologue 攻撃で LSASS に触れず NTLM ハッシュ取得。NetNTLM 設定ダウングレード、非ネットワークログオントークンなりすまし、ローカル SSPI で NTLMv1 応答を誘発。 |
+| `net-junction-folder` | dotnet | Windows Accessories スタートアップフォルダにジャンクションフォルダ作成（Vault 7 手法）。verclsid.exe が DLL 実行。 |
+| `net-kee-thief` | dotnet | メモリから KeePass 2.x 鍵素材を抽出。CLR MD で KeePass.exe にアタッチ、ヒープ上 PwDatabase/CompositeKey を特定、注入 shellcode で RtlEncryptMemory 保護 blob を復号。 |
+| `net-koh` | dotnet | トークン/ログオンセッション漏洩でユーザー資格情報素材を捕捉する Koh サーバー。SSPI でトークン交渉し保存。捕捉操作に SYSTEM と SeTcbPrivilege が必要。 |
+| `net-krb-relay-up` | dotnet | KrbRelay と Rubeus ラッパー。LDAP 署名未強制ドメインでローカル権限昇格を自動化。マシンアカウント Kerberos 強制、LDAP（または ADCS）リレー、RBCD/Shadow Credentials/ADCS 制御プリミティブ確立、SYSTEM サービス生成。 |
+| `net-ldap-sign-check-dotnet` | dotnet | DC を列挙し LDAP 署名/チャネルバインディングを確認してリレー攻撃リスクを評価。各 DC で LDAP と LDAPS をテスト。 |
+| `net-lock-less` | dotnet | オープンファイルハンドルを列挙し、ロックプロセスからハンドル複製でロックファイルをコピー。NtQuerySystemInformation、DuplicateHandle、CreateFileMapping、MapViewOfFile。ロックプロセス終了なし。 |
+| `net-mlokit` | dotnet | REST API 経由 MLOps プラットフォーム攻撃 MLOps Attack Toolkit。Azure ML、BigML、Vertex AI、MLFlow、Palantir、SageMaker 等で recon、学習データ窃取、モデル窃取/ポイズニング、notebook 攻撃。 |
+| `net-moriarty` | dotnet | Watson/Sherlock 拡張 .NET 権限昇格スキャナ。不足 KB、既知 Windows 脆弱性、LPE exploit 候補を Windows 10/11、Server 2016/2019/2022 で提示。 |
+| `net-nopowershell` | dotnet | System.Management.Automation.dll なし .NET 内 PowerShell 風実行。execute-assembly でインメモリ、PowerShell ログ回避。パイプライン、AD cmdlets、WMI、レジストリ、ネットワーク、アーカイブ。 |
+| `net-pass-the-cert` | dotnet | PKINIT 非対応時 Schannel でクライアント証明書 LDAP/LDAPS 認証。権限昇格、RBCD、SPN 操作、証明書ベース LDAP バインドでのドメインコンピューターアカウント作成。 |
+| `net-phantom-service` | dotnet | 組み込みツールで削除不能な非 ASCII phantom サービスを検索・オプション削除。 |
+| `net-port-bender` | dotnet | ビーコン経由でローカルポートをリモートホストへリダイレクト。 |
+| `net-restricted-admin` | dotnet | WMI StdRegProv 経由 RDP pass-the-hash 用 Restricted Admin Mode をリモート有効/無効。HKLM\\System\\CurrentControlSet\\Control\\Lsa の DisableRestrictedAdmin を変更。 |
+| `net-rubeus` | dotnet | 生 Kerberos 操作・悪用 C# ツール。チケット要求/更新、S4U、golden/silver/diamond、Kerberoasting、AS-REP ロースティング、パスワードスプレー、チケット管理。 |
+| `net-runas-cs` | dotnet | 別ユーザー資格情報でプロセス実行 .NET ユーティリティ。runas.exe 改良 OSS 版。ログオン型、UAC バイパス、リモート I/O、CreateProcess 自動選択。 |
+| `net-safety-katz` | dotnet | LSASS をミニダンプしカスタムインメモリ Mimikatz で logonpasswords/ekeys 抽出後ダンプ削除。 |
+| `net-sauron-eye` | dotnet | レッドチーム向け .NET ファイル検索。ネットワークドライブ含むディレクトリでキーワード一致、内容検索、Office 解析、VBA マクロ、正規表現。 |
+| `net-search-outlook` | dotnet | 実行中 Outlook の全メールアカウント/サブフォルダで指定キーワードメールを検索。 |
+| `net-seatbelt` | dotnet | 攻撃/防御両視点のセキュリティ向けホスト列挙 C# ツール。システム、ユーザー、ネットワーク、資格情報アーティファクトを収集。 |
+| `net-session-searcher` | dotnet | 接続ドライブ全体で PuTTY 秘密鍵（.ppk）と RDP 接続ファイルを検索し資格情報をパース。 |
+| `net-shadow-spray` | dotnet | 全ドメインユーザー/コンピューターに Shadow Credentials をスプレー。GenericWrite/GenericAll で KeyCredential 追加、PKINIT と UnPACTheHash で NT ハッシュ取得を試行。 |
+| `net-sharp-chrome` | dotnet | .NET アセンブリで Chrome ブラウザデータを抽出。 |
+| `net-sharp-cloud` | dotnet | AWS、Azure、GCP 関連クラウド資格情報ファイルをユーザープロファイルから検索する C# ユーティリティ。 |
+| `net-sharp-cookie-monster` | dotnet | Chrome/Edge リモートデバッグプロトコルで httpOnly、secure、session 含む全サイト Cookie をダンプ。 |
+| `net-sharp-dpapi` | dotnet | DPAPI マスターキー、資格情報、vault、証明書、RDG、KeePass、SCCM シークレット、Chrome/Edge データを復号。 |
+| `net-sharp-dump` | dotnet | Out-Minidump.ps1 の C# 移植。MiniDumpWriteDump でプロセス（既定 LSASS）圧縮ミニダンプ、gzip 圧縮後 raw 削除。 |
+| `net-sharp-edr-checker` | dotnet | C# EDR/AV 検出。実行プロセス、読み込み DLL、インストールディレクトリ、サービス、ドライバー、メタデータ経由 hidden EDR を含む既知防御製品を確認。 |
+| `net-sharp-exec` | dotnet | 攻撃 C# 横移動。PSExec、WMI、WMIExec、SMBExec でリモート実行と半対話シェル。 |
+| `net-sharp-exfiltrate` | dotnet | 信頼できるクラウドチャネル経由でファイル/ディレクトリを持ち出すモジュラー C# フレームワーク。アップロード前に圧縮・暗号化。拡張子・サイズでフィルタ可能。 |
+| `net-sharp-gpo-abuse` | dotnet | GPO 編集権限悪用 .NET ツール。GPO を変更しユーザー権利、ローカル管理者、ログオン/起動スクリプト、即時スケジュールタスクを追加。 |
+| `net-sharp-hide` | dotnet | NtSetValueKey と UNICODE_STRING キー名の null バイトプレフィックスで非表示 Run レジストリキーを作成。標準列挙回避の永続化。 |
+| `net-sharp-hound` | dotnet | Active Directory 用 BloodHound データコレクター。ユーザー、グループ、セッション、ACL、trust、GPO、証明書サービス等を BloodHound CE インポート用に列挙。 |
+| `net-sharp-hound3` | dotnet | レガシー BloodHound ingestor（非推奨）。BloodHound 4.1+ と非互換。 |
+| `net-sharp-katz` | dotnet | LSASS プロバイダーから資格情報ダンプ、DCSync、pass the hash、Zerologon、PrintNightmare、HiveNightmare。 |
+| `net-sharp-laps` | dotnet | ms-mnet-AdmPwd 属性読み取りで Active Directory から LAPS パスワード取得。コンピューターオブジェクト ExtendedRight/GenericAll または Domain Admin 必須。 |
+| `net-sharp-map-exec` | dotnet | Windows ネイティブ CrackMapExec 代替。CIM、Reg32、SMB、WinRM、LDAP、ドメインスプレーで Kerberos/NTLM 認証。 |
+| `net-sharp-move` | dotnet | .NET 認証済みリモート実行。WMI、SCM、DCOM、Task Scheduler、サービス DLL ハイジャック、DCOM サーバーハイジャック、既存サービス/スケジュールタスク変更。 |
+| `net-sharp-no-ps-exec` | dotnet | ファイルレス横移動。停止中 LocalSystem サービスのバイナリパスを一時置換してペイロード実行、5 秒後に元設定復元。 |
+| `net-sharp-persist` | dotnet | レジストリ、スケジュールタスク、スタートアップ LNK、KeePass 設定バックドア、サービス、Tortoise SVN フック、スケジュールタスクバックドアの永続化ツールキット。追加/削除/確認/一覧操作をサポート。 |
+| `net-sharp-printer` | dotnet | ListNetworks コンソール版。現在ユーザーコンテキストでアクセス可能ネットワークプリンターを列挙。 |
+| `net-sharp-rdp` | dotnet | 認証済みリモートコマンド実行 RDP コンソール。RDP 接続後 Windows 実行ダイアログ（Win+R）でコマンド実行。 |
+| `net-sharp-rdp-hijack` | dotnet | RDP セッションハイジャック PoC。WTSConnectSession/WTSDisconnectSession で切断済み対話ログオンセッションを制御。 |
+| `net-sharp-roast` | dotnet | サービスチケットを要求し hashcat 形式のクラック可能 TGS ハッシュを出力。 |
+| `net-sharp-sccm` | dotnet | Microsoft Endpoint Configuration Manager（SCCM）ポストエクスプロイト。横移動、資格情報収集、クライアントプッシュ NTLM 強制悪用。 |
+| `net-sharp-sec-dump` | dotnet | impacket secretsdump.py の .NET 移植。RPC 経由リモート/ローカル SAM と LSA Secrets ダンプ。 |
+| `net-sharp-shares` | dotnet | マルチスレッド C# でドメイン内アクセス可能ネットワーク共有列挙。LDAP でターゲット取得、読み書きアクセス確認。 |
+| `net-sharp-smb-exec` | dotnet | SMB 経由 NTLM ハッシュ認証（pass-the-hash）でリモートターゲットにコマンド実行。 |
+| `net-sharp-sphere` | dotnet | vSphere インフラ攻撃。VMware Tools と vSphere Web Services API でゲスト VM 実行、ファイル転送、メモリダンプ。 |
+| `net-sharp-stay` | dotnet | 昇格/非昇格レジストリ、スケジュールタスク、サービス、WMI イベント購読、COM ハンドラーハイジャック、LNK バックドアの .NET 永続化ツールキット。 |
+| `net-sharp-token-finder` | dotnet | M365 Desktop Office アプリで平文認証トークンを列挙し M365 ID 侵害に使用可能。 |
+| `net-sharp-up` | dotnet | 一般的 Windows 権限昇格誤設定をローカル監査。 |
+| `net-sharp-view` | dotnet | PowerView の .NET 移植 Active Directory 偵察ツールキット。ドメイン列挙、ACL 分析、共有発見、セッション列挙、Kerberoasting。 |
+| `net-sharp-wifi-grabber` | dotnet | ワークステーション保存全 WLAN プロファイルから WiFi パスワードを平文取得。Win32 WLAN API による状況認識ツール。 |
+| `net-sharp-wmi` | dotnet | C# WMI ツールキット。ローカル/リモート列挙、プロセス作成、イベント購読 VBS、ファイルアップロード、ファイアウォール列挙、プロセス管理。 |
+| `net-sharp-wsus` | dotnet | WSUS 経由横移動 C# ツール。WSUS サーバー経由で悪意更新を作成・承認・デプロイ。 |
+| `net-sharpsh` | dotnet | RunspaceFactory 経由 C# PowerShell 実行。エンコードコマンド、リモートスクリプト読み込み、クリップボードスクリプト。インライン assembly 向け。 |
+| `net-sigma-potato` | dotnet | サービスアカウントから SYSTEM への昇格 GodPotato 派生。ディスク実行、.NET reflection、PowerShell、組み込みリバースシェル。 |
+| `net-snaffler` | dotnet | 設定可能ルールと正規表現でドメインコンピューター横断の AD ファイル共有クローラー。資格情報と機密ファイルを発見。 |
+| `net-sql-recon` | dotnet | Microsoft SQL Server 向け攻撃偵察とポストエクスプロイトのツールキット。列挙、なりすまし、リンクサーバー、SCCM モジュール実行。 |
+| `net-stand-in` | dotnet | 小規模 Active Directory ポストエクスプロイトのツールキット。LDAP クエリ、ACL 操作、Kerberoasting、AS-REP ロースティング、委任悪用、GPO 悪用、ADCS 攻撃、マシンアカウント操作。 |
+| `net-sweet-potato` | dotnet | サービスアカウントから SYSTEM へのネイティブ Windows 権限昇格手法集。RottenPotato、JuicyPotato、PrintSpoofer、EfsRpc。 |
+| `net-unquoted-path` | dotnet | System32/SysWow64 外の PE 配置向け引用符なしサービスパス一覧（T1034）。 |
+| `net-webdav-status` | dotnet | WebDAV 状態確認のマルチスレッド C# 版。DAV RPC SERVICE 名前付きパイプで Web Client をプローブ。管理者権限不要、有効資格情報必須。 |
+| `net-winpeas` | dotnet | Windows Privilege Escalation Awesome Script。誤設定、脆弱サービス、資格情報、AV/EDR、ネットワーク、AD、LPE ベクトルを列挙。 |
+| `net-winrmdll` | dotnet | WinRM 経由でリモートホストにコマンド実行。 |

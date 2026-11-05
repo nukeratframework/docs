@@ -1,0 +1,44 @@
+---
+title: 首页
+---
+
+import { Card, Cards } from 'fumadocs-ui/components/card';
+
+NukeRat 主要主题：
+
+<div className="not-prose [&_[data-card]]:rounded-xl [&_[data-card]]:border-fd-border/80 [&_[data-card]]:p-6 [&_[data-card]]:shadow-lg [&_[data-card]]:transition-none [&_[data-card]:hover]:bg-fd-card [&_[data-card]:hover]:shadow-lg [&_[data-card]>h3]:mb-2 [&_[data-card]>h3]:text-lg [&_[data-card]>h3]:font-semibold [&_[data-card]>h3]:tracking-tight [&_[data-card]>p]:text-base [&_[data-card]>p]:leading-relaxed">
+
+<Cards className="gap-5 sm:grid-cols-2">
+  <Card
+    title="Armory"
+    description="来自官方仓库的 BOF 与 .NET 工具，可在客户端直接运行。"
+    href="/docs/armory"
+  />
+  <Card
+    title="植入体"
+    description="无阶段与加载器构建、C2 配置及编译流程。"
+    href="/docs/client/implants"
+  />
+  <Card
+    title="跳板与代理"
+    description="经植入体进行中继、SOCKS 与端口转发。"
+    href="/docs/pivoting"
+  />
+  <Card
+    title="自定义通道"
+    description="经 Telegram、Discord 等外部平台的通信通道。"
+    href="/docs/custom-channels"
+  />
+  <Card
+    title="自定义植入体"
+    description="使用自有二进制，仍沿用同一任务下发模型。"
+    href="/docs/custom-implants"
+  />
+  <Card
+    title="监听器"
+    description="供植入体与 staging 使用的 HTTP、HTTPS 及文件服务器通道。"
+    href="/docs/listeners"
+  />
+</Cards>
+
+</div>

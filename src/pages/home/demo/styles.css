@@ -1,0 +1,1174 @@
+.nukerat-demo-root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 83%;
+  --popover: 0 0% 13%;
+  --popover-foreground: 0 0% 83%;
+  --primary: 0 0% 83%;
+  --primary-foreground: 0 0% 12%;
+  --secondary: 0 0% 16%;
+  --secondary-foreground: 0 0% 83%;
+  --muted: 0 0% 16%;
+  --muted-foreground: 0 0% 33%;
+  --accent: 0 0% 18%;
+  --accent-foreground: 0 0% 83%;
+  --destructive: 0 70% 50%;
+  --destructive-foreground: 0 0% 83%;
+  --border: 0 0% 21%;
+  --input: 0 0% 13%;
+  --ring: 0 0% 33%;
+  --radius: 0.25rem;
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+
+}
+
+.nukerat-demo-root,
+.nukerat-demo-root * {
+  box-sizing: border-box;
+  font-family: 'Mona Sans', system-ui, -apple-system, sans-serif;
+}
+
+.nukerat-demo-root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #0b0b0b;
+  isolation: isolate;
+}
+
+.nukerat-demo-root .dockview-theme-dark {
+  height: 100%;
+  width: 100%;
+}
+
+.nukerat-demo-root .dockview-theme-dark, .nukerat-demo-root .dv-dockview {
+  --dv-background-color: #ff000000;
+  --dv-group-view-background-color: #00000000;
+  --dv-separator-border: #00000000;
+  --dv-tabs-and-actions-container-background-color: #000000;
+  --dv-tabs-and-actions-container-height: 42px;
+  --dv-tabs-and-actions-container-font-size: 13px;
+  --dv-activegroup-visiblepanel-tab-background-color: #e7eaea;
+  --dv-activegroup-hiddenpanel-tab-background-color: #f1f1f1;
+  --dv-activegroup-visiblepanel-tab-color: #000000;
+  --dv-activegroup-hiddenpanel-tab-color: #ffffff;
+  --dv-inactivegroup-visiblepanel-tab-background-color: #000000;
+  --dv-inactivegroup-hiddenpanel-tab-background-color: #000000;
+  --dv-inactivegroup-visiblepanel-tab-color: #ffffff;
+  --dv-inactivegroup-hiddenpanel-tab-color: #000000;
+  --dv-tab-divider-color: #25283600;
+  --dv-paneview-header-border-color: #ffffff;
+  --dv-icon-hover-background-color: rgba(255, 255, 255, 0.1);
+
+  --dv-drag-over-background-color: rgba(255, 255, 255, 0.342);
+
+  --dv-drag-over-border-color: #f5f5f5;
+  --dv-active-sash-color: #141a22;
+  --dv-floating-box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --dv-tabs-container-scrollbar-color: #2e3248;
+  --dv-activegroup-hiddenpanel-tab-color: rgb(220, 221, 223) !important;
+  --dv-activegroup-hiddenpanel-tab-color: #ffffff !important;
+  --dv-paneview-active-outline-color: #f8f8f8 !important;
+}
+
+.nukerat-demo-root .bg-color-workspace {
+  background-color: #0b0b0b;
+}
+
+.nukerat-demo-root .dv-bg-window {
+  background-color: #171717;
+}
+
+.nukerat-demo-root .dv-bg-border {
+  
+  
+  background-color: #222323 !important;
+}
+
+.nukerat-demo-root .dv-groupview.dv-active-group>.dv-tabs-and-actions-container .dv-tabs-container>.dv-tab.dv-active-tab {
+  background-color: #171717 !important;
+}
+
+.nukerat-demo-root .dv-tabs-overflow-dropdown-default {
+  font-size: .9rem;
+  color: #9e9e9e !important;
+}
+
+.nukerat-demo-root .dv-tabs-and-actions-container {
+  
+  font-size: .4rem !important;
+  height: 2.3rem !important;
+  background: #0c0c0c !important;
+  border-bottom: 1px solid #383938 !important;
+  display: flex !important;
+  align-items: stretch !important;
+}
+
+.nukerat-demo-root .dv-tab {
+  flex: 1 0 140px !important;
+  
+  max-width: calc-size(fit-content, size + 0.01rem);
+  overflow: hidden !important;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  border-right: 1px solid #383939 !important;
+}
+
+.nukerat-demo-root .dv-tabs-overflow-container #host-select {
+  display: none !important;
+}
+
+.nukerat-demo-root .dv-groupview.dv-active-group>.dv-tabs-and-actions-container .dv-tabs-container>.dv-tab.dv-active-tab {
+  border-bottom: 0px solid #dfdfdf9e !important;
+  position: relative !important;
+}
+
+.nukerat-demo-root .dv-tab.dv-active-tab {
+  background: #171717 !important;
+  border-bottom: none !important;
+}
+
+.nukerat-demo-root .dv-tab:hover {
+  background: #171717 !important;
+  border-bottom: none !important;
+}
+
+.nukerat-demo-root .dv-content-container {
+  background: #242d38 !important;
+}
+
+.nukerat-demo-root .dv-groupview {
+  border-radius: 10px !important;
+  overflow: hidden !important;
+  
+  border: 1px solid #383939 !important;
+}
+
+.nukerat-demo-root .dv-sash-container .dv-sash {
+  background: transparent !important;
+  border-radius: 4px !important;
+  transition: background-color 0.1s ease-in-out 0.5s !important;
+}
+
+.nukerat-demo-root .dv-vertical>.dv-sash-container>.dv-sash:not(.disabled)::after {
+  content: "";
+  height: 0.4rem;
+  width: 100%;
+  border-radius: 2px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #121212;
+  position: absolute;
+}
+
+.nukerat-demo-root .dv-horizontal>.dv-sash-container>.dv-sash:not(.disabled)::after {
+  content: "";
+  height: 100%;
+  width: 0.4rem;
+  border-radius: 2px;
+  top: 50%;
+  left: 50%;
+  background-color: #0b0b0b;
+  transform: translate(-50%, -50%);
+  position: absolute;
+}
+
+.nukerat-demo-root .dv-vertical>.dv-sash-container>.dv-sash:not(.disabled):hover::after, .nukerat-demo-root .dv-vertical>.dv-sash-container>.dv-sash:not(.disabled):active::after, .nukerat-demo-root .dv-horizontal>.dv-sash-container>.dv-sash:not(.disabled):hover::after, .nukerat-demo-root .dv-horizontal>.dv-sash-container>.dv-sash:not(.disabled):active::after {
+  background-color: #121212;
+}
+
+.nukerat-demo-root .dv-sash-container .dv-sash:not(.disabled):hover, .nukerat-demo-root .dv-sash-container .dv-sash:not(.disabled):active {
+  background: var(--dv-active-sash-color, #ffffff) !important;
+  transition-delay: 0s !important;
+}
+
+.nukerat-demo-root .dv-resize-container:has(> .dv-groupview) {
+  border-radius: 8px !important;
+}
+
+.nukerat-demo-root .dv-tab:focus::after, .nukerat-demo-root .dv-tab:focus-within::after {
+  
+  
+}
+
+.nukerat-demo-root .dv-tab:focus::before, .nukerat-demo-root .dv-tab:focus-within::before {
+  
+  background-color: rgb(0, 123, 255) !important;
+}
+
+.nukerat-demo-root ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.nukerat-demo-root ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.nukerat-demo-root ::-webkit-scrollbar-thumb {
+  background: #292929;
+  border-radius: 3px;
+}
+
+.nukerat-demo-root ::-webkit-scrollbar-thumb:hover {
+  background: #5a5b5b;
+}
+
+.nukerat-demo-root .react-flow__pane {
+  cursor: default !important;
+}
+
+.nukerat-demo-root .react-flow__node {
+  cursor: default !important;
+}
+
+.nukerat-demo-root .noise {
+  position: relative;
+}
+
+.nukerat-demo-root .primary-text {
+  color: #cecece
+}
+
+.nukerat-demo-root .secondary-text {
+  color: #FFFFFFE6
+}
+
+.nukerat-demo-root .tHa7k {
+  height: 100%;
+  color: #d4d4d4;
+  font-size: 13px;
+  overflow: hidden;
+}
+
+.nukerat-demo-root .tHa7k * {
+  font-family: 'Mona Sans Mono', system-ui, -apple-system, sans-serif;
+  font-size: 13.5px;
+  font-weight: 400;
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "calt" 0;
+}
+
+.nukerat-demo-root .font-mona-mono {
+  font-family: 'Mona Sans Mono', ui-monospace, monospace !important;
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "calt" 0;
+}
+
+.nukerat-demo-root .ns-editor, .nukerat-demo-root .ns-editor textarea, .nukerat-demo-root .ns-editor pre, .nukerat-demo-root .ns-editor * {
+  font-family: 'Mona Sans Mono', ui-monospace, monospace !important;
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "calt" 0;
+}
+
+.nukerat-demo-root .ns-editor-highlight {
+  overflow: auto;
+  scrollbar-width: none;
+}
+
+.nukerat-demo-root .ns-editor-highlight::-webkit-scrollbar {
+  display: none;
+}
+
+.nukerat-demo-root .code-editor, .nukerat-demo-root .code-editor textarea, .nukerat-demo-root .code-editor pre, .nukerat-demo-root .code-editor * {
+  font-family: 'Mona Sans Mono', ui-monospace, monospace !important;
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "calt" 0;
+}
+
+.nukerat-demo-root .code-editor {
+  color: #d3d3d3;
+  background: transparent;
+}
+
+.nukerat-demo-root .code-editor-scroll {
+  min-height: 40vh;
+  height: 40vh;
+  max-height: none;
+  overflow-y: auto;
+  resize: vertical;
+}
+
+.nukerat-demo-root .code-editor-scroll--strings {
+  min-height: 15vh;
+  height: 15vh;
+}
+
+.nukerat-demo-root .code-editor-scroll--script {
+  min-height: 18rem;
+  height: 18rem;
+}
+
+.nukerat-demo-root .code-editor textarea, .nukerat-demo-root .code-editor__input {
+  outline: none !important;
+  caret-color: #d3d3d3;
+}
+
+.nukerat-demo-root .code-editor textarea:disabled {
+  cursor: not-allowed;
+}
+
+.nukerat-demo-root .code-editor pre, .nukerat-demo-root .code-editor__pre {
+  margin: 0;
+}
+
+.nukerat-demo-root .code-editor .hljs-keyword, .nukerat-demo-root .code-editor .hljs-selector-tag {
+  color: #be84bb;
+}
+
+.nukerat-demo-root .code-editor .hljs-built_in {
+  color: #d3a86a;
+}
+
+.nukerat-demo-root .code-editor .hljs-meta {
+  color: #e8b86d;
+}
+
+.nukerat-demo-root .code-editor .hljs-string, .nukerat-demo-root .code-editor .hljs-char {
+  color: #c79078;
+}
+
+.nukerat-demo-root .code-editor .hljs-number {
+  color: #b0c9a6;
+}
+
+.nukerat-demo-root .code-editor .hljs-type, .nukerat-demo-root .code-editor .hljs-title.class_ {
+  color: #50c8ad;
+}
+
+.nukerat-demo-root .code-editor .hljs-title.function_, .nukerat-demo-root .code-editor .function_ {
+  color: #d3d4a7;
+}
+
+.nukerat-demo-root .code-editor .hljs-comment {
+  color: #689456;
+}
+
+.nukerat-demo-root .code-editor .hljs-variable, .nukerat-demo-root .code-editor .hljs-params {
+  color: #99cbf0;
+}
+
+.nukerat-demo-root .mK2vP {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 10px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+.nukerat-demo-root .qX9lW {
+  display: flex;
+  align-items: center;
+  border: 1px solid #4f4f4f !important;
+  border-radius: 5px;
+  height: 32px !important;
+  padding: 1px 1px 1px 10px !important;
+  background-color: #1e1e1e;
+}
+
+.nukerat-demo-root .bZ5cQ {
+  user-select: none;
+  color: #41be5c;
+  margin-right: 4px;
+  font-size: 14px;
+}
+
+.nukerat-demo-root .pL8mF {
+  flex: 1;
+  background-color: transparent;
+  border: none;
+  color: #d4d4d4;
+  font-size: 14px;
+  outline: none;
+}
+
+.nukerat-demo-root .qJ6xN {
+  margin-bottom: 0.4rem;
+}
+
+.nukerat-demo-root .nR3wG {
+  color: #d4d4d4;
+}
+
+.nukerat-demo-root .sT2hJ {
+  color: #cecece;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.nukerat-demo-root .oKD1s {
+  color: #9b9b9b;
+  margin-right: .2rem;
+}
+
+.nukerat-demo-root .gW1pX {
+  color: #888;
+}
+
+.nukerat-demo-root [role="menu"] {
+  background-color: #2f2f2f !important;
+  border: 1px solid #292929 !important;
+  border-radius: 10px;
+}
+
+.nukerat-demo-root [role="menuitem"] {
+  color: #A2A2A2 !important;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.nukerat-demo-root [role="menuitem"] svg {
+  height: 1.1rem;
+  width: 1.1rem;
+  margin-right: .30rem;
+}
+
+.nukerat-demo-root [role="menuitem"]:hover {
+  background-color: #4f4f4f !important;
+  color: #A2A2A2 !important;
+  stroke: #A2A2A2 !important;
+}
+
+.nukerat-demo-root [role="menuitem"]:hover svg {
+  stroke: #A2A2A2 !important;
+  color: #A2A2A2 !important;
+}
+
+.nukerat-demo-root [role="separator"] {
+  background-color: #3A3A3A !important;
+}
+
+.nukerat-demo-root .m3vqw {
+  height: 2.6rem;
+  padding-top: 0.25rem;
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  z-index: 10;
+  user-select: none;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #292929 transparent;
+}
+
+.nukerat-demo-root .m3vqw::-webkit-scrollbar {
+  height: 4px;
+  width: 4px;
+}
+
+.nukerat-demo-root .m3vqw::-webkit-scrollbar-thumb {
+  background-color: #292929;
+  border-radius: 9999px;
+}
+
+.nukerat-demo-root .m3vqw::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.nukerat-demo-root .thin_button {
+  padding: "3px 14px 3px 12px" !important
+}
+
+.nukerat-demo-root .nk-checkbox {
+  display: inline-flex;
+  align-items: center;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #ffffff26;
+  border-radius: 4px;
+  background-color: #191819;
+  cursor: pointer;
+  transition: none;
+}
+
+.nukerat-demo-root .nk-checkbox[data-state="checked"] {
+  background-color: #a4a4a4;
+}
+
+.nukerat-demo-root .nk-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  width: 1.77rem;
+  height: 1.07rem;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  background-color: #3a3a3c;
+  padding: 1.5px;
+}
+
+.nukerat-demo-root .nk-switch:focus-visible {
+  outline: 2px solid #41be5c;
+  outline-offset: 2px;
+}
+
+.nukerat-demo-root .nk-switch[data-state="checked"] {
+  background-color: #ffffff;
+}
+
+.nukerat-demo-root .nk-switch-thumb {
+  pointer-events: none;
+  display: block;
+  width: 0.83rem;
+  height: 0.83rem;
+  border-radius: 9999px;
+  background-color: #fff;
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  transform: translateX(0);
+}
+
+.nukerat-demo-root .nk-switch[data-state="checked"] .nk-switch-thumb {
+  background-color: #3a3a3c;
+  transform: translateX(0.77rem);
+}
+
+[data-slot="combobox-content"] {
+  font-size: 12px;
+  background-color: #1e1e1e;
+  border: 1px solid #363636 !important;
+  border-radius: 4px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  color: #d4d4d4;
+}
+
+[data-slot="combobox-list"] {
+  padding: 2px;
+}
+
+[data-slot="combobox-item"] {
+  font-size: 11px;
+  color: #d4d4d4;
+  border-radius: 3px;
+  padding: 5px 28px 5px 6px;
+}
+
+[data-slot="combobox-item"][data-highlighted] {
+  background-color: #2a2a2a;
+  color: #d4d4d4;
+}
+
+[data-slot="combobox-label"] {
+  font-size: 10px;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+[data-slot="combobox-empty"] {
+  font-size: 11px;
+  color: #555;
+}
+
+[data-slot="combobox-separator"] {
+  background-color: #252525;
+}
+
+[data-slot="combobox-chip"] {
+  background-color: #2a2a2a;
+  border: 1px solid #363636;
+  color: #d4d4d4;
+  font-size: 11px;
+  border-radius: 3px;
+}
+
+[data-slot="combobox-chips"] {
+  background-color: #212121;
+  border-color: #363636;
+  font-size: 11px;
+}
+
+[data-slot="combobox-chips"]:focus-within {
+  border-color: #555;
+}
+
+[data-slot="command"] {
+  font-size: 12px;
+  background-color: #141414;
+  border-radius: 10px;
+  color: #d4d4d4;
+}
+
+[data-slot="command-input"] {
+  font-size: 12px;
+  color: #d4d4d4;
+  background-color: #ffffff00;
+}
+
+[data-slot="command-input"]::placeholder {
+  color: #444;
+}
+
+[data-slot="command-input-wrapper"] [data-slot="input-group"] {
+  background-color: #24242400;
+  border-color: #2e2f2f;
+  height: 20px !important;
+}
+
+[data-slot="command-input-wrapper"] [data-slot="input-group"]:focus-within {
+  border-color: #555;
+  height: 3rem !important;
+}
+
+[data-slot="command-list"] {
+  max-height: 220px;
+}
+
+[data-slot="command-item"] {
+  font-size: 12px;
+  color: #d4d4d4;
+  border-radius: 6px;
+}
+
+[data-slot="command-item"][data-selected="true"] {
+  background-color: #2a2a2a;
+  color: #cecece;
+}
+
+[data-slot="command-item"][data-selected="false"] {
+  background-color: #00000000;
+  color: #cecece;
+}
+
+[data-slot="command-empty"] {
+  font-size: 11px;
+  color: #555;
+}
+
+[data-slot="command-group"] [cmdk-group-heading] {
+  margin-top: -5px;
+  font-size: 11px;
+  color: #5E5D5F;
+  text-transform: uppercase;
+}
+
+[data-slot="command-separator"] {
+  background-color: #252525;
+}
+
+[data-slot="command-shortcut"] {
+  font-size: 10px;
+  color: #555;
+}
+
+[data-slot="dialog-overlay"] {
+  background-color: rgba(0, 0, 0, 0.55) !important;
+  backdrop-filter: blur(2px);
+}
+
+[data-slot="dialog-content"] {
+  font-size: 12px;
+  background-color: #1e1e1e;
+  border: 1px solid #2a2a2a;
+  border-radius: 5px;
+  color: #d4d4d4;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+[data-slot="dialog-header"] {
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+[data-slot="dialog-title"] {
+  font-size: 13.5px !important;
+  font-weight: 600;
+  color: #d4d4d4;
+  letter-spacing: 0.02em;
+}
+
+[data-slot="dialog-description"] {
+  font-size: 11px;
+  color: #555;
+}
+
+[data-slot="dialog-footer"] {
+  background-color: #1a1a1a;
+  border-top: 1px solid #2a2a2a;
+}
+
+[data-slot="dropdown-menu-content"],
+[data-slot="dropdown-menu-sub-content"] {
+  font-size: 12px;
+  background-color: #1e1e1e;
+  border: 1px solid #363636 !important;
+  border-radius: 4px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  color: #d4d4d4;
+}
+
+[data-slot="dropdown-menu-item"],
+[data-slot="dropdown-menu-checkbox-item"],
+[data-slot="dropdown-menu-radio-item"],
+[data-slot="dropdown-menu-sub-trigger"] {
+  font-size: 13.5px;
+  color: #d4d4d4;
+  border-radius: 3px;
+  font-weight: 400;
+  margin-bottom: 0.2px;
+}
+
+[data-slot="dropdown-menu-item"]:focus,
+[data-slot="dropdown-menu-item"][data-highlighted],
+[data-slot="dropdown-menu-checkbox-item"]:focus,
+[data-slot="dropdown-menu-radio-item"]:focus,
+[data-slot="dropdown-menu-sub-trigger"]:focus,
+[data-slot="dropdown-menu-sub-trigger"][data-state="open"] {
+  background-color: #2a2a2a;
+  color: #d4d4d4;
+}
+
+[data-slot="dropdown-menu-label"] {
+  font-size: 10px;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+[data-slot="dropdown-menu-separator"] {
+  background-color: #252525;
+}
+
+[data-slot="dropdown-menu-shortcut"] {
+  font-size: 10px;
+  color: #555;
+}
+
+.nukerat-demo-root .popover-border {
+  border: .8px solid #2e2f2f !important;
+}
+
+[data-slot="popover-content"] {
+  width: 13rem !important;
+  font-size: 12px;
+  background-color: #1e1e1e;
+
+  border-radius: 14px;
+  color: #d4d4d4;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+[data-slot="popover-title"] {
+  font-size: 12px;
+  font-weight: 600;
+  color: #d4d4d4;
+  letter-spacing: 0.02em;
+}
+
+[data-slot="popover-description"] {
+  font-size: 11px;
+  color: #555;
+}
+
+.nukerat-demo-root #host-select {
+  max-width: 200px;
+}
+
+.nukerat-demo-root #host-select label {
+  font-size: 10px;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  display: block;
+  margin-bottom: 0.375rem;
+}
+
+.nukerat-demo-root #host-select-popover {
+  --tw-enter-opacity: 1 !important;
+  --tw-enter-scale: 1 !important;
+  --tw-enter-translate-x: 0 !important;
+  --tw-enter-translate-y: 0 !important;
+  --tw-exit-opacity: 1 !important;
+  --tw-exit-scale: 1 !important;
+  --tw-exit-translate-x: 0 !important;
+  --tw-exit-translate-y: 0 !important;
+  animation: none !important;
+  transition: none !important;
+}
+
+.nukerat-demo-root #host-select [role="combobox"] {
+  height: 1.3rem;
+  font-size: 12px;
+  background-color: #1a1a1a00;
+  border: 1px solid #353535;
+  border-radius: 6px;
+  color: #a0a1a0;
+  padding-left: 10px;
+  padding-right: 8px;
+  padding-top: 7.2px;
+  padding-bottom: 7.2px;
+  transition: border-color 0.15s;
+  font-weight: 500 !important;
+}
+
+.nukerat-demo-root #host-select [role="combobox"]:hover {
+  background-color: #1a1a1a00;
+  border-color: #3f3f3f;
+}
+
+.nukerat-demo-root #host-select [role="combobox"][aria-expanded="true"] {
+  border-color: #555;
+}
+
+.nukerat-demo-root #host-select [role="combobox"] svg {
+  width: 13px;
+  height: 13px;
+  color: #555;
+}
+
+.nukerat-demo-root #host-select [role="combobox"] .text-muted-foreground {
+  font-size: 12px;
+  font-weight: 400 !important;
+  color: #9e9e9e;
+}
+
+.nukerat-demo-root #host-select button[role="combobox"] {
+  height: 20px !important;
+  min-height: 20px !important;
+  max-height: 20px !important;
+}
+
+.nukerat-demo-root #process-filter-select {
+  max-width: 200px;
+}
+
+.nukerat-demo-root #process-filter-select label {
+  font-size: 10px;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  display: block;
+  margin-bottom: 0.375rem;
+}
+
+.nukerat-demo-root #process-filter-select [role="combobox"] {
+  height: 30px;
+  font-size: .8rem;
+  background-color: #1a1a1a00;
+  border: 1px solid #434343;
+  border-radius: 6px;
+  color: #a0a1a0;
+  padding-left: 10px;
+  padding-right: 8px;
+  padding-top: 7.2px;
+  padding-bottom: 7.2px;
+  transition: border-color 0.15s;
+  font-weight: 500 !important;
+}
+
+.nukerat-demo-root #process-filter-select [role="combobox"]:hover {
+  background-color: #1a1a1a00;
+  border-color: #3f3f3f;
+}
+
+.nukerat-demo-root #process-filter-select [role="combobox"][aria-expanded="true"] {
+  border-color: #555;
+}
+
+.nukerat-demo-root #process-filter-select [role="combobox"] svg {
+  width: 13px;
+  height: 13px;
+  color: #555;
+}
+
+.nukerat-demo-root #process-filter-select [role="combobox"] .text-muted-foreground {
+  font-size: .8rem;
+  font-weight: 500 !important;
+  color: #9e9e9e;
+}
+
+.nukerat-demo-root .process-cell-truncate {
+  display: block;
+  max-width: 30ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nukerat-demo-root .process-cell-name {
+  cursor: text;
+  user-select: text;
+}
+
+.nukerat-demo-root #folders-content-view {
+  font-family: 'Mona Sans Mono', system-ui, -apple-system, monospace !important;
+  padding: 12px 16px;
+}
+
+.nukerat-demo-root #custom-radius {
+  border-radius: calc(0.625rem * 1.2) !important;
+}
+
+.nukerat-demo-root .docs-md-content {
+  font-family: 'Mona Sans', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  color: #cecece;
+  line-height: 1.7;
+  padding: 0px 0px 0px 0px;
+  max-width: 920px;
+}
+
+.nukerat-demo-root .docs-md-content h1, .nukerat-demo-root .docs-md-content h2, .nukerat-demo-root .docs-md-content h3, .nukerat-demo-root .docs-md-content h4, .nukerat-demo-root .docs-md-content h5, .nukerat-demo-root .docs-md-content h6 {
+  font-weight: 600;
+  margin: 0 0 0.6rem;
+  letter-spacing: 0.005em;
+}
+
+.nukerat-demo-root .docs-md-content h1 {
+  color: #e8e8e8;
+  font-size: 1.55rem;
+  margin-top: 0.25rem;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #222323;
+}
+
+.nukerat-demo-root .docs-md-content h2 {
+  color: #e4e4e4;
+  font-size: 1.25rem;
+  margin-top: 1.5rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid #1f2020;
+}
+
+.nukerat-demo-root .docs-md-content h3 {
+  color: #e0e0e0;
+  font-size: 1.08rem;
+  margin-top: 1.25rem;
+}
+
+.nukerat-demo-root .docs-md-content h4 {
+  color: #dcdcdc;
+  font-size: 0.98rem;
+  margin-top: 1rem;
+}
+
+.nukerat-demo-root .docs-md-content h5 {
+  color: #d6d6d6;
+  font-size: 0.9rem;
+  margin-top: 0.875rem;
+}
+
+.nukerat-demo-root .docs-md-content h6 {
+  color: #d2d2d2;
+  font-size: 0.9rem;
+  margin-top: 0.875rem;
+}
+
+.nukerat-demo-root .docs-md-content p {
+  margin: 0 0 0.7rem;
+  color: #cecece;
+}
+
+.nukerat-demo-root .docs-md-content .md-spacer {
+  height: 0.4rem;
+}
+
+.nukerat-demo-root .docs-md-content strong {
+  color: #cecece;
+  font-weight: 600;
+}
+
+.nukerat-demo-root .docs-md-content em {
+  font-style: italic;
+  color: #bdbdbd;
+}
+
+.nukerat-demo-root .docs-md-content del, .nukerat-demo-root .docs-md-content s, .nukerat-demo-root .docs-md-content strike {
+  text-decoration: line-through;
+  color: #888;
+}
+
+.nukerat-demo-root .docs-md-content .md-fn-ref a {
+  color: #6ea8d4;
+  text-decoration: none;
+  font-size: 0.85em;
+}
+
+.nukerat-demo-root .docs-md-content .md-fn-ref a:hover {
+  text-decoration: underline;
+}
+
+.nukerat-demo-root .docs-md-content .md-footnotes sup {
+  color: #6e6e6e;
+}
+
+.nukerat-demo-root .docs-md-content code {
+  font-family: 'Mona Sans Mono', monospace;
+  font-size: 12px;
+  background: #1c1b1c;
+  border: 1px solid #2a2a2a;
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+
+.nukerat-demo-root .docs-md-content pre {
+  background: #131213;
+  border: 1px solid #222323;
+  border-radius: 6px;
+  padding: 12px 14px;
+  overflow-x: auto;
+  margin: 0 0 0.875rem;
+}
+
+.nukerat-demo-root .docs-md-content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #d4d4d4;
+  font-size: 12.5px;
+}
+
+.nukerat-demo-root .docs-md-content ul, .nukerat-demo-root .docs-md-content ol {
+  margin: 0 0 0.7rem;
+  padding-left: 1.4rem;
+  color: #cecece;
+}
+
+.nukerat-demo-root .docs-md-content ul {
+  list-style: disc;
+}
+
+.nukerat-demo-root .docs-md-content ol {
+  list-style: decimal;
+}
+
+.nukerat-demo-root .docs-md-content li {
+  margin-bottom: 0.2rem;
+}
+
+.nukerat-demo-root .docs-md-content li::marker {
+  color: #5e5d5f;
+}
+
+.nukerat-demo-root .docs-md-content blockquote {
+  border-left: 3px solid #3a3a3a;
+  margin: 0 0 0.75rem;
+  padding: 4px 0 4px 12px;
+  color: #9a9a9a;
+  background: #161516;
+  border-radius: 0 4px 4px 0;
+}
+
+.nukerat-demo-root .docs-md-content blockquote p {
+  margin: 0;
+  color: #9a9a9a;
+}
+
+.nukerat-demo-root .docs-md-content hr {
+  border: none;
+  border-top: 1px solid #222323;
+  margin: 1.25rem 0;
+}
+
+.nukerat-demo-root .docs-md-content a {
+  color: #6ea8d4;
+  text-decoration: none;
+}
+
+.nukerat-demo-root .docs-md-content a:hover {
+  text-decoration: underline;
+}
+
+.nukerat-demo-root .docs-md-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 0.875rem;
+  font-size: 13px;
+}
+
+.nukerat-demo-root .docs-md-content th, .nukerat-demo-root .docs-md-content td {
+  border: 1px solid #222323;
+  padding: 6px 10px;
+  text-align: left;
+  color: #cecece;
+}
+
+.nukerat-demo-root .docs-md-content th {
+  background: #1a191a;
+  font-weight: 600;
+  color: #d8d8d8;
+}
+
+.nukerat-demo-root .bg-topbar-window {
+  background-color: #00000085;
+}
+
+.nukerat-demo-root button[role="combobox"] {
+  font-size: 13.5px !important;
+  border-radius: 5px !important;
+  padding-top: 3px !important;
+  padding-bottom: 3px !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+
+.nukerat-demo-root input {
+  border-radius: 5px !important;
+  padding-top: 3px !important;
+  padding-bottom: 3px !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+
+.nukerat-demo-root button-default {
+  height: 30px !important;
+  border-radius: 5px !important;
+  padding-top: 3.2px !important;
+  padding-bottom: 3.2px !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+
+.nukerat-demo-root th {
+  min-width: 80px !important;
+  text-align: center !important;
+  height: 28px !important;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+
+.nukerat-demo-root td {
+  text-align: center !important;
+  padding-top: 6px !important;
+  padding-bottom: 4px !important;
+}
+
+.nukerat-demo-root [role="checkbox"] {
+  background: #989898 !important;
+  color: #111111
+}

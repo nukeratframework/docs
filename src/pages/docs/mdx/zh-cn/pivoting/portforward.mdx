@@ -1,0 +1,37 @@
+---
+title: 端口转发
+---
+
+import socks from '@/assets/img/tutorial/port_fw.png';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+NukeRat 支持经已控主机配置端口转发，以便访问内网指定端口。
+
+团队服务端绑定监听端口；连接经所选植入体转发到内网主机与端口。
+
+## 配置步骤
+
+创建端口转发请按以下步骤操作：
+
+  <Steps>
+    <Step>
+      ### 打开 Network 窗口
+      进入 **NukeRat** > **Network**，点击 **Add**。
+    </Step>
+    <Step>
+      ### 配置端口转发
+      <ImageZoom src={socks} alt="添加端口转发" className="h-[15rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+      - **Team server（团队服务端）**：监听器 API 端点（表单顶部的 host 与 port）
+      - **Type（类型）**：`port forwarding`
+      - **Host tag（主机 tag）**：向内网目标发起连接的植入体
+      - **Listen port（监听端口）**：在团队服务端打开的端口
+      - **Protocol（协议）**：仅 TCP（当前团队服务端仅支持此项）
+      - **Forward host（转发主机）**：经植入体访问的内网 IP 或主机名
+      - **Forward port（转发端口）**：经植入体访问的内网端口
+
+      填写完成后点击 **Create**。
+    </Step>
+  </Steps>
+
+完成后，端口转发会出现在 Network 表中。连接 `<team_server_host>:<listen_port>` 即可经植入体访问 `forward_host:forward_port`。

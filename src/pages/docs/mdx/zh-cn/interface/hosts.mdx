@@ -1,0 +1,32 @@
+---
+title: 会话
+---
+
+import { MonitorIcon } from 'lucide-react';
+import hosts from '@/assets/img/tutorial/hosts.png';
+import hostsInfo from '@/assets/img/tutorial/hosts_01.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+会话标签页是监控各已配置团队服务器上会话的主要入口。
+
+可从顶部栏<span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">的 <MonitorIcon size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> 图标</span>打开 **Sessions（会话）** 标签页，或从 **Tabs（标签页）** > **Sessions（会话）** 进入。
+
+<ImageZoom src={hosts} alt="Sessions" className="tutorial_img" />
+
+打开标签页后，所有已配置团队服务器上的会话会自动列出，无需单独选择团队服务器。
+
+如需快速筛选，使用标签页顶部的 **Filter sessions...（筛选会话…）** 字段，按会话信息中的任意字符串过滤。
+
+## 会话详情
+
+要查看完整会话信息，双击会话行，侧栏会展开更多详情。
+
+<ImageZoom src={hostsInfo} alt="Sessions Info" className="tutorial_img" />
+
+同一侧栏还提供备注字段，可记录与会话相关的说明。点击 **Save（保存）** 保存备注。凡能访问该团队服务器的操作员均可查看这些备注。
+
+## 移除会话
+
+要移除会话，选中对应行并点击 **Remove（移除）**。
+
+**重要**：移除前请确认该主机上的植入体已不再运行，否则会话会被重新加入。提示：可在终端使用 `kill` 命令停止主机上的植入体。

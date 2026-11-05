@@ -1,0 +1,37 @@
+---
+title: Port forwarding
+---
+
+import socks from '@/assets/img/tutorial/port_fw.png';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+NukeRat lets you set up port forwarding through compromised hosts so you can reach a specific port on the internal network.
+
+The team server binds the listen port. Connections are forwarded to the internal host and port through the implant you select.
+
+## How to configure
+
+To create a port forward, follow the steps below:
+
+  <Steps>
+    <Step>
+      ### Open the Network window
+      Go to **NukeRat** > **Network**, then click **Add**.
+    </Step>
+    <Step>
+      ### Configure the port forwarding
+      <ImageZoom src={socks} alt="Port forward add" className="h-[15rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+      - **Team server**: listener API endpoint (host and port at the top of the form)
+      - **Type**: `port forwarding`
+      - **Host tag**: implant that will open connections to the internal target
+      - **Listen port**: port opened on the team server
+      - **Protocol**: TCP only (this is what the team server accepts today)
+      - **Forward host**: internal IP or hostname to reach through the implant
+      - **Forward port**: internal port to reach through the implant
+
+      Click **Create** when the fields are set.
+    </Step>
+  </Steps>
+
+Once done, your port forward should appear in the Network table. Connect to `<team_server_host>:<listen_port>` to reach `forward_host:forward_port` through the implant.

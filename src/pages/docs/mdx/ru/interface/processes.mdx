@@ -1,0 +1,42 @@
+---
+title: Процессы
+---
+
+import processes from '@/assets/img/tutorial/processes.png';
+import {
+  Bot,
+  ChevronsUpDown,
+  Cpu,
+  RefreshCw,
+  X,
+} from 'lucide-react';
+import { Callout } from '@/ui/custom/callout';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+На вкладке **Processes** удобнее анализировать и отслеживать процессы, запущенные на хосте.
+
+Вкладку можно открыть через значок <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle"><Cpu size={18.5} className="shrink-0 ml-1.5 mr-1.5" /></span> на верхней панели или **Tabs** > **Processes**.
+
+<Callout type="info">
+  Перед использованием вкладки выберите целевой хост: нажмите **Host** рядом с названием вкладки.
+</Callout>
+
+Как и во вкладке **File Browser**, после выбора хоста клиент запрашивает список процессов; ответ заполняет вкладку при первой загрузке.
+
+<ImageZoom src={processes} alt="Processes" className="tutorial_img" />
+
+## Как это устроено
+
+Имплант перечисляет запущенные процессы и преобразует результат в собственный JSON для отображения в клиенте.
+
+### Windows
+
+`kernel32.dll` (`CreateToolhelp32Snapshot`, `Process32FirstW`, `Process32NextW`, `OpenProcess`, `QueryFullProcessImageNameW`) и `iphlpapi.dll` (`GetExtendedTcpTable`). Логика: `implants/windows/stageless/capabilities/process.nim`.
+
+### Linux
+
+Чтение `/proc` (`stat`, `status`, `exe`) и `/proc/net/tcp`. Логика: `implants/linux/stageless/capabilities/process.nim`.
+
+### MacOS
+
+Модуль `macapi` (`ListProcessIDs`, `ReadProcessStat`, `ReadProcessStatus`, `GetTcpPidMap`). Логика: `implants/mac/stageless/capabilities/process.go`.

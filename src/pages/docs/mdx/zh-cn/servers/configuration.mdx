@@ -1,0 +1,70 @@
+---
+title: 配置
+---
+
+团队服务端设置通过 `./nukerat.py server config` 管理。请勿与客户端 **NukeRat** > **Servers** 中添加服务端混淆。
+
+`server.conf` 大致涵盖：
+
+- 管理 API 的主机与端口
+- TLS（证书与私钥）
+- 操作员 JWT（有效期与签名密钥）
+- SQLite 大小限制
+- Armory 仓库 URL
+- 植入体之间的 AES 中继密钥
+
+以及按需启用的其他配置段。
+
+## 命令
+
+以下为启动器语法（`./nukerat.py server config …`）。没有 `import` 子命令。
+
+列出全部配置：
+
+```bash
+./nukerat.py server config list
+```
+
+修改某项（`<key>` 格式为 `section.option`；若值含空格，写在键名之后即可）：
+
+```bash
+./nukerat.py server config set server.port 8080
+```
+
+更多示例：
+
+```bash
+./nukerat.py server config set server.host 192.168.1.100
+./nukerat.py server config set server.keys.jwt.duration 30m
+```
+
+恢复默认值（仅启动器已知的键；密钥类会生成**新**值，而非还原旧值）：
+
+```bash
+./nukerat.py server config reset server.port
+```
+
+用文件整体替换 `server.conf`（覆盖写入，INI 布局与线上一致）：
+
+```bash
+./nukerat.py server config load /path/to/server.conf
+```
+
+文件必须是合法的 `server.conf`，例如：
+
+```ini
+[server]
+host = 0.0.0.0
+port = 8080
+
+[server.keys]
+jwt.duration = 7d
+```
+
+生成自签名证书并在配置中启用 TLS：
+
+```bash
+./nukerat.py server config create-tls
+```
+
+需要已安装 `openssl`。随后在客户端将 **Protocol** 设为 `https` 并完成认证（见 [服务器](/docs/servers)）。

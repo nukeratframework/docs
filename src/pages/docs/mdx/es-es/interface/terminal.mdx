@@ -1,0 +1,75 @@
+---
+title: Terminal
+---
+import hostSelect from '@/assets/img/tutorial/terminal.png';
+import terminalSearch from '@/assets/img/tutorial/terminal_search.png';
+import { SquareChevronRight, Bot } from 'lucide-react';
+import { Callout } from '@/ui/custom/callout';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+La terminal es el espacio de trabajo principal para ejecutar comandos en un host comprometido.
+
+Puedes abrir la pestaña **Terminal** desde el icono <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle"><SquareChevronRight size={18.5} className="shrink-0 ml-1.5 mr-1.5" /></span> en la barra superior, o desde **Tabs** > **Terminal**.
+
+<Callout type="info">
+  Antes de ejecutar cualquier comando, selecciona el host de destino haciendo clic en **Host** junto al nombre de la pestaña.
+</Callout>
+
+<Callout type="info">
+  Ten en cuenta que el cliente NukeRat envía un valor `source_terminal` con cada solicitud. Identifica qué pestaña de terminal envió el comando. Solo es referencial; no afecta la ejecución del comando.
+</Callout>
+
+Escribe un comando en el campo de entrada y pulsa **Enter** para enviarlo al host seleccionado.
+<ImageZoom src={hostSelect} alt="Selección de host" className="tutorial_img" />
+
+Pulsa **Ctrl + F** para activar o desactivar la búsqueda en la salida de la terminal.
+
+<ImageZoom src={terminalSearch} alt="Búsqueda en la terminal" className="tutorial_img" />
+
+## Comandos
+
+Ejecuta `help` para ver todos los comandos disponibles. Usa `help <command>` para ver el uso detallado de un comando concreto.
+
+| Comando | Descripción |
+| --- | --- |
+| `help` | Muestra los comandos disponibles y su uso |
+| `config` | Consulta la configuración del implante |
+| `delay` | Establece el retardo de callback del implante en segundos |
+| `kill` | Termina el proceso del implante |
+| `tasks` | Lista los ID de tareas en ejecución |
+| `pwd` | Muestra el directorio actual |
+| `cd` | Cambia de directorio |
+| `ls` | Lista archivos y directorios |
+| `cat` | Muestra el contenido de un archivo |
+| `echo` | Imprime texto en la salida |
+| `cp` | Copia un archivo |
+| `mv` | Mueve o renombra un archivo |
+| `rm` | Elimina un archivo |
+| `mkdir` | Crea un directorio |
+| `rmdir` | Elimina un directorio |
+| `echo $` | Imprime una variable de entorno |
+| `whoami` | Muestra información del usuario actual |
+| `systeminfo` | Muestra información detallada del SO y del hardware |
+| `env` | Lista las variables de entorno |
+| `tasklist` | Lista procesos en ejecución mediante WMI |
+| `enumdrives` | Lista las letras de unidad disponibles |
+| `ifconfig` | Muestra la configuración del adaptador de red |
+| `route` | Muestra la tabla de enrutamiento |
+| `arp` | Muestra la caché ARP |
+| `netstat` | Muestra conexiones de red activas |
+| `portscan` | Escanea puertos en un host remoto |
+| `shell` | Ejecuta un comando de shell |
+| `powershell` | Ejecuta un script de PowerShell |
+| `shellcode` | Ejecuta shellcode en bruto |
+| `bof` | Ejecuta un BOF integrado |
+| `dotnet` | Ejecuta un ensamblado .NET |
+| `spawn` | Crea un nuevo proceso |
+| `inj` | Inyecta shellcode, una DLL reflectiva o un payload donut en un proceso |
+| `tokens` | Consulta y gestiona tokens de acceso |
+| `relay` | Gestiona relés de pivot |
+| `keylogger start` | Inicia el keylogger en segundo plano |
+| `keylogger stop` | Detiene el keylogger en segundo plano |
+| `screenshot` | Captura una sola captura de pantalla |
+| `screenshot start` | Inicia el bucle de capturas de pantalla |
+| `screenshot stop` | Detiene el bucle de capturas de pantalla |
+| `armory` | Lista las herramientas de armory disponibles |

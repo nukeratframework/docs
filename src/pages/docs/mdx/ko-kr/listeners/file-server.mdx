@@ -1,0 +1,49 @@
+---
+title: 파일 서버
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import fileServerForm from '@/assets/img/tutorial/file_server_form.png';
+import { Globe } from 'lucide-react';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+이름에서 알 수 있듯 파일 서버 리스너는 파일 서버입니다. 페이로드 호스팅, 로더용 스테이지 제공, 간단한 피싱 애플리케이션 호스팅 등 다양한 용도로 사용할 수 있습니다.
+
+각 리스너는 팀 서버에 전용 콘텐츠 폴더를 갖습니다. 파일은 리스너 주소에서 일반 URL 경로로 HTTP 또는 HTTPS를 통해 제공됩니다(예: `http://host:port/payload.bin`).
+
+## 파일 서버 생성
+
+파일 서버를 만들려면 아래 단계를 따르세요.
+
+
+  <Steps>
+    <Step>
+      ### 리스너 탭 열기
+      **NukeRat** > **Listeners** > **Add**를 엽니다.
+    </Step>
+    <Step>
+      ### 필드 입력
+      <ImageZoom src={fileServerForm} alt="File Server Form" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+      - **Name**: 리스너를 쉽게 구분할 수 있는 이름을 지정합니다.
+      - **Type**: **File server** 선택
+      - **Server**: 리스너를 생성할 팀 서버 선택(사전에 구성되어 있어야 함)
+      - **Port to open**: 사용할 포트
+    </Step>
+    <Step>
+      ### **Create** 클릭
+      생성 후 상단 바의 **File Server** 워크스페이스(<span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">(<Globe size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> 아이콘)</span>) 또는 **Tabs** > **File Server**에서 엽니다. 리스너를 선택한 뒤 **Upload**로 파일을 추가합니다.
+    </Step>
+  </Steps>
+
+
+## SSL 및 인증서
+
+파일 서버는 HTTPS를 지원합니다. 생성 폼에서 **SSL**을 선택한 뒤 **Certificate** 섹션에서 인증서를 구성합니다.
+
+**Source**에서 self signed 또는 manual을 선택합니다. 자체 서명 인증서는 NukeRat가 `openssl` 명령으로 자동 생성하며, 채널 리스너와 동일한 subject 및 키 옵션을 사용합니다.
+
+manual 인증서의 경우 인증서와 개인 키 PEM을 붙여 넣거나 업로드합니다.
+
+## 사용자 지정 응답 헤더
+
+**Advanced** > **Response headers**로 응답 헤더도 구성할 수 있습니다.

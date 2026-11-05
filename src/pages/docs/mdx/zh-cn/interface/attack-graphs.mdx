@@ -1,0 +1,35 @@
+---
+title: 攻击图
+---
+
+import { Share2 } from 'lucide-react';
+import attackGraphs from '@/assets/img/tutorial/graphs.png';
+import attackGraphsInfo from '@/assets/img/tutorial/graphs_01.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+攻击图标签页以图形方式展示已连接且活跃的会话，主要用于可视化网络跳板与中继路径。
+
+可从顶部栏<span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">的 <Share2 size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> 图标</span>打开 **Attack Graph（攻击图）** 标签页，或从 **Tabs（标签页）** > **Attack Graph（攻击图）** 进入。
+
+打开标签页后，客户端会向每个已配置的团队服务器发起请求，并为每台服务器分别绘制一张图。
+
+<ImageZoom src={attackGraphs} alt="Attack Graph" className="tutorial_img" />
+
+当有新会话接入，或权限级别发生变化（例如从普通用户升为管理员）时，图形会自动更新。
+
+## 会话信息
+
+每个会话显示为显示器图标，内部为对应操作系统图标。若会话已提权，显示器图标呈红色。
+
+也可双击某个会话，在侧栏中查看更多信息。
+
+<ImageZoom src={attackGraphsInfo} alt="Attack Graph Info" className="tutorial_img" />
+
+## 中继连接
+
+当两个会话通过中继相连时，它们之间会绘制箭头，并标注中继类型：**TCP** 或 **SMB**。
+
+某些情况下，会话会从图形中消失，常见原因有两种：
+
+1. 父会话上的中继已不再活跃
+2. 子会话在未使用中继的情况下直接连接

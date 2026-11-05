@@ -1,0 +1,34 @@
+---
+title: モニタリング
+---
+
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import commandQueue from '@/assets/img/tutorial/queue.png';
+
+作戦中は、何が起きているかを把握しておくと常に有用です。NukeRat には、チームサーバーに直接アクセスしてログを掘らなくても状況を追える 2 つの機能があります。
+
+## コマンドキュー
+
+**NukeRat** > **Queue** で実行キュー内のすべてのコマンドを確認できます。表には実行待ちと実行済みのコマンドが含まれます。次の用途に便利です。
+
+- 誤って追加したコマンドの削除（インプラントが受け取る前）
+- 閉じたターミナルタブで実行したコマンドの出力確認
+- コマンド失敗の原因となったエラーの確認
+
+<ImageZoom src={commandQueue} alt="コマンドキュー" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+
+表に載るコマンドはターミナルタブに限りません。フォルダエクスプローラーやプロセスタブからの活動も含まれます。
+
+表の行をダブルクリックすると、そのキューイベントの詳細をすべて表示できます。
+
+キューからコマンドを削除することもできます。選択して **Delete** をクリックすると、データベースから削除され、まだ配信されていなければインプラントは実行しません。
+
+## イベントログ
+
+**NukeRat** > **Event Log** で特定チームサーバーのログを表示します。ログは次のグループに分かれます。
+
+- **リスナー（Listeners）**: HTTP チャネルとファイルサーバーリスナー上のトラフィックと操作（`listeners.log` 由来）
+- **ランチャー（Launcher）**: サーバー起動とランチャーからのメッセージ（`server.log` 由来）
+- **サーバー（Server）**: チームサーバー API とコアからのエラーおよび情報メッセージ（`server.log` 由来）
+
+イベントログビューは、チームサーバーの [`GET /api/logs/`](/docs/rest-api/team-server) エンドポイント経由で `server.log` と `listeners.log` を読み取ります。

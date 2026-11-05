@@ -1,0 +1,179 @@
+---
+title: Implantes
+---
+
+Los implants son los binarios que se ejecutan en hosts comprometidos. En otros frameworks también se conocen comúnmente como «beacons».
+
+Se pueden crear directamente desde el cliente NukeRat. Para aprender a crear un implant, consulta [Creation](/docs/client/implants/creation).
+
+## Filosofía de diseño del implant
+
+Los implants de NukeRat se construyen en torno a una personalización flexible, lo que te permite crear implants únicos. Esto aplica principalmente a:
+
+- **Creación de implant**: Puedes personalizar cabeceras PE, código preface, PE strings y otras opciones directamente desde el cliente NukeRat.
+- **Implant API**: El check-in del implant y el tráfico de tareas usan la [Implant API del listener](/docs/rest-api/implants) (HTTP **POST** cifrado en el canal `endpointPath`), no las rutas REST de gestión del team server bajo `/api/...`.
+
+
+## Evasión de detección
+
+Los implants de NukeRat incluyen varias técnicas de evasión esenciales para escenarios actuales, siendo indirect syscalls y sleep masking las principales.
+
+La mayoría de las funciones de evasión están ligadas a implants de Windows. Los implants de Linux y macOS admiten actualmente ofuscación de cadenas (Off, Xor o RC4) y las opciones de artefactos PE son solo para Windows.
+
+## Compatibilidad
+
+Los implants de NukeRat admiten las siguientes plataformas:
+
+<div className="not-prose">
+
+<table style={{ borderCollapse: 'collapse', width: '70%', border: '1px solid #3a3a3a' }}>
+  <thead>
+    <tr>
+      <th style={{ padding: '2px 12px', textAlign: 'left', border: '1px solid #3a3a3a' }}>Platform</th>
+      <th style={{ padding: '2px 12px', textAlign: 'center', border: '1px solid #3a3a3a' }}>x86 (32-bit)</th>
+      <th style={{ padding: '2px 12px', textAlign: 'center', border: '1px solid #3a3a3a' }}>x64 (AMD64)</th>
+      <th style={{ padding: '2px 12px', textAlign: 'center', border: '1px solid #3a3a3a' }}>ARM</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style={{ padding: '2px 12px', border: '1px solid #3a3a3a' }}>Windows</td>
+      <td style={{ padding: '2px 12px', textAlign: 'center', border: '1px solid #3a3a3a' }}><span style={{ color: '#f87171' }}>No</span></td>
+      <td style={{ padding: '2px 12px', textAlign: 'center', border: '1px solid #3a3a3a' }}><span style={{ color: '#4ade80' }}>✓</span></td>
+      <td style={{ padding: '2px 12px', textAlign: 'center', border: '1px solid #3a3a3a' }}><span style={{ color: '#f87171' }}>No</span></td>
+    </tr>
+    <tr>
+      <td style={{ padding: '2px 12px', border: '1px solid #3a3a3a' }}>Linux</td>
+      <td style={{ padding: '2px 12px', textAlign: 'center', border: '1px solid #3a3a3a' }}><span style={{ color: '#f87171' }}>No</span></td>
+      <td style={{ padding: '2px 12px', textAlign: 'center', border: '1px solid #3a3a3a' }}><span style={{ color: '#4ade80' }}>✓</span></td>
+      <td style={{ padding: '2px 12px', textAlign: 'center', border: '1px solid #3a3a3a' }}><span style={{ color: '#4ade80' }}>✓</span></td>
+    </tr>
+    <tr>
+      <td style={{ padding: '2px 12px', border: '1px solid #3a3a3a' }}>macOS</td>
+      <td style={{ padding: '2px 12px', textAlign: 'center', border: '1px solid #3a3a3a' }}><span style={{ color: '#f87171' }}>No</span></td>
+      <td style={{ padding: '2px 12px', textAlign: 'center', border: '1px solid #3a3a3a' }}><span style={{ color: '#4ade80' }}>✓</span></td>
+      <td style={{ padding: '2px 12px', textAlign: 'center', border: '1px solid #3a3a3a' }}><span style={{ color: '#4ade80' }}>✓</span></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+## Funciones
+
+Los implants de NukeRat incluyen muchas funciones esenciales para los escenarios actuales. A continuación está la referencia de comandos del implant de Windows (ejecuta `help` en una sesión para la lista en vivo). Usa `help -os linux` o `help -os mac` para comandos específicos de plataforma.
+
+```text-plain
+Implant commands (Windows):
+=============================
+
+[ General ]
+
+help      help                                                     Show this help message
+          help arp                                                 Show command details and examples
+          help -os [linux|mac]                                     Show OS compatible commands
+config    config                                                   View implant configuration
+delay     delay 4                                                  Set implant delay in seconds
+kill      kill                                                     Terminate implant process (ExitProcess)
+tasks     tasks                                                    Show running tasks IDs
+          tasks kill 3912                                          Kill a running task by ID
+
+[ Filesystem ]
+
+pwd       pwd                                                      Show current directory
+cd        cd /home/user                                            Change directory
+ls        ls /etc                                                  List files and directories
+cat       cat /etc/hosts                                           Display file contents
+preview   preview file.txt --size-limit 4096                       Read first bytes of a file
+fileinfo  fileinfo file.exe                                        File metadata (size, times, attributes)
+acl       acl /some/path                                           DACL and owner for path
+echo      echo hello world                                         Print text to output
+          echo $PATH                                               View environment variable
+cp        cp /tmp/a.txt /tmp/b.txt                                 Copy file
+mv        mv /tmp/a /tmp/b                                         Move or rename file
+rm        rm /tmp/a.txt                                             Delete file
+ren       ren C:\\Temp\\old.txt C:\\Temp\\new.txt                  Rename file
+mkdir     mkdir /tmp/newfolder                                     Create directory
+rmdir     rmdir /tmp/newfolder                                     Remove directory
+upload    upload -f file.exe -o C:/file.exe                        Upload a file to the target
+download  download -f C:/file.exe -o file.exe                      Download a file from the target
+reg       reg <mode> [..args]                                      Native Windows registry operations
+search    search --path C:\\Users --content password               Search file contents
+
+[ Recognition ]
+
+whoami    whoami                                                   Current user info
+systeminfo systeminfo                                              Detailed OS and hardware info
+env       env                                                      List all environment variables
+tasklist  tasklist ROOT\\CIMV2                                      Running processes via WMI
+enumdrives enumdrives                                               List available drive letters
+ifconfig  ifconfig                                                 Network adapter configuration
+route     route                                                    Network routing table
+arp       arp                                                      ARP cache table
+netstat   netstat TCP                                              Active connections
+hooks     hooks                                                    Compare export prologues (mem vs disk)
+
+[ Execution ]
+
+shell     shell whoami                                             Execute shell command
+powershell powershell ps aux                                        Execute PowerShell script
+shellcode shellcode -f file.bin                                    Execute raw shellcode
+bof       bof -f file.o --- <args>                                 Execute built-in BOF
+dotnet    dotnet -f file.exe --- <args>                            Execute .NET assembly
+load-dll  load-dll -f file.dll                                     Load DLL into memory
+load-so   load-so -f file.so                                       Load SO into memory
+load-dylib load-dylib -f file.dylib                                 Load DYLIB into memory
+
+[ Injection ]
+
+migrate   migrate 4919 [--alloc <mode>]                            Inject implant shellcode into a process
+spawn     spawn -t cmd.exe --- <args>                              Spawn process and capture output
+          spawn suspend -t C:\\Windows\\System32\\notepad.exe      Create suspended process (no resume)
+inj       inj shellcode -f file.bin -p 2300 --- <args>             Inject shellcode into a process
+          inj dll-reflective -f file.dll -p 2300                   Inject reflective DLL into a process
+          inj donut -f file -p 2300 --- <args>                     Inject multiple payload types via donut
+          --alloc section / --alloc stomping [--stomp-dll name.dll]  Allocation modes (inj, migrate)
+          --encoder sgn                                            SGN encoder (inj donut/shellcode)
+
+[ Process ]
+
+proc      proc info                                                Current process summary
+          proc info [modules|privileges|full]                      Show specific process information
+          proc [kill|suspend|resume] --pid <pid>                   Change process state by PID
+tokens    tokens                                                   Current token
+          tokens grab --pid 1000                                   Grab token from a process into vault
+          tokens list                                              List saved vault tokens
+          tokens impersonate --id 0                                Impersonate a vault token
+          tokens revert                                            Stop impersonating (RevertToSelf)
+runas     runas --domain name -u jhon -p 123 --path cmd.exe --- <args>  Run as another user
+
+[ Pivoting ]
+
+relay     relay                                                    Show relays
+          relay create -c tcp -l 8888 -t [implant|server]://10.1.1.5:9090 [--tls]  Create TCP relay
+          relay create -c smb -l 445 -t [implant|server]://10.1.1.5:9090 --pipe test [--tls]  Create SMB relay
+          relay delete --id 445                                    Remove relay by id
+
+(*) SOCKS5 and port forwarding are under NukeRat > Network.
+
+[ Utilities ]
+
+getsystem getsystem --method [inject|token|com]                    Try to elevate to SYSTEM
+keylogger keylogger [start|stop] --method [keystate|boardstate]    Start or stop keylogger
+screenshot screenshot                                              Take a single screenshot
+          screenshot [start|stop] --delay 15 (seconds)             Start or stop screenshot loop
+
+[ Armory and lolbins ]
+
+armory    armory                                                   Show all available armory tools
+          armory [install|remove] seatbelt                         Install or remove armory tools
+          armory update                                            Update armory tools
+lolbins   lolbins [<category>]                                     Show lolbins by category
+          lolbins check <category>                                 Check if category binaries exist on the host
+
+[ Modifiers ]
+
+-bg       shell -bg dir                                            Run in background
+-w        shell -w 30 ping 127.0.0.1 -n 10                         Custom max wait time (seconds)
+prefix    prefix powershell                                        Sticky prefix for every command
+          prefix clear                                             Clear active prefix
+```

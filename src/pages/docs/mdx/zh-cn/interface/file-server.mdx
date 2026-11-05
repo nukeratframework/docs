@@ -1,0 +1,37 @@
+---
+title: 文件服务器
+---
+
+import { Globe } from 'lucide-react';
+import fileServer from '@/assets/img/tutorial/file_server.png';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+文件服务器标签页用于管理已在 NukeRat 中配置的文件服务器，便于快速、高效地托管文件，例如载荷。
+
+可从顶部栏<span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">的 <Globe size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> 图标</span>打开 **File Server（文件服务器）** 标签页，或从 **Tabs（标签页）** > **File Server（文件服务器）** 进入。
+
+<ImageZoom src={fileServer} alt="File Server" className="tutorial_img" />
+
+## 使用方法
+
+按以下步骤使用文件服务器标签页：
+
+  <Steps>
+    <Step>
+      ### 创建文件服务器监听器
+      首先创建类型为 **File server（文件服务器）** 的监听器。详见 [监听器](/docs/listeners) 章节。
+    </Step>
+    <Step>
+      ### 选择文件服务器
+      在标签页顶部打开服务器选择器，选择要管理的文件服务器监听器。
+    </Step>
+    <Step>
+      ### 上传文件
+      最后上传需要托管的文件。
+    </Step>
+  </Steps>
+
+## 补充说明
+
+NukeRat 的文件服务器不仅限于托管静态文件，也可用于托管社会工程学相关应用，例如伪造登录页。

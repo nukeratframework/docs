@@ -1,0 +1,87 @@
+---
+title: 快速上手
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import keyAdd from '@/assets/img/tutorial/key_2.png';
+import listenerForm from '@/assets/img/tutorial/listener_form.png';
+
+从安装到生成第一个植入体的简明流程（Linux 服务端）。
+
+  <Steps>
+    <Step>
+      ### 安装服务端
+      克隆仓库并运行安装脚本。
+
+      ```bash
+      git clone https://github.com/nukeratframework/nukerat && cd nukerat && sudo bash install.sh
+      ```
+    </Step>
+    <Step>
+      ### 创建操作员密钥
+      使用服务端需要操作员密钥。在仓库根目录执行：
+
+      ```bash
+      ./nukerat.py server key add test
+      ```
+
+      输出大致如下：
+      ```html
+      test:z6MIe3MbZQL57Hx3fOthGZJ:oxcWICLu9Tnu7GyvwDiwVCRoER4ybKv...
+
+      Operator created successfully: test
+      ```
+
+      请复制生成的密钥，以便在客户端粘贴。
+    </Step>
+    <Step>
+      ### 启动服务端
+      使用以下命令在 0.0.0.0:9000（默认）上启动服务端：
+
+      ```bash
+      ./nukerat.py server start
+      ```
+    </Step>
+    <Step>
+      ### 打开客户端
+      使用以下命令启动客户端：
+
+      ```bash
+      ./nukerat.py client start
+      ```
+    </Step>
+    <Step>
+      ### 配置服务端
+      在顶栏进入 **NukeRat** > **Servers** > **Add**。粘贴操作员密钥，端口填 9000（默认）并填写服务端 IP，然后点击 **Auth**。
+
+      <ImageZoom src={keyAdd} alt="添加服务端" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+
+    </Step>
+    <Step>
+      ### 配置监听器
+      监听器即植入体用于通信的端口。进入 **NukeRat** > **Listeners** > **Add**
+
+      1. 填写便于识别的名称
+      2. 在 TYPE 字段选择 "Channel"
+      3. channel 字段保持 "http"
+      4. 选择此前创建的服务端
+      5. 填写与服务端管理端口不同的端口
+      6. 点击 **Create**
+
+      <ImageZoom src={listenerForm} alt="监听器表单" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+    </Step>
+    <Step>
+      ### 构建植入体
+      进入 **NukeRat** > **Implants** > **Add**，然后：
+
+      1. 在 COMPILE SERVER 中选择此前创建的服务端
+      2. 选择目标操作系统
+      3. 在左侧点击 **Command and control**，将 C2 指向此前创建的监听器，例如：http://192.168.1.100:9000
+    </Step>
+    <Step>
+      ### 运行植入体，开始实战
+
+      在目标机器上运行植入体；若一切配置正确，应出现新会话。要与之交互，可在 **Tabs** > **Terminal** 下打开终端，在标签名旁的 **Host** 下拉框中选择该会话，即可开始操作。
+    </Step>
+  </Steps>

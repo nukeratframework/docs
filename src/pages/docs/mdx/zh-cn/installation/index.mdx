@@ -1,0 +1,49 @@
+---
+title: 安装
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Callout } from '@/ui/custom/callout';
+
+以下命令用于安装 NukeRat 客户端与服务端。**服务端**仅支持 **Linux**。**客户端**支持 **Windows**、**Linux** 与 **macOS**。
+
+<Callout
+  type="info"
+  title="提示"
+  className="rounded-[6px] border-blue-500/25 bg-blue-500/5 shadow-none [&_svg]:text-blue-600/70 dark:[&_svg]:text-blue-400/60 [&_.text-fd-muted-foreground]:text-fd-muted-foreground [&_p.font-medium]:text-fd-foreground"
+>
+  若是首次使用 NukeRat，建议阅读 [快速上手](/docs/fast-setup)，按步骤在较短时间内跑通第一个可用植入体。
+</Callout>
+
+## 命令
+
+  <Tabs items={['Linux', 'Windows', 'macOS']} groupId="installation-os" persist>
+    <Tab value="Linux">
+      **服务端：**
+      ```bash
+      git clone https://github.com/nukeratframework/nukerat && cd nukerat && sudo bash install.sh server
+      ```
+
+      **客户端：**
+      ```bash
+      git clone https://github.com/nukeratframework/nukerat && cd nukerat && sudo bash install.sh client
+      ```
+
+      **全部：**
+      ```bash
+      git clone https://github.com/nukeratframework/nukerat && cd nukerat && sudo bash install.sh all
+      ```
+    </Tab>
+    <Tab value="Windows">
+      **客户端：**
+      ```bash
+      git clone https://github.com/nukeratframework/nukerat && cd nukerat && install\windows.bat client
+      ```
+    </Tab>
+    <Tab value="macOS">
+      **客户端：**
+      ```bash
+      git clone https://github.com/nukeratframework/nukerat && cd nukerat && bash install/mac.sh client
+      ```
+    </Tab>
+  </Tabs>

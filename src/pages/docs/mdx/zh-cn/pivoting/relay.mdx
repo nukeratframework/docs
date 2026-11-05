@@ -1,0 +1,118 @@
+---
+title: 中继
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+Relay（中继）是植入体功能，允许网络内的植入体彼此通信。适用于主机无法访问互联网，或网络管控较严的场景。
+
+中继支持 **SMB** 与 **TCP**。**SMB** 仅 Windows。
+
+## 使用方法
+
+下面用一个场景说明：
+
+你有主机 A，同一网段还有主机 B，B 无法出网，因此不能直接连上 team server。
+
+可按以下步骤操作：
+
+  <Steps>
+    <Step>
+      ### 预配置植入体
+      首先确保主机 B 上运行的植入体已预配置为支持 relay 通信。
+
+      如何构建 relay 植入体见 [Relay stageless implant（Relay stageless 植入体）](/docs/client/implants/creation#relay-stageless-implant)
+    </Step>
+    <Step>
+      ### 在主机 A 上配置 relay
+
+      TCP relay：
+        ```
+        relay create --listen 8888 --target implant://192.168.15.10:9090 --channel tcp
+        ```
+      SMB relay（仅 Windows）：
+        ```
+        relay create -l 445 --target server://192.168.15.10:9090 -c smb --pipe test --tls
+        ```
+    参数说明：
+        - `--listen` / `-l`：植入体监听端口（也用作默认 relay id）
+        - `--target` / `-t`：下游端点，格式为 `implant://host:port` 或 `server://host:port`
+        - `--channel` / `-c`：`tcp` 或 `smb`
+        - `--pipe`：SMB 命名管道。可用短名如 `test`，或 Windows 上的完整 `\\pipe\\name` 路径
+        - `--tls`：当 target 为 `server://` 时，通过 HTTPS 而非 HTTP 向 team server POST
+        - `--id`：用于 `relay delete` 的 relay id，或覆盖默认的 listen 端口 id
+    </Step>
+    <Step>
+      ### 管理 relay
+      不带参数运行 `relay` 可列出活动 relay（监听端口、target、模式、状态）。
+
+      停止 relay：
+        ```
+        relay delete --id 8888
+        ```
+    </Step>
+    <Step>
+      ### 测试 relay
+      完成后，植入体 B 应可正常工作。
+    </Step>
+  </Steps>
+
+
+### 目标前缀
+
+`target` 参数必须使用 `implant://` 或 `server://` 前缀，用于告诉植入体何时将流量转换为 HTTP 以到达 team server。
+
+选择很简单：下一跳是 team server 时用 `server://`（出口点）；流量转给另一植入体时用 `implant://`。
+
+### 延迟累加
+
+Relay 转发流量时会遵守各植入体配置的 delay。若流量经多台主机跳转，延迟会叠加，响应时间可能明显变慢。
+
+## 工作原理
+
+创建 relay 后，植入体会在配置的端口上监听。
+
+有流量进入时，植入体解密载荷，将自身 host tag 追加到 `chain`，再次加密后转发给 target。
+
+转发的 JSON 结构如下：
+
+```json
+{
+  "source": "hostB",
+  "content": [
+    {
+      "option": "output",
+      "type": "terminal",
+      "task_tag": "k7F2a9",
+      "output": "desktop\\user\r\n"
+    }
+  ],
+  "chain": ["hostB", "hostA"]
+}
+```
+
+当 target 是另一植入体时，载荷原样转发。当 target 是 team server 时，植入体将流量转为 HTTP 向上游发送。
+
+### 通信加密
+
+所有 relay 流量使用编译时写入各植入体的主 AES 密钥加密。为同一 team server 构建的所有植入体共享同一密钥。
+
+这样植入体无需事先握手交换密钥，也减少了此类流量特征。
+
+要更换主 AES 密钥，编辑 `server.conf` 中 `[implants]` 段的 `relay_aes_key`。值解码后须至少 32 字节（base64 或十六进制）。修改后须重新构建植入体。
+
+**注意：** 更换主 AES 密钥会导致仍使用旧密钥的植入体无法通信。
+
+### Windows
+
+- **TCP** 使用 `ws2_32.dll` 中的 `WSAStartup`、`socket`、`bind`、`listen`、`accept`、`connect`、`send`、`recv`、`closesocket`、`getaddrinfo`、`freeaddrinfo`。
+
+- **SMB** 使用 `kernel32.dll` 中的 `CreateNamedPipeA`、`ConnectNamedPipe`、`CreateFileA`、`WaitNamedPipeA`、`PeekNamedPipe`、`ReadFile`、`WriteFile`、`DisconnectNamedPipe`、`CloseHandle`。
+
+### Linux
+
+使用 POSIX 套接字（`sys/socket.h`）及 `socket`、`bind`、`listen`、`accept`、`connect`、`send`、`recv`、`setsockopt`、`getaddrinfo` / `freeaddrinfo`。不支持 SMB。
+
+### macOS
+
+使用 Go 标准库的 `net.Listen`、`net.Accept`、`net.Dial`、`io.Copy`。不支持 SMB。

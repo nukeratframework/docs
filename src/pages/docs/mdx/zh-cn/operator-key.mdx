@@ -1,0 +1,45 @@
+---
+title: 操作员密钥
+---
+
+操作员密钥用于登录并在团队服务器上创建访问会话。
+
+在团队服务器主机上运行：
+
+```bash
+nukerat server key add bill
+```
+
+密钥会打印在输出中，并在运行命令的目录下生成 `.key` 文件。
+
+列出所有已生成密钥：
+
+```bash
+nukerat server key list
+```
+
+删除密钥：
+
+```bash
+nukerat server key rem bill
+```
+
+## 密钥结构
+
+```
+bill:1pDi0uSLlFKfCjjHPL9uZAlP:1789429491513043059V5Kua8T5ug3ZHcVt…
+```
+
+操作员密钥由三部分组成，以冒号分隔：
+
+1. 操作员名称（仅用于标识）
+2. 密码（在服务器上通过 bcrypt 校验）
+3. Secret
+
+使用密钥时，客户端向 `/auth/login` 发送包含 `user`、`pass`、`secret` 的 POST 请求以获取会话 JWT。
+
+## 会话时长
+
+默认 JWT 会话有效期为 7 天（服务器配置中的 `server.keys.jwt.duration`，默认 `7d`）。过期后，尝试使用需认证的功能时会看到错误 toast。
+
+要续期会话，请使用已保存的密钥重新登录。

@@ -1,0 +1,48 @@
+---
+title: 文件服务器
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import fileServerForm from '@/assets/img/tutorial/file_server_form.png';
+import { Globe } from 'lucide-react';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+文件服务器 listener 顾名思义即文件服务器，可用于托管载荷、为 loader 提供 stage、托管简单钓鱼页面等。
+
+每个 listener 在团队服务器上都有独立的内容目录。文件通过 listener 地址以 HTTP 或 HTTPS 及常规 URL 路径提供（例如 `http://host:port/payload.bin`）。
+
+## 创建文件服务器
+
+按以下步骤创建：
+
+  <Steps>
+    <Step>
+      ### 打开 listeners 标签页
+      打开 **NukeRat** > **Listeners** > **Add**。
+    </Step>
+    <Step>
+      ### 填写字段
+      <ImageZoom src={fileServerForm} alt="File Server Form" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+      - **Name**：便于识别的名称。
+      - **Type**：选择 **File server**
+      - **Server**：listener 将创建在其上的团队服务器（须事先配置）
+      - **Port to open**：使用的端口
+    </Step>
+    <Step>
+      ### 点击 **Create**
+      创建后，从顶部栏<span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">的 <Globe size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> 图标</span>或 **Tabs** > **File Server** 打开 **File Server** 工作区。选择 listener，再用 **Upload** 添加文件。
+    </Step>
+  </Steps>
+
+
+## SSL 与证书
+
+文件服务器支持 HTTPS。在创建表单勾选 **SSL**，然后在 **Certificate** 区域配置证书。
+
+在 **Source** 下选择 self signed 或 manual。NukeRat 通过 `openssl` 自动生成自签名证书，主题与密钥选项与 channel listener 相同。
+
+手动证书时，粘贴或上传证书与私钥 PEM。
+
+## 自定义响应头
+
+可在 **Advanced** > **Response headers** 中配置响应头。

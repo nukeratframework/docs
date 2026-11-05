@@ -1,0 +1,34 @@
+---
+title: پایش
+---
+
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import commandQueue from '@/assets/img/tutorial/queue.png';
+
+در طول عملیات، همیشه مفید است بدانید چه می‌گذرد. NukeRat دو قابلیت برای این کار دارد، بدون اینکه مجبور شوید به team server بروید و دستی در logها بگردید.
+
+## Command queue
+
+بروید به **NukeRat** > **Queue** تا هر دستور در صف اجرا را ببینید. جدول شامل دستورهای در انتظار اجرا و اجراشده است. برای این‌ها به درد می‌خورد:
+
+- حذف دستورهای اشتباهی (قبل از اینکه ایمپلنت بگیرد)
+- دیدن خروجی دستورهایی که در تب ترمینالی بسته‌اید اجرا شده‌اند
+- بررسی خطایی که باعث شکست دستور شده
+
+<ImageZoom src={commandQueue} alt="Command queue" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+
+دستورهای جدول فقط به تب ترمینال محدود نیستند؛ می‌توانند فعالیت از تب‌های folder explorer و processes هم باشند.
+
+روی یک ردیف جدول دوبار کلیک کنید تا جزئیات کامل آن رویداد صف را ببینید.
+
+همچنین می‌توانید دستوری را از صف حذف کنید. آن را انتخاب کنید و **Delete** را بزنید. از پایگاه داده حذف می‌شود تا اگر هنوز تحویل نشده، ایمپلنت اجرا نکند.
+
+## Event logs
+
+بروید به **NukeRat** > **Event Log** تا logهای یک team server مشخص را ببینید. logها در این گروه‌ها هستند:
+
+- **Listeners**: ترافیک و عملیات روی کانال‌های HTTP و listener file server (از `listeners.log`)
+- **Launcher**: پیام‌های راه‌اندازی سرور و launcher (از `server.log`)
+- **Server**: خطاها و پیام‌های informational از team server API و core (از `server.log`)
+
+نمای Event Log از `server.log` و `listeners.log` از طریق endpoint team server [`GET /api/logs/`](/docs/rest-api/team-server) می‌خواند.

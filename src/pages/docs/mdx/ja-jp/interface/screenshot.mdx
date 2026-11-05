@@ -1,0 +1,54 @@
+---
+title: スクリーンショット
+---
+
+import screenshot from '@/assets/img/tutorial/screenshot.png';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { Camera } from 'lucide-react';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+スクリーンショットタブは受動的なビューアです。選択したホストからの最新キャプチャを描画するため、何か表示するには先にスクリーンショットを取得する必要があります。
+
+主な目的は動的な閲覧です。ループモードと組み合わせると、ライブ映像に近い表示が可能です。
+
+上部バーの <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle"><Camera size={20} className="shrink-0 ml-1.5 mr-1.5" /> アイコン</span>から **Screenshot** タブを開くか、**Tabs** > **Screenshot** から開けます。
+
+<ImageZoom src={screenshot} alt="Screenshot" className="tutorial_img" />
+
+## 使い方
+
+スクリーンショットタブを使うには、次の手順に従ってください。
+
+  <Steps>
+    <Step>
+      ### ホストを選択
+      まず、スクリーンショットを表示したいホストを選択します。タブ名の横にある **Host** をクリックしてください。
+    </Step>
+    <Step>
+      ### スクリーンショットループを開始
+      ターミナルで `screenshot start` を実行してスクリーンショットループを開始します。キャプチャ間隔を設定するには、`--delay <interval>` 引数で秒数を指定します。
+    </Step>
+    <Step>
+      ### 画像の更新を待つ
+      既定では、スクリーンショットタブはチームサーバーをポーリングし、新しいキャプチャが届くたびに更新されるため、手動で更新する必要はありません。
+    </Step>
+  </Steps>
+
+## 仕組み
+
+スクリーンショット取得には次の 2 つの方法があります。
+
+1. 単発キャプチャ
+2. ループキャプチャ。別スレッド上のタスクが指定間隔ごとにスクリーンショットを取得します。
+
+### Windows
+
+GDI（`user32.dll` と `gdi32.dll`）で `GetDC`、`BitBlt`、`CreateDIBSection` を使い画面をキャプチャします。コアロジックは `implants/windows/stageless/capabilities/screenshots.nim` にあります。
+
+### Linux
+
+X11（`libX11.so`）の `XOpenDisplay` とルートウィンドウへの `XGetImage` でキャプチャします。`DISPLAY` の設定が必要です。コアロジックは `implants/linux/stageless/capabilities/screenshots.nim` にあります。
+
+### MacOS
+
+この機能は MacOS ではサポートされていません。

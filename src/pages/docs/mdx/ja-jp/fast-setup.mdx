@@ -1,0 +1,87 @@
+---
+title: クイックセットアップ
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import keyAdd from '@/assets/img/tutorial/key_2.png';
+import listenerForm from '@/assets/img/tutorial/listener_form.png';
+
+セットアップから最初のインプラントのビルドまでのクイックガイド（Linux サーバー）。
+
+  <Steps>
+    <Step>
+      ### サーバーをインストール
+      リポジトリをクローンし、インストーラーを実行します。
+
+      ```bash
+      git clone https://github.com/nukeratframework/nukerat && cd nukerat && sudo bash install.sh
+      ```
+    </Step>
+    <Step>
+      ### オペレーターキーを作成
+      サーバーを使うにはオペレーターキーが必要です。リポジトリのルートで次を実行してください。
+
+      ```bash
+      ./nukerat.py server key add test
+      ```
+
+      出力は次のような形式になります。
+      ```html
+      test:z6MIe3MbZQL57Hx3fOthGZJ:oxcWICLu9Tnu7GyvwDiwVCRoER4ybKv...
+
+      Operator created successfully: test
+      ```
+
+      生成されたキーをコピーし、クライアントに貼り付けられるようにしておいてください。
+    </Step>
+    <Step>
+      ### サーバーを起動
+      次のコマンドで 0.0.0.0:9000（デフォルト）上でサーバーを起動します。
+
+      ```bash
+      ./nukerat.py server start
+      ```
+    </Step>
+    <Step>
+      ### クライアントを開く
+      クライアントを開くには次のコマンドを使います。
+
+      ```bash
+      ./nukerat.py client start
+      ```
+    </Step>
+    <Step>
+      ### サーバーを設定
+      上部バーで **NukeRat** > **Servers** > **Add** に進みます。オペレーターキーを貼り付け、ポート 9000（デフォルト）とサーバーの IP を設定し、**Auth** をクリックします。
+
+      <ImageZoom src={keyAdd} alt="サーバーを追加" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+
+    </Step>
+    <Step>
+      ### リスナーを設定
+      インプラントが通信に使うポートです。**NukeRat** > **Listeners** > **Add** に進みます。
+
+      1. 識別用の名前を選びます
+      2. TYPE フィールドで "Channel" を選択します
+      3. チャネルフィールドは "http" のままにします
+      4. 先ほど作成したサーバーを選択します
+      5. サーバー用とは別のポートを入力します
+      6. **Create** をクリックします
+
+      <ImageZoom src={listenerForm} alt="リスナーフォーム" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+    </Step>
+    <Step>
+      ### インプラントをビルド
+      **NukeRat** > **Implants** > **Add** に進み、次を行います。
+
+      1. COMPILE SERVER で先ほど作成したサーバーを選択します
+      2. ターゲット OS を選びます
+      3. 左の **Command and control** をクリックし、C2 を先ほど作成したリスナー（例: http://192.168.1.100:9000）に向けます
+    </Step>
+    <Step>
+      ### 実行してハッピーハッキング！
+
+      ターゲットマシンでインプラントを実行してください。問題なく設定されていれば、新しいセッションが表示されます。操作するには **Tabs** > **Terminal** の下でターミナルを開き、タブ名横の "Host" ドロップダウンでセッションを選んでください。楽しんでください！
+    </Step>
+  </Steps>

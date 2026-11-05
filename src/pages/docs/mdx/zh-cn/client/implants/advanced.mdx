@@ -1,0 +1,62 @@
+---
+title: 高级
+---
+
+import preface from '@/assets/img/tutorial/preface.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+NukeRat 植入体创建包含 preface、runtime、PE 工件等高级选项。无需修改植入体源码即可深度定制植入体。
+
+## Preface（前置代码）
+
+**Preface** 区域用于配置 preface 代码，在植入体主例程启动前执行。
+
+在 Windows 与 Linux 上，用户 preface 代码注入 `custom.nim`，在 `main_init()` 之前由 `preface()` 执行。入口类似：
+
+```nim
+import custom
+import routine/start
+
+proc main(): void =
+  custom.preface()
+  start.main_init()
+main()
+```
+
+在 macOS 上，preface 为注入 `custom.go` 的 Go 代码；构建时在 `routine.MainInit()` 之前调用 `Custom()`。
+
+Preface 代码可用于：
+
+- 沙箱检测
+- 插入垃圾代码
+- 增大植入体体积
+
+Windows 与 Linux 植入体的 preface 使用 Nim 编写；macOS 植入体使用 Go。
+
+## PE 工件
+
+此区域仅适用于 **Windows** 植入体，用于修改 PE（Portable Executable）文件。
+
+可用修改项：
+
+- **EXE 图标**：更改可执行文件图标（仅 EXE）
+- **PE 字符串**：在 PE 节中嵌入诱饵值（EXE 与 DLL）
+- **TimeDateStamp（时间戳）**：修改 PE 时间戳字段
+- **Version fields（版本字段）**：链接器、OS、镜像与子系统的 major/minor 版本字段
+
+这些改动的目的是改善静态规避，或使植入体在静态分析中看起来更合法。
+
+## Runtime（运行时）
+
+**Runtime** 区域配置规避与混淆选项。
+
+在 **Windows** 上可设置：
+
+- **API resolution（API 解析）**：动态加载（固定）
+- **Win API method（Win API 方式）**：带栈欺骗的间接系统调用（固定）
+- **ETW patch** 与 **AMSI patch**
+- **Sleep mask（睡眠掩码）**：Off、Ekko 或 Zilean
+- **String obfuscation（字符串混淆）**：Off、Xor 或 RC4
+- **Wipe PE headers in memory（内存擦除 PE 头）**
+
+在 **Linux** 与 **macOS** 上，runtime 区域提供 **String obfuscation（字符串混淆）**（Off、Xor 或 RC4）。睡眠掩码、ETW、AMSI 与 PE 头擦除仅适用于 Windows 植入体。

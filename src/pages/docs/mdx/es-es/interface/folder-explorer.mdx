@@ -1,0 +1,56 @@
+---
+title: Explorador de archivos
+---
+import folderExplorer from '@/assets/img/tutorial/folder_explorer.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import {
+  ArrowDownToLine,
+  ArrowLeft,
+  ArrowRight,
+  Bot,
+  ChevronsRight,
+  Folder,
+  LayoutGrid,
+  List,
+  RefreshCw,
+} from 'lucide-react';
+import { Callout } from '@/ui/custom/callout';
+
+El explorador de archivos te permite navegar por archivos y directorios de un host sin depender de comandos de terminal.
+
+Puedes abrir la pestaña **File Browser** desde el icono <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle"><Folder size={18.5} className="shrink-0 ml-1.5 mr-1.5" /></span> en la barra superior, o desde **Tabs** > **File Browser**.
+
+<Callout type="info">
+  Antes de usar el explorador de archivos, selecciona el host de destino haciendo clic en **Host** junto al nombre de la pestaña.
+</Callout>
+
+Cuando seleccionas un host, el cliente solicita un listado de directorios para ese host. La respuesta rellena el explorador de archivos en la primera carga.
+
+<ImageZoom src={folderExplorer} alt="Explorador de archivos" className="tutorial_img" />
+
+El árbol de archivos y directorios a la izquierda te permite navegar por carpetas y archivos del host seleccionado con más rapidez, mientras que la barra de búsqueda
+encima del árbol filtra el árbol de forma local. No envía nuevos comandos de listado al host.
+
+## Descarga de archivos
+
+Haz clic en un archivo para ver su contenido en bruto. Usa el botón **Download** para guardarlo en local.
+
+Los archivos de imagen se muestran en línea en el explorador de archivos.
+
+Cuando un archivo supera los 25 MB, el explorador muestra una advertencia en lugar de cargar todo el contenido. Descarga el archivo desde la terminal si necesitas el payload completo.
+
+## Cómo funciona
+
+Para listar directorios, el implante lee el directorio y convierte el resultado en un formato JSON personalizado para que el cliente lo renderice. Para descargas, el implante devuelve los bytes del archivo en bruto.
+
+### Windows
+
+Usa `kernel32.dll` (`FindFirstFileW`, `FindNextFileW`, `GetLogicalDriveStringsW`, `GetFileAttributesW`). La lógica principal está en `implants/windows/stageless/capabilities/folders.nim`.
+
+### Linux
+
+Usa POSIX `opendir`, `readdir` y `stat`. La lógica principal está en `implants/linux/stageless/capabilities/folders.nim`.
+
+### MacOS
+
+Usa el módulo `macapi` (`ListDirEntries`, `PathExists`, `PathIsDir`). La lógica principal está en `implants/mac/stageless/capabilities/folders.go`.

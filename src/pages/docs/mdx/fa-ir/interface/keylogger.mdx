@@ -1,0 +1,53 @@
+---
+title: کی‌لاگر
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { Keyboard, RefreshCw } from 'lucide-react';
+import keylogger from '@/assets/img/tutorial/keylogger.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+تب **Keylogger**، مانند تب **Screenshot**، فقط نمایش و ویرایش می‌دهد. فقط کلیدهای از پیش ضبط‌شده از میزبان را می‌خواند و ویرایش می‌کند.
+
+می‌توانید تب **Keylogger** را از <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">آیکون <Keyboard size={18.5} className="shrink-0 ml-1.5 mr-1.5" /></span> در نوار بالا، یا از **Tabs** > **Keylogger** باز کنید.
+
+<ImageZoom src={keylogger} alt="کی‌لاگر" className="tutorial_img" />
+
+## نحوهٔ استفاده
+
+برای استفاده از تب کی‌لاگر این مراحل را دنبال کنید:
+
+  <Steps>
+    <Step>
+      ### شروع کی‌لاگر
+      در ترمینال `keylogger start` را اجرا کنید تا کی‌لاگر شروع شود. در Windows با پرچم `--method [keystate|boardstate]` روش ضبط را تغییر دهید.
+    </Step>
+    <Step>
+      ### به‌روزرسانی تب کی‌لاگر
+      تب **Keylogger** خودکار به‌روز نمی‌شود؛ با کلیک روی <RefreshCw size={18.5} className="w-4 ml-1.5 inline-flex items-center gap-1 whitespace-nowrap align-middle" /> آن را دستی به‌روز کنید.
+    </Step>
+  </Steps>
+
+تب کی‌لاگر نیازی به انتخاب میزبان یا سرور ندارد. درخواست از قبل به همهٔ team serverهای پیکربندی‌شده ارسال می‌شود.
+
+## نحوهٔ کار
+
+کی‌لاگر در thread پس‌زمینهٔ جدا اجرا می‌شود و کلیدهای ضبط‌شده را دسته‌ای به سرور می‌فرستد.
+
+### Windows
+
+همان‌طور که گفته شد، کی‌لاگر Windows دو روش ضبط دارد: یکی OPSEC و دیگری دقت ضبط را اولویت می‌دهد.
+
+- **keystate** از keyboard hook سطح پایین با `SetWindowsHookEx` استفاده می‌کند. برای پایش hook قابل‌رؤیت‌تر است، اما از polling گسترده پرهیز می‌کند.
+
+- **boardstate** وقتی `--method` را حذف کنید پیش‌فرض است. از `GetAsyncKeyState` در `user32.dll` استفاده می‌کند و در حلقه وضعیت کلید را poll می‌کند. hook نصب نمی‌شود، اما polling مکرر می‌تواند خود را نشان دهد.
+
+منطق اصلی در `implants/windows/stageless/capabilities/keylogger.nim` است.
+
+### Linux
+
+از X11 (`libX11.so`) با `XOpenDisplay` و `XQueryKeymap` استفاده می‌کند. نیاز به `DISPLAY` دارد. منطق اصلی در `implants/linux/stageless/capabilities/keylogger.nim` است.
+
+### MacOS
+
+این قابلیت روی MacOS پشتیبانی نمی‌شود.

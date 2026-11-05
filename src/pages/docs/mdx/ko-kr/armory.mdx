@@ -1,0 +1,576 @@
+---
+title: Armory
+---
+
+Armory는 543개의 유틸리티(BOF 및 .NET 실행 파일)로 구성된 사전 구성 세트로, 특정 호스트에서 빠르게 다운로드하고 실행할 수 있습니다.
+
+모든 유틸리티는 [**github.com/nukeratframework/armory**](https://github.com/nukeratframework/armory)의 공식 NukeRat armory 저장소에서 다운로드됩니다.
+
+미리 컴파일된 상태로 자동 다운로드되며, 수동으로 빌드할 수도 있습니다. 수동 빌드 방법은 다음과 같습니다.
+
+1. `server/infra/bin/armory/` 폴더에 직접 빌드하여 추가
+2. `server/server.conf`의 `[server.armory]` 아래 `repository` 값을 자신의 GitHub 릴리스 호스트를 가리키도록 설정
+
+## 명령
+
+기본적으로 NukeRat에는 미리 컴파일된 armory 바이너리가 포함되어 있지 않습니다. 팀 서버에 설치하려면 armory 명령을 사용하세요.
+
+| 명령 | 동작 |
+| --- | --- |
+| `armory` | 사용 가능한 유틸리티와 간단한 설명 나열 |
+| `armory install all` | 최신 릴리스 번들에서 모든 유틸리티 다운로드 |
+| `armory install &lt;tool&gt;` | 한 유틸리티의 파일 다운로드 |
+| `armory update` | 저장소에서 armory 인덱스(`armory.json`) 새로 고침 |
+| `armory update &lt;tool&gt;` | 인덱스를 새로 고친 뒤 한 유틸리티 재다운로드 |
+| `armory remove &lt;tool&gt;` | 해당 유틸리티의 캐시 파일 제거 |
+| `help &lt;command&gt;` | 유틸리티 명령 도움말 표시 |
+
+## 카탈로그
+
+543개 armory 유틸리티 전체 목록입니다. 도구 이름은 `armory install`에 넘기는 터미널 명령과 일치합니다.
+
+| 이름 | 카테고리 | 설명 |
+| --- | --- | --- |
+| `bof-aadjoininfo` | bof | 장치의 Azure AD 또는 Entra ID 가입 정보를 표시합니다. |
+| `bof-adnet-enum` | bof | Active Directory Certificate Services를 열거합니다. |
+| `bof-adnet-enum-com2` | bof | IX509PolicyServerListManager COM 객체로 AD의 CA 및 템플릿을 열거합니다. |
+| `bof-adnet-on-behalf` | bof | XCN_OID_ENROLLMENT_AGENT 확장이 있는 등록 에이전트 인증서로 다른 사용자를 대신해 AD CS 등록 인증서를 요청합니다. |
+| `bof-add-ace` | bof | 개체 DACL에 ACE를 추가합니다. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-add-attribute` | bof | 속성 값을 추가/덧붙입니다. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-add-computer` | bof | 새 컴퓨터 개체를 만듭니다. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-add-defender-excl` | bof | COM을 사용해 MSFT_MpPreference WMI 클래스로 Windows Defender 제외를 추가합니다. |
+| `bof-add-delegation` | bof | 위임 SPN을 설정/교체합니다. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-add-exclusion` | bof | 폴더, 파일, 프로세스 또는 확장자에 대한 Windows Defender 제외를 추가합니다. |
+| `bof-add-firewall-rule` | bof | COM을 사용해 새 인바운드 또는 아웃바운드 방화벽 규칙을 추가합니다. |
+| `bof-add-group` | bof | 새 그룹을 만듭니다. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-add-groupmember` | bof | 사용자를 그룹에 추가합니다. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-add-local-cert` | bof | (자체 서명) 인증서를 특정 로컬 컴퓨터 인증서 저장소에 추가합니다. 예: 악성 바이너리 서명에 사용한 자체 서명 인증서를 대상 로컬 컴퓨터의 \"Trusted Root Certification Authorities\"(ROOT) 폴더에 추가. |
+| `bof-add-machine-account` | bof | 기본 Active Directory 컴퓨터 계정 할당량(ms-DS-MachineAccountQuota)을 악용해 후속 공격용 악성 컴퓨터 계정을 추가합니다. |
+| `bof-add-ou` | bof | 조직 구성 단위(OU)를 만듭니다. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-add-rbcd` | bof | RBCD 위임을 구성합니다. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-add-sidhistory` | bof | sidHistory에 SID를 추가합니다. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-add-spn` | bof | ServicePrincipalName을 추가합니다. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-add-uac` | bof | UserAccountControl 플래그를 추가합니다. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-add-user` | bof | 새 사용자 개체를 만듭니다. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-add-user-by-samr` | bof | SAMR로 사용자를 로컬 그룹에 추가합니다. 관리자 권한이 필요합니다. Active Directory에서는 사용하지 마세요. |
+| `bof-adduser` | bof | 로컬 또는 원격 사용자를 추가합니다. |
+| `bof-adduser-to-group` | bof | 사용자를 그룹에 추가합니다. |
+| `bof-addusertogroup` | bof | 지정한 사용자를 지정한 도메인 그룹에 추가합니다. |
+| `bof-adv-audit-policies` | bof | 고급 보안 감사 정책을 조회합니다. |
+| `bof-ai-surface` | bof | Windows 개발자 엔드포인트의 AI 도구를 매핑하고, 워크플로 데이터·로컬 상태·자격 증명을 노출할 수 있는 트리아지용 AI 에이전트 및 MCP 아티팩트를 강조합니다. |
+| `bof-allow-firewall-rule` | bof | 인바운드 또는 아웃바운드 방화벽 허용 규칙을 추가합니다. |
+| `bof-amsi-etw-detect` | bof | 로드된 DLL과 ETW 관련 export를 감지해 현재 프로세스의 AMSI·ETW 존재 여부를 확인합니다. 보안 활동이 적은 대상 선택에 유용합니다. |
+| `bof-app-count` | bof | 레지스트리로 설치된 애플리케이션 수를 세고 중복을 제거한 뒤 출력합니다. 다수 비콘에 적용하면 앱 수 차이로 장치를 추론할 수 있습니다. |
+| `bof-applocker-policy` | bof | 관련 레지스트리 키를 스캔해 AppLocker 정책 구성, 규칙 컬렉션, 적용 모드를 열거합니다. |
+| `bof-arp` | bof | ARP 테이블을 나열합니다. |
+| `bof-ask-mfa` | bof | 지정한 번호가 있는 가짜 Microsoft Authenticator 승인 대화 상자를 표시합니다. 30초 후 대화 상자가 자동으로 닫힙니다. |
+| `bof-askcreds` | bof | CredUIPromptForWindowsCredentialsName으로 자격 증명을 수집합니다. 스레드에서 실행되며 사용자 입력을 최대 60초 대기합니다. 대기 중 비콘은 응답하지 않습니다. |
+| `bof-asktgs` | bof | TGT에서 서비스 티켓을 요청합니다. |
+| `bof-asktgt` | bof | 암호, 해시 또는 사전 인증 없이 TGT를 요청합니다. |
+| `bof-asr-status` | bof | 레지스트리 위치에서 Windows Defender 공격 표면 축소(ASR) 규칙을 열거해 구성된 규칙, 적용 상태(Block/Audit/Warn/Disabled), 정책 출처(Intune/MDM vs 그룹 정책)를 식별합니다. |
+| `bof-asrenum` | bof | WMI로 MSFT_MpPreference를 쿼리해 ASR 규칙, 동작, 제외 위치를 식별합니다. 상승된 컨텍스트가 필요합니다. |
+| `bof-asreproasting` | bof | Kerberos 사전 인증이 없는 사용자에 대해 AS-REP를 요청합니다. |
+| `bof-authenticate-http` | bof | 현재 사용자 컨텍스트에서 (ntlmrelayx) 서버로 Windows 인증 HTTP 요청을 강제해 인증된 (LDAP) 릴레이 공격에 사용할 수 있습니다. |
+| `bof-backup-priv-sam` | bof | 원격 레지스트리를 통해 SeBackupPrivilege를 악용해 원격 시스템에서 SAM, SYSTEM, SECURITY 하이브를 덤프합니다. |
+| `bof-bitlocker-status` | bof | 레지스트리 키를 스캔해 BitLocker 암호화 상태, 정책 구성, 복구 키 백업 위치를 열거합니다. |
+| `bof-c-enumerate-defender` | bof | WMI로 Windows Defender 제외를 열거합니다. 상승된 비콘 컨텍스트가 필요합니다. |
+| `bof-cacls` | bof | 지정 파일에 대한 사용자 권한을 나열합니다. 와일드카드 지원. |
+| `bof-capture-net-ntlm` | bof | 현재 사용자의 NetNTLMv2 해시를 캡처합니다. 클라이언트와 서버 간 NTLM 인증 교환을 시뮬레이션해 NetNTLMv2 해시를 얻습니다. |
+| `bof-cdp-enable` | bof | 실행 중인 x64 Chrome 또는 Edge에서 Chrome DevTools Protocol을 활성화합니다. 런타임에 브라우저 내부 심볼을 해석하고 브라우저 UI 스레드에서 원격 디버깅 서버를 시작합니다. x64 전용. |
+| `bof-cdp-enable-iso` | bof | Windows 프로세스 격리가 적용된 실행 중 x64 Chrome에서 Chrome DevTools Protocol을 활성화합니다. 격리 프로세스에 제한된 핸들 쿼리를 사용하고 로컬 chrome.dll 이미지에서 심볼을 해석합니다. x64 전용. |
+| `bof-certstore-loot` | bof | 로컬 인증서 저장소를 열거해 내보낼 수 있는 개인 키가 있는 인증서를 찾고 내보내기 경로를 제공합니다. |
+| `bof-change-pass` | bof | 로컬 또는 원격 호스트에서 사용자 암호를 설정합니다. |
+| `bof-changepw` | bof | kpasswd로 사용자 암호를 변경합니다. |
+| `bof-chrome-key` | bof | Local State의 base64 인코딩 Chrome 키를 복호화해 브라우저 쿠키를 오프라인으로 복호화하는 데 사용합니다. |
+| `bof-chromium-key-dump` | bof | Chrome/Edge 마스터 키를 덤프하고 브라우저 프로필에서 Cookie/Login Data 파일을 다운로드합니다. |
+| `bof-cicd-credential-hunt` | bof | 현재 Windows 사용자 프로필에서 일반적인 CI/CD, 클라우드, 개발자 자격 증명 아티팩트를 찾습니다. 기본적으로 경로와 크기를 보고합니다. .gitconfig와 .ssh/config는 자격 증명이 아닌 구성으로 분류됩니다. |
+| `bof-clipboard-grab` | bof | Win32 API로 Windows 클립보드 텍스트 데이터를 가져와 콜백으로 내용을 반환합니다. |
+| `bof-clipboard-monitor` | bof | GetClipboardSequenceNumber로 클립보드 변경을 모니터링하는 비동기 BOF. 변경 감지 시 클립보드 내용을 출력합니다. 텍스트·이미지 캡처 지원(동기 모드에서 이미지는 base64 BMP). 이미지 조회는 동기 모드에서만 동작합니다. |
+| `bof-clipboard-steal` | bof | Windows 클립보드 기록에 대한 활성화, 비활성화, 확인, 덤프 기능. |
+| `bof-cloud-metadata-check` | bof | 현재 프로세스에서 AWS, Azure, GCP 로컬 메타데이터 서비스를 탐색하고, 도달 가능할 때 공급자 ID, 인스턴스 컨텍스트, 제한된 자격 증명 조각을 보고합니다. |
+| `bof-cloudap-bof` | bof | LsaCallAuthenticationPackage로 Entra ID SSO 쿠키, 장치 SSO 쿠키, AD FS 엔터프라이즈 SSO 쿠키, 클라우드 공급자 상태를 추출합니다. 활성 클라우드 로그온 세션이 있는 Entra ID/Azure AD 가입 장치가 필요합니다. |
+| `bof-com-probe` | bof | 주어진 CLSID에서 COM 개체를 인스턴스화할 수 있는지 탐색합니다. 프로세스 내 먼저 시도하고 로컬 서버로 폴백합니다. |
+| `bof-contact-harvester` | bof | COM으로 Outlook 전역 주소록 연락처를 수집합니다. |
+| `bof-cookie-graber` | bof | DPAPI로 Chrome·Edge Local State에서 WebKit 마스터 암호화 키를 추출합니다. Edge 키를 먼저 덤프한 뒤 Chrome 키. 마스터 키와 CookieProcessor.exe로 디스크 DB의 쿠키를 오프라인 복호화. |
+| `bof-cookie-monster` | bof | Chrome, Edge, Firefox의 브라우저 쿠키와 로그인을 탈취합니다. WebKit 마스터 키와 App Bound 암호화 키를 추출하고 Cookies·Login Data 파일 핸들을 복제해 파일 없이 다운로드합니다. 브라우저 주입 없이 SYSTEM 모드 키 복호화 지원. decrypt.py로 다운로드 DB 오프라인 복호화. |
+| `bof-cred-man` | bof | SeTrustedCredManAccess 권한을 악용해 Windows 자격 증명 관리자를 덤프합니다. winlogon.exe에서 토큰을 훔쳐 권한을 활성화합니다. 관리자 권한 필요. |
+| `bof-cred-prompt` | bof | 사용자 자격 증명 캡처를 시도하기 위해 Windows 자격 증명 프롬프트를 시작합니다. 입력한 자격 증명은 출력으로 반환됩니다. 프롬프트는 지속되어 피해자가 취소/닫기 또는 빈 암호 입력을 할 수 없습니다. 그런 시도는 출력에 표시됩니다. 마지막으로 비콘이 언젠가 반환되도록 타이머를 설정합니다. |
+| `bof-credui` | bof | Windows API CredUIPromptForWindowsCredentials로 자격 증명 프롬프트를 호출하고 LogonUser로 제출 자격 증명을 검증합니다. |
+| `bof-cross-s4u` | bof | 도메인 간 S4U 제한 위임 남용을 수행합니다. |
+| `bof-cryptvortex` | bof | 디렉터리의 파일을 암호화 또는 복호화합니다. |
+| `bof-curl` | bof | SOCKS 프록시 없이 HTTP 요청을 보냅니다. |
+| `bof-cve-2022-26923` | bof | AD CS 도메인 권한 상승 취약점 CVE-2022-26923. dNSHostName 및 servicePrincipalName 속성 변경이 있는 AddMachineAccount 기반. |
+| `bof-dcom-local-server32` | bof | 제공된 CLSID로 지정 호스트에서 DCOM/COM 클래스를 인스턴스화해 관련 out-of-process EXE 서버를 실행하고 별도 프로세스를 만듭니다. DLL/COM 하이재킹에 취약한 EXE와 모듈 로드 디렉터리에 쓸 수 있는 위치를 이용하면 (원격) 코드 실행이 가능해 횡적 이동에 효과적입니다. |
+| `bof-dcompotato-notify` | bof | 악성 IUnknown 객체를 PrintNotify DCOM 호출에 넘겨 SeImpersonate로 SYSTEM 권한을 얻습니다. |
+| `bof-defender-exclusions` | bof | 레지스트리에서 Windows Defender 제외 경로, 프로세스, 확장자를 나열합니다. |
+| `bof-del-exclusion` | bof | 폴더, 파일, 프로세스 또는 확장자에 대한 Windows Defender 제외를 삭제합니다. |
+| `bof-del-firewall-rule` | bof | COM으로 방화벽 규칙을 삭제합니다. |
+| `bof-del-local-cert` | bof | 고유 지문으로 지정 저장소의 로컬 컴퓨터 인증서를 삭제합니다. |
+| `bof-del-machine-account` | bof | Active Directory에 만든 악성 컴퓨터 계정을 삭제합니다. |
+| `bof-del-task-scheduler` | bof | 현재 시스템 또는 원격 호스트의 예약 작업을 삭제합니다. |
+| `bof-describe` | bof | Kerberos 티켓을 파싱하고 설명합니다. |
+| `bof-detect-hooks` | bof | ntdll export Nt/Zw 함수의 예상치 못한 명령 패턴을 스캔해 현재 프로세스의 인라인 후크를 감지합니다. |
+| `bof-dir` | bof | 디렉터리의 파일을 나열합니다. CobaltStrike `ls`와 달리 와일드카드 지원(예: "C:\\Windows\\S*"). |
+| `bof-disableuser` | bof | 대상 컴퓨터에서 지정 사용자 계정을 비활성화합니다. |
+| `bof-dll-env-hijacking` | bof | 숨겨진 파일 구조를 만들고, 디스크의 악성 프록시 DLL을 새 system32 폴더로 옮기고, 프록시 DLL을 숨기며, SYSTEMROOT 환경 변수를 수정한 뒤 취약 바이너리를 스푸핑 프로세스로 실행해 악성 DLL을 실행하고, 원래 SYSTEMROOT로 되돌려 비콘이 정상 동작하도록 합니다. |
+| `bof-dll-hijack-hunter` | bof | 주어진 경로와 DLL 이름에서 SafeDllSearchMode DLL 해석 순서를 순회합니다. 선택적으로 일치 파일에 쓰기 접근 가능 여부를 확인합니다. |
+| `bof-domaininfo` | bof | Active Directory Domain Services로 도메인 정보를 열거합니다. |
+| `bof-draugr` | bof | 간접 syscall과 Draugr 스택 스푸핑. NtAllocateVirtualMemory로 메모리 할당, User32.dll 로드, 합성 스택 프레임으로 MessageBoxA 호출. |
+| `bof-driversigs` | bof | 설치된 서비스 ImagePath를 열거해 서명 인증서를 알려진 AV/EDR 벤더와 비교합니다. |
+| `bof-dropspawn` | bof | 프록시 DLL을 디스크에 드롭하고 DLL 검색 순서용 애플리케이션 디렉터리를 스푸핑해 새 프로세스를 생성합니다. x86, x64, 교차 아키텍처 지원. 드롭 DLL은 새 프로세스가 로드한 뒤 자체 삭제해야 합니다. |
+| `bof-dump` | bof | 로그온 세션에서 Kerberos 티켓을 추출합니다. |
+| `bof-dump-procargs` | bof | PEB에서 프로세스 명령줄 인수를 덤프합니다. |
+| `bof-edgedump` | bof | msedge.exe 메인 프로세스 메모리에서 Edge 저장 자격 증명 아티팩트를 추출합니다. 읽기 가능 메모리 영역에서 자격 증명 패턴을 스캔합니다. 브라우저 파일, SQLite, DPAPI는 사용하지 않습니다. 동일 사용자 컨텍스트는 현재 사용자 Edge 프로세스 읽기 가능. 상승 컨텍스트는 로그온 세션 간 Edge 프로세스 읽기 가능. |
+| `bof-elevate-trusted` | bof | SetThreadToken 가장으로 현재 비콘을 SYSTEM으로 상승하고 TrustedInstaller 그룹 권한을 얻습니다. |
+| `bof-enableuser` | bof | 대상 컴퓨터에서 지정 사용자 계정을 활성화하고 잠금 해제합니다. |
+| `bof-entra-authcode-flow` | bof | OAuth 인증 코드 흐름 URL로 브라우저를 실행해 Microsoft Entra 액세스·리프레시 토큰을 얻습니다. 토큰 교환을 엔드포인트에 유지해 조건부 액세스 정책을 우회할 수 있습니다. 동작: 1. OAuth URL로 새 브라우저 탭 실행 2. 인증 코드가 있는 리다이렉트를 창 제목으로 모니터 3. 코드를 액세스·리프레시 토큰으로 교환 |
+| `bof-enum-active-hosts` | bof | 활성 호스트를 열거하거나 단일 열린 포트를 확인합니다. 미리 정의한 호스트명/IP 목록을 받으며 운영자 클라이언트에서 로드합니다. |
+| `bof-enum-dll-sideloading` | bof | 단일 .EXE, 폴더 또는 모든 하위 폴더를 재귀 열거해 실행 파일의 DLL 사이드로딩 취약점을 식별합니다. |
+| `bof-enum-drives` | bof | 드라이브 문자와 유형을 열거합니다. |
+| `bof-enum-exclusions` | bof | Windows Defender에서 제외된 파일, 폴더, 확장자, 프로세스를 열거합니다. |
+| `bof-enum-files` | bof | 단어, 확장자 또는 파일 내용 키워드로 일치 파일을 검색합니다. 와일드카드 지원. |
+| `bof-enum-filter-driver` | bof | 필터 드라이버를 열거합니다. |
+| `bof-enum-handles` | bof | 프로세스 간 `process` 및 `thread` 핸들 유형을 열거합니다. |
+| `bof-enum-lib` | bof | 모든 프로세스에서 특정 로드 모듈을 찾거나 특정 프로세스의 모든 로드 모듈을 나열합니다. |
+| `bof-enum-local-cert` | bof | 특정 저장소의 모든 로컬 컴퓨터 인증서를 나열합니다. 일반 저장소 이름: ROOT, MY, TRUST, CA, USERDS, AuthRoot, Disallowed. |
+| `bof-enum-local-sessions` | bof | 로컬 및 RDP로 연결된 현재 사용자 세션을 열거합니다. |
+| `bof-enum-sec-products` | bof | 현재 또는 원격 호스트에서 실행 중인 AV/EDR 등 보안 제품 목록을 반환합니다. 실행 프로세스를 130개 보안 제품 하드코딩 목록과 비교합니다. |
+| `bof-enum-shares` | bof | 미리 정의한 호스트명/IP 목록으로 도메인 전역 공유와 접근 수준을 나열합니다. 빠른 TCP/445 확인으로 오프라인 호스트를 건너뛰고 은밀한 속성 확인으로 접근을 검증합니다. |
+| `bof-enum-task-scheduler` | bof | 루트 폴더의 모든 예약 작업을 열거하고 기본 정보를 나열합니다. |
+| `bof-enum-web-client` | bof | 미리 정의한 호스트명/IP 목록으로 WebClient 서비스가 실행 중인 호스트를 열거합니다. 목록은 공격자 시스템에서 로드합니다. |
+| `bof-enumprotections` | bof | 시스템 프로세스를 열거해 보호 수준, 서비스 관계, 사용자, 세션 ID, 파일 경로를 보고합니다. DLL 하이재킹 후보인 보호되지 않은 서드 파티 서비스 프로세스 식별에 유용합니다. |
+| `bof-env` | bof | 프로세스 환경 변수를 나열합니다. |
+| `bof-esc1-unpac` | bof | ADCS ESC1 공격 체인 전체를 수행합니다. 임의 SAN(및 KB5014754 우회용 SID) 인증서 요청, PKINIT 인증, UnPAC the hash로 NT 해시 추출. |
+| `bof-etw` | bof | ntdll.dll의 EtwEventWrite를 패치/복원해 ETW 기반 로깅을 저하시킵니다. |
+| `bof-event-log-manage` | bof | 이벤트 로그 채널 검사, BOF 소유 클래식 로그·소스 관리, 등록 소스로 텍스트/바이너리 이벤트 기록, 선택적 백업과 함께 채널 지우기. create, clear, destroy는 상승된 Administrator 또는 SYSTEM 컨텍스트 필요. |
+| `bof-execute-cross-session` | bof | 디스크 바이너리를 다른 사용자 컨텍스트에서 실행합니다. IStandardActivator, ISpecialSystemProperties, IHxHelpPaneServer COM으로 세션 간 상호 작용합니다. 다른 로그온 사용자 대신 코드 실행에 프로세스 주입이 필요 없습니다. |
+| `bof-find-loaded-module` | bof | *modulepart*가 로드된 프로세스를 찾습니다. 선택적으로 *procnamepart*만 검색. |
+| `bof-find-module` | bof | 직접 syscall로 특정 로드 모듈(예: clr.dll, winhttp.dll, amsi.dll)이 있는 프로세스를 열거합니다. opsec 안전 spawnto 후보 선택에 유용. |
+| `bof-find-proc-handle` | bof | 대상 프로세스(예: lsass.exe)에 핸들을 보유한 프로세스를 열거합니다. 새 LSASS 핸들 열기를 피하기 위해 기존 핸들 식별 가능. |
+| `bof-firewall-rule` | bof | netsh.exe/cmd.exe 없이 COM API(INetFwPolicy2)로 Windows 방화벽 규칙 추가·제거·조회. 네트워크 내부 피벗에 유용. |
+| `bof-force-lock-screen` | bof | 현재 사용자 세션의 잠금 화면을 강제합니다. |
+| `bof-functionutil` | bof | 로드 모듈 API 함수를 디스크 DLL 사본과 읽기·비교·패치합니다. EPP/EDR 후킹 감지 및 unhook에 사용. |
+| `bof-get-acl` | bof | 개체 DACL/ACE를 봅니다. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-get-attribute` | bof | 특정 LDAP 속성을 읽습니다. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-get-azure-token` | bof | 저장된 브라우저 로그인으로 Azure에 OAuth 인증 코드 흐름을 완료하고 반환 토큰을 출력합니다. |
+| `bof-get-clipboard` | bof | Win32 클립보드 API로 클립보드 텍스트를 출력합니다. |
+| `bof-get-computers` | bof | 모든 도메인 컴퓨터를 나열합니다. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-get-delegation` | bof | 위임 구성을 봅니다. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-get-domain-info` | bof | 현재 도메인·DC 정보(포리스트 이름, 도메인 이름, DC 이름·주소, DC 사이트 이름 등)를 반환합니다. |
+| `bof-get-domaininfo` | bof | rootDSE에서 도메인 정보를 쿼리합니다. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-get-dpapi-system` | bof | DPAPI_SYSTEM 키와 bootkey를 가져옵니다. |
+| `bof-get-groupmembers` | bof | 그룹 멤버를 나열합니다. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-get-groups` | bof | 모든 도메인 그룹을 나열합니다. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-get-machacct-quota` | bof | 현재 도메인의 ms-DS-MachineAccountQuota 값을 읽습니다. |
+| `bof-get-maq` | bof | 컴퓨터 계정 할당량을 가져옵니다. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-get-netntlm` | bof | SSPI로 NetNTLMv2 해시를 캡처합니다. |
+| `bof-get-netsession` | bof | 로컬 또는 지정 컴퓨터의 세션을 열거합니다. |
+| `bof-get-netsession2` | bof | BOFHound를 지원하는 `netsession` 수정판. |
+| `bof-get-object` | bof | 개체의 모든 속성을 덤프합니다. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-get-password-policy` | bof | 대상 서버 또는 도메인의 암호 정책 및 잠금 설정을 가져옵니다. |
+| `bof-get-priv` | bof | 현재 프로세스에서 지정 토큰 권한을 활성화합니다. |
+| `bof-get-rbcd` | bof | 리소스 기반 제한 위임(RBCD)을 봅니다. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-get-session-info` | bof | 현재 사용자 로그온 세션 관련 정보를 출력합니다. |
+| `bof-get-spn` | bof | ServicePrincipalName을 나열합니다. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-get-uac` | bof | UserAccountControl 플래그를 봅니다. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-get-usergroups` | bof | 사용자가 속한 그룹을 나열합니다. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-get-users` | bof | 모든 도메인 사용자를 나열합니다. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-get-webdav-status` | bof | DAV RPC SERVICE 명명 파이프를 탐색해 원격 시스템의 Web Client(WebDAV) 서비스 실행 여부를 확인합니다. 대상 관리자 권한 불필요, 유효 자격 증명 필요(익명 불가). |
+| `bof-get-writable` | bof | 쓰기 접근 가능한 개체를 찾습니다. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-getsystem` | bof | winlogon.exe 토큰을 복제해 SYSTEM을 얻습니다. 관리자 권한이 필요합니다. |
+| `bof-ghost-task` | bof | 레지스트리만으로 예약 작업을 만들거나 삭제해 Windows 이벤트 4698·106을 발생시키지 않습니다. NT AUTHORITY\\SYSTEM 필요. |
+| `bof-ghostkatz` | bof | MmMapIoSpace 원시가 있는 서명된 취약 커널 드라이버로 물리 메모리를 읽어 LSASS 자격 증명을 덤프합니다. MSV1(logonpasswords) 및 WDigest 추출 지원. 관리자 권한이 필요합니다. 드라이버 실패 시 BSOD가 발생할 수 있습니다. |
+| `bof-global-unprotect` | bof | GlobalProtect VPN 구성 및 HIP 설정을 찾아 복호화하고 다운로드합니다. |
+| `bof-handle-finder` | bof | 대상 프로세스의 열린 핸들을 열거합니다. |
+| `bof-handle-stealer` | bof | Chrome/Edge NetworkService 프로세스를 찾아 Cookies SQLite DB 핸들을 복제해 %LOCALAPPDATA%&lt;pid&gt;.db에 저장합니다. chrome.exe·msedge.exe 자동 스캔. |
+| `bof-hash` | bof | 암호에서 Kerberos 키 해시를 생성합니다. |
+| `bof-hide-file` | bof | 속성을 systemfile+hidden으로 바꿔 디렉터리 또는 파일을 숨깁니다. |
+| `bof-ide-extension-surface` | bof | 사용자 프로필 루트에서 VS Code, Cursor, Windsurf, Zed, Insiders, OSS, server/remote 확장 manifest를 열거하고 확장 ID, 활성화 이벤트, 기능 신호를 요약합니다. |
+| `bof-idle-time` | bof | 사용자 마지막 입력 기준 현재 활동을 확인합니다. HH:MM:SS 형식으로 반환. |
+| `bof-ipconfig` | bof | IPv4 주소, 호스트명, DNS 서버를 나열합니다. |
+| `bof-kerb-hash` | bof | 암호를 Kerberos 키로 해시: rc4_hmac, aes128_cts_hmac_sha1, aes256_cts_hmac_sha1, des_cbc_md5. |
+| `bof-kerberoast` | bof | 주어진 SPN에 Kerberos 서비스 티켓(AP-REQ)을 요청하고 오프라인 크래킹용 base64 티켓을 출력합니다. apreq2hashcat.py로 변환. |
+| `bof-kerberoasting` | bof | SPN 활성 사용자/서비스 계정을 나열하거나 오프라인 Hashcat용 서비스 티켓(TGS-REP)을 요청합니다. 티켓은 TICKET 태그 사이에 출력. TicketToHashcat.py로 변환. |
+| `bof-kerberos-bof` | bof | LSASS 메모리 접촉 없이 LsaCallAuthenticationPackage로 캐시 Kerberos 티켓 나열·덤프·제거. |
+| `bof-kerbeus-asktgs` | bof | TGT에서 서비스 티켓을 요청합니다. |
+| `bof-kerbeus-asktgt` | bof | 암호, 해시 또는 사전 인증 없이 TGT를 요청합니다. |
+| `bof-kerbeus-asreproasting` | bof | Kerberos 사전 인증이 없는 사용자에 대해 AS-REP를 요청합니다. |
+| `bof-kerbeus-changepw` | bof | kpasswd로 사용자 암호를 변경합니다. |
+| `bof-kerbeus-cross_s4u` | bof | 도메인 간 S4U 제한 위임 남용을 수행합니다. |
+| `bof-kerbeus-describe` | bof | Kerberos 티켓을 파싱하고 설명합니다. |
+| `bof-kerbeus-dump` | bof | 로그온 세션에서 Kerberos 티켓을 추출합니다. |
+| `bof-kerbeus-hash` | bof | 암호에서 Kerberos 키 해시를 생성합니다. |
+| `bof-kerbeus-kerberoasting` | bof | 오프라인 크래킹용 Kerberos 서비스 티켓을 요청합니다. |
+| `bof-kerbeus-klist` | bof | 상세 정보와 함께 Kerberos 티켓을 나열합니다. |
+| `bof-kerbeus-ptt` | bof | 현재 또는 지정 로그온 세션에 티켓을 제출합니다. |
+| `bof-kerbeus-purge` | bof | 현재 또는 지정 로그온 세션에서 Kerberos 티켓을 제거합니다. |
+| `bof-kerbeus-renew` | bof | TGT를 갱신합니다. |
+| `bof-kerbeus-s4u` | bof | S4U2self 및 S4U2proxy 제한 위임 남용을 수행합니다. |
+| `bof-kerbeus-tgtdeleg` | bof | GSS-API 위임 남용으로 사용 가능한 TGT를 가져옵니다. |
+| `bof-kerbeus-triage` | bof | 표 형식으로 Kerberos 티켓을 나열합니다. |
+| `bof-klist` | bof | 현재 캐시된 Kerberos 티켓을 표시합니다. 나열, 제거, 주어진 SPN용 서비스 티켓 요청 지원. |
+| `bof-koh-client` | bof | Koh 명명 파이프로 통신해 캡처된 토큰을 나열·필터·가장·해제합니다. 캡처 토큰 가장에 SeImpersonatePrivilege 필요. |
+| `bof-ksl-lsa` | bof | KslD.sys BYOVD 물리 메모리 읽기 원시로 LSASS 메모리에서 자격 증명을 추출합니다. lsass에 OpenProcess, NtReadVirtualMemory, MiniDumpWriteDump를 호출하지 않습니다. MSV1_0 NT 해시, WDigest 평문(활성 시), LSA 암호화 키 추출. 관리자 권한 필요. |
+| `bof-lapsdump` | bof | Active Directory 내 지정 컴퓨터에서 LAPS 암호를 덤프합니다. 상승된 AD 권한 필요. |
+| `bof-lastpass` | bof | Chrome 또는 Brave 프로세스 메모리에서 LastPass 암호 및 데이터를 검색합니다. |
+| `bof-ldap-sign-check` | bof | LDAP 릴레이 완화를 위해 LdapEnforceChannelBinding 또는 LdapServerIntegrity 변경 여부를 DC에서 스캔합니다. LDAP(389) 및 LDAPS(636) 바인딩 테스트. |
+| `bof-ldapsearch` | bof | LDAP 검색 실행(참고: 모든 속성+개체 ACL base64를 원하면 속성 매개변수에 *,ntsecuritydescriptor 지정, BOFHound로 해석 가능. 페이지네이션 깨질 수 있으나 테스트에서는 문제 없었음). |
+| `bof-ldapsecuritycheck` | bof | 도메인 컨트롤러의 LDAP 서명 및 채널 바인딩 요구 사항을 확인합니다. |
+| `bof-lin-arp` | bof | (linux) /proc/net/arp에서 ARP 테이블 표시, 호스트명 해석. |
+| `bof-lin-awk` | bof | (linux) 최소 awk(열 출력만). |
+| `bof-lin-base64` | bof | (linux) Base64 인코드/디코드. |
+| `bof-lin-basename` | bof | (linux) 경로에서 디렉터리 제거. |
+| `bof-lin-cat` | bof | (linux) 파일 연결 및 출력. |
+| `bof-lin-chmod` | bof | (linux) 파일 권한 변경. |
+| `bof-lin-chown` | bof | (linux) 파일 소유권 변경. |
+| `bof-lin-cp` | bof | (linux) 파일 복사. |
+| `bof-lin-cut` | bof | (linux) 필드/열 추출. |
+| `bof-lin-date` | bof | (linux) 현재 날짜/시간 출력. |
+| `bof-lin-df` | bof | (linux) 디스크 사용량. |
+| `bof-lin-diff` | bof | (linux) 두 파일 비교. |
+| `bof-lin-dirname` | bof | (linux) 경로에서 파일명 제거. |
+| `bof-lin-dmesg` | bof | (linux) 커널 ring buffer 출력. |
+| `bof-lin-du` | bof | (linux) 디스크 사용량 추정. |
+| `bof-lin-env` | bof | (linux) /proc/self/environ에서 환경 변수 출력. |
+| `bof-lin-find` | bof | (linux) 파일 검색. |
+| `bof-lin-free` | bof | (linux) 메모리 사용량 표시. |
+| `bof-lin-grep` | bof | (linux) 파일 내용 검색. |
+| `bof-lin-groups` | bof | (linux) 그룹 멤버십 출력. |
+| `bof-lin-head` | bof | (linux) 파일 앞부분 출력. |
+| `bof-lin-hostname` | bof | (linux) 호스트명 출력. |
+| `bof-lin-id` | bof | (linux) 사용자/그룹 ID 출력. |
+| `bof-lin-ifconfig` | bof | (linux) 네트워크 인터페이스 표시. |
+| `bof-lin-kill` | bof | (linux) 프로세스에 시그널 전송. |
+| `bof-lin-ln` | bof | (linux) 링크 생성. |
+| `bof-lin-logger` | bof | (linux) syslog에 메시지 기록. |
+| `bof-lin-ls` | bof | (linux) 디렉터리 내용 나열. |
+| `bof-lin-lsmod` | bof | (linux) 로드된 커널 모듈 나열. |
+| `bof-lin-md5sum` | bof | (linux) md5 해시 계산. |
+| `bof-lin-mkdir` | bof | (linux) 디렉터리 생성. |
+| `bof-lin-mount` | bof | (linux) 마운트 지점 나열. |
+| `bof-lin-mv` | bof | (linux) 파일 이동/이름 변경. |
+| `bof-lin-netstat` | bof | (linux) /proc/net에서 TCP/UDP 연결 표시(플래그: -tlnpu). |
+| `bof-lin-nl` | bof | (linux) 파일 줄 번호 매기기. |
+| `bof-lin-nslookup` | bof | (linux) getaddrinfo로 DNS 조회. |
+| `bof-lin-od` | bof | (linux) 8진 덤프. |
+| `bof-lin-paste` | bof | (linux) 파일 줄 병합. |
+| `bof-lin-ping` | bof | (linux) 호스트 도달 가능성 테스트. |
+| `bof-lin-ps` | bof | (linux) 프로세스 나열. |
+| `bof-lin-pwd` | bof | (linux) 작업 디렉터리 출력. |
+| `bof-lin-rev` | bof | (linux) 파일 줄 역순. |
+| `bof-lin-rm` | bof | (linux) 파일/디렉터리 제거. |
+| `bof-lin-rmdir` | bof | (linux) 빈 디렉터리 제거. |
+| `bof-lin-route` | bof | (linux) 라우팅 테이블 표시. |
+| `bof-lin-sed` | bof | (linux) 스트림 편집기(s/old/new/g). |
+| `bof-lin-sha256sum` | bof | (linux) sha-256 해시 계산. |
+| `bof-lin-sort` | bof | (linux) 파일 줄 정렬. |
+| `bof-lin-stat` | bof | (linux) 파일 상태 표시. |
+| `bof-lin-strings` | bof | (linux) 출력 가능 문자열 찾기. |
+| `bof-lin-sysctl` | bof | (linux) 커널 매개변수 읽기/쓰기. |
+| `bof-lin-tail` | bof | (linux) 파일 끝부분 출력. |
+| `bof-lin-tar` | bof | (linux) tar 아카이브 생성·나열·추출. |
+| `bof-lin-touch` | bof | (linux) 파일 생성 또는 타임스탬프 갱신. |
+| `bof-lin-tr` | bof | (linux) 문자 변환/삭제. |
+| `bof-lin-traceroute` | bof | (linux) 호스트까지 경로 추적. |
+| `bof-lin-tree` | bof | (linux) 재귀 디렉터리 트리 나열. |
+| `bof-lin-uname` | bof | (linux) 시스템 정보 출력. |
+| `bof-lin-uniq` | bof | (linux) 인접 중복 줄 제거. |
+| `bof-lin-uptime` | bof | (linux) 가동 시간, 로드 평균, 현재 시간 출력. |
+| `bof-lin-wc` | bof | (linux) 단어·줄·바이트 수. |
+| `bof-lin-wget` | bof | (linux) HTTP GET 다운로드. |
+| `bof-lin-whoami` | bof | (linux) 유효 사용자 이름 출력. |
+| `bof-lin-xxd` | bof | (linux) 16진 덤프. |
+| `bof-list-chrome-cookies` | bof | 쿠키 덤프 대상 브라우저 하위 프로세스를 나열합니다. 반환 PID를 bof-cookie-katz와 함께 사용. x64 전용. |
+| `bof-list-firewall-rules` | bof | Windows 방화벽 규칙 나열. |
+| `bof-list-process-handles` | bof | 프로세스의 열린 핸들 나열. |
+| `bof-listdns` | bof | DNS 캐시 항목 나열. 각 항목 쿼리 및 해석 시도. |
+| `bof-listmods` | bof | 프로세스 모듈(DLL) 나열. PID가 비어 있으면 현재 프로세스 대상. AV/EDR 주입 여부 확인용 driversigs 보완. |
+| `bof-locale` | bof | 시스템 로캘 언어, 로캘 ID, 날짜, 시간, 국가 나열. |
+| `bof-make-token-cert` | bof | PFX 인증서로 가장합니다. |
+| `bof-md5` | bof | md5로 파일명 해시. |
+| `bof-mdm-policy-artifacts` | bof | 가입 상태, 예약 작업, 정책 구성, 등록 아티팩트 등 지표를 평가하는 점수 모델로 Windows MDM 등록 상태를 평가합니다. |
+| `bof-mem-read` | bof | 로드된 DLL export 함수의 첫 바이트를 읽습니다. |
+| `bof-mem-search` | bof | 프로세스 메모리에서 문자열 검색. |
+| `bof-memreader` | bof | 대상 프로세스 메모리에서 특정 문자열 패턴을 검색해 모든 일치를 Beacon 출력으로 반환합니다. |
+| `bof-move-object` | bof | 개체를 다른 OU로 이동합니다. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-msi-lateral-mv` | bof | DCOM MSI Server로 Custom Action Server를 통해 ODBC 드라이버를 설치·구성해 횡적 이동합니다. 모든 인수는 wide string. |
+| `bof-msi-search` | bof | C:\\Windows\\Installer\\에서 캐시 MSI를 스캔해 관련 소프트웨어 이름과 함께 나열합니다. MSI repair 취약점 로컬 권한 상승 연구용 설치 프로그램 식별에 도움. |
+| `bof-msv1-0-bof` | bof | LSASS 핸들 없이 LsaCallAuthenticationPackage로 DPAPI 자격 증명 키 복구 및 NTLMv1 응답 생성. PPL·Credential Guard 환경에서도 자격 증명 키 복구 가능. |
+| `bof-nanorobeus` | bof | Kerberos 티켓 관리. LUID, 세션, 티켓 나열, 덤프, 가져오기(ptt), 제거, TGT 위임, Kerberoasting 지원. |
+| `bof-netgroup` | bof | 기본 또는 지정 도메인의 도메인 그룹 또는 그룹 멤버 나열. |
+| `bof-netjoin-query` | bof | Windows 도메인 가입 정보 및 워크스테이션 세부 정보를 쿼리해 도메인 가입 또는 워크그룹 여부를 식별합니다. |
+| `bof-netlocalgroup` | bof | 로컬 또는 지정 컴퓨터의 로컬 그룹 또는 로컬 그룹 멤버 나열. |
+| `bof-netlocalgroup2` | bof | BOFHound를 지원하는 `netLocalGroupListMembers` 수정판. |
+| `bof-netloggedon` | bof | 로컬 또는 원격 컴퓨터에 로그온한 사용자 반환. |
+| `bof-netloggedon2` | bof | BOFHound를 지원하는 `netloggedon` 수정판. |
+| `bof-netshares` | bof | 로컬 또는 원격 컴퓨터의 공유 나열. |
+| `bof-netstat` | bof | TCP 및 UDP IPv4 포트 나열. |
+| `bof-nettime` | bof | 원격 컴퓨터 시간 표시. |
+| `bof-netuptime` | bof | 로컬 또는 원격 컴퓨터 부팅 시간 정보 반환. |
+| `bof-netuser` | bof | 특정 사용자 정보 조회. domainname 지정 시 도메인에서 가져옴. |
+| `bof-netuserenum` | bof | 로컬 컴퓨터 또는 현재 도메인의 사용자 계정 열거. |
+| `bof-netview` | bof | 현재 도메인에서 도달 가능한 컴퓨터 나열. |
+| `bof-nonpagedldapsearch` | bof | 페이지네이션 없이 LDAP 검색 실행. |
+| `bof-notepad` | bof | 열린 Notepad·Notepad++ 창을 찾아 편집 컨트롤에서 텍스트 가져오기. |
+| `bof-notepad-grab` | bof | 열린 Notepad 창 메모리에서 평문을 직접 추출·반환해 저장되지 않았거나 메모리 내 메모 복구. |
+| `bof-notethief` | bof | Notepad Edit 컨트롤을 찾아 WM_GETTEXT로 텍스트를 읽어 열린 Notepad 내용 탈취. |
+| `bof-nslookup` | bof | DNS 쿼리. DNS 서버는 조회 대상(미지정 또는 0은 기본값). 레코드 유형은 A, AAAA, ANY 등. 일부 상황은 관측된 크래시로 제한. |
+| `bof-office-tokens` | bof | 지정 Office 프로세스 메모리에서 Office JWT 액세스 토큰 수집. |
+| `bof-p-sremote` | bof | 원격 호스트에서 실행 중인 모든 프로세스 목록. |
+| `bof-password-spray-a-d` | bof | LDAP, LDAPS, GC, GCS simple bind로 여러 계정에 단일 암호 검증. |
+| `bof-password-spray-local` | bof | SMB(IPC$)로 대상 호스트명 목록에 단일 로컬 사용자명·암호 검증. |
+| `bof-patchit` | bof | x64 프로세스의 AMSI·ETW 패치·확인·복원. AmsiScanBuffer·EtwEventWrite 첫 10+바이트 비교. amsi.dll이 없으면 로드하지 않음. x64 전용. |
+| `bof-port-scan` | bof | Winsock으로 단일 IPv4 호스트의 열린 TCP/UDP 포트 스캔. 제한된 포트 목록, 구성 가능 타임아웃, 간결한 출력. |
+| `bof-power-state` | bof | SMBIOS 섀시 데이터와 전원 상태 폴백으로 Laptop, Desktop, Tablet, Server, Embedded, Unknown 폼 팩터 식별. |
+| `bof-powershell-history` | bof | 기본 PSReadLine·트랜스크립트 위치에서 PowerShell 기록 아티팩트 수집. 자격 증명·인프라 찾기에 유용. |
+| `bof-privkit-autorun-check` | bof | 수정 가능한 autorun 레지스트리 키 확인. |
+| `bof-privkit-cred-check` | bof | Windows 자격 증명 관리자 저장 자격 증명 확인. |
+| `bof-privkit-elev-check` | bof | HKCU·HKLM의 AlwaysInstallElevated 확인. |
+| `bof-privkit-hijack-check` | bof | 하이재킹 가능 PATH 항목 확인. |
+| `bof-privkit-logon-check` | bof | 레지스트리 AutoLogon 자격 증명 확인. |
+| `bof-privkit-pshist-check` | bof | PowerShell 명령 기록 파일 확인. |
+| `bof-privkit-service-check` | bof | 수정 가능 Windows 서비스 확인. |
+| `bof-privkit-token-check` | bof | 현재 토큰 권한의 남용 가능성 확인. |
+| `bof-privkit-uac-check` | bof | UAC 구성 상태 확인. |
+| `bof-privkit-unquoted-svc` | bof | 따옴표 없는 서비스 경로 확인. |
+| `bof-probe` | bof | 특정 포트 열림 여부 확인. |
+| `bof-proc-version` | bof | 프로세스 주 모듈 파일 버전 조회. |
+| `bof-procargs` | bof | 지정 프로세스의 명령줄 인수 추출. |
+| `bof-procdump` | bof | MiniDumpWriteDump로 지정 프로세스를 파일에 덤프. 먼저 SeDebugPrivilege 활성화. |
+| `bof-process-destroy` | bof | 지정 프로세스의 특정 핸들 또는 모든 핸들 닫기. |
+| `bof-process-list-handles` | bof | 지정 프로세스의 모든 열린 핸들 나열. |
+| `bof-process-tokens-list` | bof | 실행 프로세스에서 접근 가능한 토큰 열거. 사용자 컨텍스트, 토큰 유형(primary/impersonation), 가장 수준 표시. PID 또는 프로세스 이름 필터 선택. OPSEC 위해 SeDebugPrivilege 기본 비활성. |
+| `bof-procinfo` | bof | 프로세스 실행 파일의 파일 버전 정보(이름, 버전, 회사 등) 표시. |
+| `bof-prockill` | bof | PID로 대상 프로세스 종료. |
+| `bof-procsearch` | bof | 읽기 가능 프로세스 메모리에서 문자열 검색 후 주변 ASCII 컨텍스트 표시. |
+| `bof-proxy-enum` | bof | WinINET, WinHTTP, 정책 키, 환경 변수, WPAD, Chrome 설정, .NET defaultProxy 등 Windows 프록시 구성 상태 열거. |
+| `bof-psw` | bof | 활성 Windows가 있는 프로세스의 창 제목 표시. |
+| `bof-ptt` | bof | 현재 또는 지정 로그온 세션에 티켓 제출. |
+| `bof-purge` | bof | 현재 또는 지정 로그온 세션에서 Kerberos 티켓 제거. |
+| `bof-recon-ad` | bof | ADSI로 Active Directory 개체·속성 쿼리. 사용자/컴퓨터/그룹 쿼리, 사용자 지정 LDAP 필터, Kerberos 암호화 통신, 글로벌 카탈로그 검색. 한 바이너리에 네 가지 쿼리 모드. |
+| `bof-reg-del` | bof | 레지스트리 키 또는 값 삭제. |
+| `bof-reg-delete` | bof | 로컬 또는 원격 시스템의 레지스트리 키 또는 값 삭제. |
+| `bof-reg-query` | bof | 레지스트리 값 쿼리 또는 단일 키 열거. 원격 컴퓨터 지원. |
+| `bof-reg-query-recursive` | bof | 경로부터 레지스트리 키 재귀 열거. 원격 컴퓨터 지원. |
+| `bof-reg-save` | bof | 레지스트리 키를 파일로 내보내기. |
+| `bof-reg-set` | bof | 로컬 또는 원격 호스트에 레지스트리 값 생성 또는 설정. |
+| `bof-regsave` | bof | 필요 권한을 얻어 SAM, SYSTEM, SECURITY 레지스트리 키를 덤프해 오프라인 파싱·해시 추출합니다. 관리자 권한이 필요합니다. |
+| `bof-regsession` | bof | HKEY_USERS 열거로 로그온 사용자 SID 반환. BOFHound 호환. |
+| `bof-remotereg` | bof | 원격 레지스트리 API로 원격 서버, VDI, DC의 로그온 사용자 쿼리. |
+| `bof-remove-ace` | bof | DACL에서 ACE 제거. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-remove-attribute` | bof | 속성 값 제거. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-remove-delegation` | bof | 위임 SPN 지우기. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-remove-groupmember` | bof | 그룹에서 사용자 제거. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-remove-object` | bof | AD 개체 삭제. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-remove-rbcd` | bof | RBCD 구성 지우기. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-remove-spn` | bof | 특정 SPN 제거. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-remove-uac` | bof | UAC 플래그 제거. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-renew` | bof | TGT 갱신. |
+| `bof-resources` | bof | 주 하드 드라이브 메모리 사용량 및 사용 가능 디스크 공간 나열. |
+| `bof-routeprint` | bof | IPv4 경로 나열. |
+| `bof-runpe` | bof | process herpaderping 부분 구현으로 희생 프로세스 내부에서 임의 PE 실행. 첫 인수 원격 파일 생성, PE 기록, 실행 전 0x82 0x7f 0x76 0x7c 패턴으로 덮어쓰기. |
+| `bof-s4u` | bof | S4U2self 및 S4U2proxy 제한 위임 남용 수행. |
+| `bof-sc-config` | bof | 로컬 또는 원격 시스템의 기존 Windows 서비스 구성. |
+| `bof-sc-create` | bof | 로컬 또는 원격 시스템에 새 Windows 서비스 생성. |
+| `bof-sc-delete` | bof | 기존 Windows 서비스 삭제. |
+| `bof-sc-description` | bof | 기존 Windows 서비스 설명 설정. |
+| `bof-sc-enum` | bof | qc, query, qfailure, qtriggers 정보용 서비스 열거. |
+| `bof-sc-failure` | bof | 기존 Windows 서비스 실패 동작 구성. |
+| `bof-sc-qc` | bof | BOF의 sc qc 구현. |
+| `bof-sc-qdescription` | bof | BOF의 sc qdescription 구현. |
+| `bof-sc-qfailure` | bof | 서비스 실패 조건 쿼리. |
+| `bof-sc-qtriggerinfo` | bof | 서비스 트리거 조건 쿼리. |
+| `bof-sc-query` | bof | BOF의 sc query 구현. |
+| `bof-sc-start` | bof | 기존 Windows 서비스 시작. |
+| `bof-sc-stop` | bof | 기존 Windows 서비스 중지. |
+| `bof-schtask-enum` | bof | Task Scheduler COM으로 Windows 예약 작업 열거. XML로 비콘을 과부하하지 않고 상태·일정·구성 요약. |
+| `bof-schtasks-del` | bof | 예약 작업 또는 폴더 삭제. |
+| `bof-schtasks-run` | bof | 예약 작업 실행. |
+| `bof-schtasks-stop` | bof | 실행 중 예약 작업 중지. |
+| `bof-schtaskscreate` | bof | XML 작업 정의 파일로 예약 작업 생성 또는 업데이트. |
+| `bof-schtasksdelete` | bof | 예약 작업 또는 폴더 삭제. |
+| `bof-schtasksenum` | bof | 로컬 또는 원격 컴퓨터의 예약 작업 열거. |
+| `bof-schtasksquery` | bof | 로컬 또는 원격 컴퓨터에서 지정 작업 쿼리. |
+| `bof-schtasksrun` | bof | 예약 작업 즉시 시작. |
+| `bof-schtasksstop` | bof | 실행 중 예약 작업 중지. |
+| `bof-screenshot` | bof | fork-and-run 없이 WinAPI로 스크린샷 캡처. JPEG 압축, 그레이스케일, 품질, 스케일, 최소화 창 캡처 지원. |
+| `bof-self-delete` | bof | NTFS 대체 데이터 스트림 이름 변경으로 잠긴 또는 실행 중 실행 파일을 디스크에서 삭제. |
+| `bof-service-control` | bof | SCM으로 로컬 Windows 서비스 관리: 쿼리(제한 목록 또는 단일), 생성, 시작, 중지, 삭제, 실패 동작 구성. 변경에는 보통 상승 권한 필요. |
+| `bof-session-view` | bof | Windows Terminal Services 세션 열거. 세션 ID, 사용자명, 도메인, 연결 상태, 세션 LUID 표시. |
+| `bof-set-attribute` | bof | 속성 값 교체. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-set-delegation` | bof | 위임 구성 교체. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-set-owner` | bof | 개체 소유자 변경. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-set-password` | bof | 사용자 암호 변경. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-set-spn` | bof | 모든 SPN 교체. 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-set-uac` | bof | UAC 플래그 설정(교체). 표준 LDAP(389) 서명/봉인 및 LDAPS(636)를 지원합니다. |
+| `bof-setuserpass` | bof | 지정 사용자 계정 암호 설정. |
+| `bof-sha1` | bof | sha1로 파일명 해시. |
+| `bof-sha256` | bof | sha256으로 파일명 해시. |
+| `bof-shadowcreds` | bof | 대상 msDS-KeyCredentialLink에 KeyCredential 기록, PKINIT 인증, UnPAC the hash로 NT 해시 추출 후 shadow credential 제거. msDS-KeyCredentialLink 쓰기 권한 필요. |
+| `bof-sharefolder` | bof | 전 세계 읽기·쓰기 공유 폴더 생성 또는 빈 폴더 삭제. |
+| `bof-shutdown` | bof | 로컬 또는 원격 시스템 종료 시작. |
+| `bof-signal-key` | bof | Signal Desktop이 설치·사용된 Windows 호스트에서 Signal Desktop DB 복호화 키 조회. |
+| `bof-silentchrome` | bof | Preferences·Secure Preferences 수정으로 Chrome/Edge에 브라우저 확장을 조용히 설치 또는 되돌림. SharpSilentChrome 포트. |
+| `bof-silentharvest` | bof | 레지스트리만 사용하는 자격 증명 덤퍼. HKLM\\SECURITY\\Policy\\Secrets에서 SAM 해시·시크릿 추출. SeBackupPrivilege만 필요(SYSTEM 불필요). |
+| `bof-slack-cookie` | bof | 지정 Slack 프로세스 메모리에서 Slack 인증 쿠키 수집. |
+| `bof-slack-key` | bof | %APPDATA%\\Slack\\Local State의 base64 Slack 키 복호화(쿠키 복호화용). |
+| `bof-sleeper` | bof | SetThreadExecutionState 호출로 호스트 절전 방지. |
+| `bof-smbinfo` | bof | NetWkstaGetInfo API로 원격 시스템 버전 정보 수집. 포트 스캐너 없이 Windows 버전, 도메인 등. |
+| `bof-sprayad` | bof | LogonUserSSPI로 Active Directory에 LDAP 또는 Kerberos 기반 암호 스프레이. 지정 시 비활성·잠금 계정 및 BadPwdCount 큰 사용자 건너뜀. |
+| `bof-sql-1434udp` | bof | UDP 1434 SQL Server Browser로 SQL Server 연결 정보 열거. |
+| `bof-sql-adsi` | bof | ADSI 연결 서버에서 ADSI 자격 증명 획득. |
+| `bof-sql-agentcmd` | bof | SQL Server 에이전트 작업으로 시스템 명령 실행. |
+| `bof-sql-agentstatus` | bof | 서버의 SQL 에이전트 상태 및 작업 열거. |
+| `bof-sql-checkrpc` | bof | 연결 서버 및 RPC 상태 열거. |
+| `bof-sql-clr` | bof | CLR 통합으로 SQL 저장 프로시저에서 .NET 어셈블리 로드·실행. |
+| `bof-sql-columns` | bof | SQL 서버 테이블 내 열 열거. |
+| `bof-sql-databases` | bof | SQL 서버 데이터베이스 열거. |
+| `bof-sql-impersonate` | bof | 서버에서 가장 가능한 SQL 로그인 열거. |
+| `bof-sql-info` | bof | 원격 SQL 서버 정보 수집. |
+| `bof-sql-links` | bof | 연결 SQL 서버 열거. |
+| `bof-sql-olecmd` | bof | SQL 서버 OLE 자동화 프로시저로 시스템 명령 실행. |
+| `bof-sql-query` | bof | 원격 SQL 서버에서 사용자 SQL 쿼리 실행. |
+| `bof-sql-rows` | bof | SQL 서버 테이블 행 수 반환. |
+| `bof-sql-search` | bof | 데이터베이스 테이블 전역에서 열 이름 검색. |
+| `bof-sql-smb` | bof | xp_dirtree로 SQL 서버에서 UNC 리스너로 NetNTLM 인증 강제. |
+| `bof-sql-tables` | bof | SQL 서버 데이터베이스 내 테이블 열거. |
+| `bof-sql-togglemodule` | bof | SQL Server 기능 RPC, CLR, xp_cmdshell, OLE 자동화 활성/비활성. |
+| `bof-sql-users` | bof | SQL 서버에서 DB 접근 사용자 열거. |
+| `bof-sql-whoami` | bof | 서버의 로그인 사용자, 매핑 사용자, SQL 역할 수집. |
+| `bof-sql-xpcmd` | bof | SQL 서버 xp_cmdshell로 시스템 명령 실행. |
+| `bof-sspi-uac-bypass` | bof | 위조 SSPI 데이터그램 컨텍스트 토큰 가장 및 CreateSvcRpc SYSTEM 서비스 생성으로 UAC 우회. |
+| `bof-start-web-client` | bof | 서비스 트리거로 사용자 컨텍스트에서 WebClient 서비스를 프로그래밍 방식으로 시작. 서비스 미실행 시 WebDAV PetitPotam 강제에 필요. |
+| `bof-static-syscalls-dump` | bof | NtReadVirtualMemory unhook 후 MiniDumpWriteDump로 프로세스 메모리 덤프. x64 전용. |
+| `bof-suspendresume` | bof | PID로 프로세스 일시 중지 또는 재개. 1=중지, 0=재개. |
+| `bof-syscallsdump` | bof | NtReadVirtualMemory unhook 후 MiniDumpWriteDump로 프로세스 메모리 덤프. x64 전용. |
+| `bof-tasklist` | bof | PID, PPID, CommandLine 포함 실행 프로세스 나열(WMI 사용). |
+| `bof-teams-cookies` | bof | ms-teams.exe 프로세스 내부 실행으로 Microsoft Teams 쿠키 탈취. 암호화 키 추출 및 Cookies DB 파일 없이 다운로드. |
+| `bof-tgtdeleg` | bof | GSS-API 위임 남용으로 사용 가능한 TGT 조회. |
+| `bof-toastnotify` | bof | 빌린 Application User Model ID로 Windows 토스트 알림 전송. 표준 토스트 및 동작·프로토콜 링크가 있는 사용자 XML 지원. |
+| `bof-token-vault` | bof | 훔치거나 복제한 Windows 액세스 토큰의 메모리 내 저장. 재복제 없이 토큰 재사용 및 나중을 위해 보관. |
+| `bof-token2cert` | bof | 토큰 가장으로 ESC1 취약 인증서 템플릿을 악용해 임의 도메인 사용자 NT 해시 추출. 등록 권한 사용자 토큰 훔치기, 임의 SAN 인증서, PKINIT, UnPAC the hash. x64 전용. 상승 권한 필요. |
+| `bof-tray-scout` | bof | 작업 표시줄 호스트 실행 파일 보고 및 시스템 트레이 알림 아이콘 툴팁 열거. 호스트 및 각 아이콘 소유 프로세스 전체 이미지 경로 선택. |
+| `bof-triage` | bof | 표 형식으로 Kerberos 티켓 나열. |
+| `bof-unexpire-user` | bof | 사용자 계정을 만료되지 않도록 설정. |
+| `bof-unexpireuser` | bof | 사용자 계정을 만료되지 않도록 설정. |
+| `bof-uptime` | bof | 시스템 부팅 시간 및 가동 시간 나열. |
+| `bof-user-idle` | bof | 마지막 입력 이후 사용자 유휴 시간 및 현재 프로세스 GUI 리소스(GDI/USER 핸들)로 타이밍 정보 수집. |
+| `bof-useridletime` | bof | 사용자 유휴 시간을 초·분·시·일로 표시. |
+| `bof-veeam-dumper` | bof | Veeam Backup and Replication 또는 Veeam One DB에서 암호화된 자격 증명 추출. sqlcmd/psql로 blob 쿼리, 레지스트리 salt, DPAPI 복호화. |
+| `bof-vssenum` | bof | 일부 Server 2012+ 서버에서 섀도 복사본 열거. |
+| `bof-wallpaper-enum` | bof | IDesktopWallpaper COM으로 각 연결 모니터의 현재 바탕 화면 경로 열거. 중앙 집중식 바탕 화면은 네트워크 경로, 도메인 신뢰, 정책 적용을 드러낼 수 있음. |
+| `bof-wd-toggle` | bof | WDigest 자격 증명 캐싱 활성화 및 Credential Guard 우회. 직접 syscall로 LSASS의 wdigest!g_fParameter_UseLogonCredential·wdigest!g_IsCredGuardEnabled 패치. 재부팅 후 유지 안 됨. Windows 빌드별 오프셋 상이. |
+| `bof-webcam-bof` | bof | 기본 웹캠에서 단일 이미지 캡처. 디스크 저장 또는 비콘으로 파일/스크린샷 다운로드 지원. |
+| `bof-wef-detect` | bof | 중앙 집중 로깅을 나타내는 Windows Event Forwarding(WEF) 구성 감지. 발견 시 보안 이벤트가 중앙 서버로 전달 중임을 의미. |
+| `bof-wer-dump` | bof | WerFaultSecure.exe로 보호된 LSASS 덤프. WerFaultSecure를 임의 파일명으로 temp에 쓰고 같은 디렉터리에 .dll로 덤프 저장. |
+| `bof-wer-resume` | bof | bof-wer-dump 전에 일시 중지된 lsass.exe 재개. 프로세스 보호 정책으로 WerDump와 다른 비콘 프로세스에서 실행해야 함. |
+| `bof-wevt-channel-enum` | bof | 선택적 대소문자 무시 부분 문자열 필터, 제한 출력, 선택적 verbose 접근·게시 메타데이터로 로컬 Windows 이벤트 로그 채널 열거. 저신호 채널이 수백 개인 호스트에서 필터 없이 실행하지 마세요. |
+| `bof-wevt-logon-enum` | bof | wevtapi로 Security 로그 최근 성공·실패 로그온(4624, 4625, 4672) 열거 후 원격 워크스테이션 이름/IP 및 대상 사용자명 출력. Security 로그 읽기 권한 필요(보통 admin 또는 SYSTEM). |
+| `bof-whoami` | bof | whoami /all 나열. |
+| `bof-wi-fi-passwords` | bof | 로컬 시스템에 저장된 Wi-Fi 암호 추출. |
+| `bof-wifi-dump` | bof | WiFi 인터페이스 열거 및 WiFi 프로필 자격 증명 평문 덤프. WlanGetProfile과 WLAN_PROFILE_GET_PLAINTEXT_KEY로 저장 암호 포함 프로필 XML 조회. |
+| `bof-win-version` | bof | 레지스트리·시스템 API로 Windows 설치에 대한 간결하고 상세한 개요 제공. |
+| `bof-window-handles-enum` | bof | 모든 시스템 프로세스의 창 핸들을 열거한 뒤 정상 창 핸들로 클립보드에 접근합니다. |
+| `bof-window-list` | bof | 현재 사용자 데스크톱의 모든 보이는 창 제목 열거. 선택적으로 PID 포함. |
+| `bof-windowlist` | bof | 현재 사용자 세션의 보이는 창 나열. |
+| `bof-winver` | bof | 실행 중 Windows 버전, 빌드 번호, 패치 릴리스(UBR) 표시. |
+| `bof-wmi-query` | bof | WMI 쿼리 실행 후 CSV 형식으로 결과 표시. |
+| `bof-wsc-status` | bof | Windows Security Center 상태(바이러스 백신, 방화벽, 스파이웨어, WSC 서비스, 자동 업데이트, 인터넷 설정, UAC) 쿼리. |
+| `bof-xpipe` | bof | 활성 명명 파이프 나열. 선택적으로 특정 파이프의 소유자 및 DACL 권한 반환. |
+| `net-abandoned-com-keys` | dotnet | 참조 DLL이 더 이상 없는 abandoned COM InprocServer32 키를 열거합니다. rundll32.exe -sta `\{CLSID\}` 지속에 유용. |
+| `net-ad-collector` | dotnet | ADCollector는 Active Directory 환경을 열거해 가능한 공격 벡터를 식별하는 경량 도구입니다. 정찰 시작점으로 환경 구성·배포에 대한 기본 이해를 제공합니다. 모든 사용자·컴퓨터의 모든 속성 대신 고가치 대상에서 유용한 속성·ACL을 추출합니다. S.DS로 DC에서 도메인·포리스트 정보, S.DS.P로 LDAP 검색. |
+| `net-adcspwn` | dotnet | ADCSPwn은 Petitpotam으로 컴퓨터 계정 인증을 강제하고 인증서 서비스로 릴레이해 AD 네트워크에서 권한을 상승시키는 도구입니다. |
+| `net-adsearch` | dotnet | Active Directory 효율 쿼리 도구. 도메인 관리자 나열, 사용자 지정 LDAP 검색, LDAPS, JSON 출력, 일반 쿼리 사용자 지정 속성 지원. |
+| `net-certify` | dotnet | AD CS(Active Directory Certificate Services) 오구성 열거·악용 C# 도구. CA 열거, 인증서 템플릿 발견, 취약성 평가, 인증서 요청·다운로드. |
+| `net-cheese-dcom` | dotnet | DCOM을 통한 명령 실행 및 횡적 이동. 권한 있는 사용자 컨텍스트에서 실행해야 합니다. MMC20.Application, ShellWindows 등 다수 DCOM 방법. 대상 . 이면 로컬 실행. |
+| `net-cheese-exec` | dotnet | Windows 서비스 생성으로 PsExec 유사 명령 실행·횡적 이동. 권한 있는 사용자 컨텍스트에서 실행해야 합니다. 원격 서비스 create/start/stop/delete/restart. |
+| `net-cheese-ps` | dotnet | System.Management.Automation.PowerShell 기반 PowerShell 실행·횡적 이동. WS Management 원격, CLM/AMSI/WLDP 우회, 모듈 import, 암호화 페이로드, reflective PE 주입. 대상 없으면 로컬. Remoting 시 권한 있는 사용자. |
+| `net-cheese-rdp` | dotnet | mstsc.exe reflective DLL 주입 RDP 자격 증명 탈취. 권한 있는 사용자 또는 SeImpersonatePrivilege 컨텍스트. RdpThief 기반 .NET reflection 래퍼. |
+| `net-cheese-sql` | dotnet | MSSQL 신뢰 악용 명령 실행·횡적 이동. 도메인 SPN, 연결 서버, 가장, xp_cmdshell, OLE, CLR, OPENQUERY. `net-cheese-sql &lt;command&gt; /help`로 인수 상세. |
+| `net-cimplant` | dotnet | 파일, 레지스트리, 서비스, 프로세스, 횡적 이동, 시스템 열거 지원. 대상 로컬 관리자 권한 필요. |
+| `net-com-hunter` | dotnet | WMI로 LocalServer32·InProcServer32에 등록된 COM 서버 열거. |
+| `net-cred-phisher` | dotnet | CredUIPromptForWindowsCredentials로 현재 사용자에게 자격 증명 프롬프트. |
+| `net-crop` | dotnet | WebDAV 서버를 가리키는 LNK, URL, library-ms, searchConnector-ms 생성. Explorer가 WebDAV에 인증해 Farmer로 NetNTLM 유출 가능. |
+| `net-driver-query` | dotnet | 로드 드라이버 세부 정보 수집. 선택적으로 Microsoft 서명 아닌 드라이버만 필터. |
+| `net-edd` | dotnet | PowerView 유사 .NET 도메인 열거. 포리스트, 도메인, 컴퓨터, 사용자, 연쇄 admin 발견, 공유 헌팅. |
+| `net-encrypted-zip` | dotnet | 파일/디렉터리 압축 후 AES256 CFB로 ZIP 암호화. RtlZeroMemory로 메모리 키 제거. |
+| `net-etw-event-subscription` | dotnet | WMI 이벤트 유사 ETW 구독. 사용자 로그온 또는 프로세스 시작 시 트리거. |
+| `net-farmer` | dotnet | Windows 도메인 NetNTLM 수집용 로컬 WebDAV 서버. WebDAV Mini Redirector로 클라이언트 인증. Crop/Fertiliser와 연동. |
+| `net-fertiliser` | dotnet | 기존 Office 문서(.docx)에 악성 필드 코드를 넣어 열 때 WebDAV 연결·Farmer로 NetNTLM 유출. |
+| `net-forge-cert` | dotnet | 탈취 CA 개인 키(.pfx/.p12)로 AD 인증 인증서 위조. Certified Pre-Owned DPERSIST1. 출력 .pfx는 Rubeus PKINIT/NT 해시 복구용. |
+| `net-gmsa-password-reader` | dotnet | LDAP으로 gMSA msDS-ManagedPassword blob 읽어 NTLM 해시로 파싱·재사용. |
+| `net-god-potato-dotnet` | dotnet | DCOM 기반 Potato로 SeImpersonatePrivilege에서 NT AUTHORITY\\SYSTEM 상승. Server 2012–2022, Windows 8–11. |
+| `net-gopher` | dotnet | 로컬 워크스테이션에서 쉬운 자격 증명·권한 상승 정보 검색. 인수 없이 내장 검사 전체 실행. |
+| `net-gps-coordinates` | dotnet | 위치 서비스 활성 시 GPS 좌표(~1km) 추적. Windows 10+. |
+| `net-group3r` | dotnet | AD GPO 설정 열거 및 악용 가능 오구성 식별. LDAP DC 쿼리, SYSVOL GPO 파싱, 공유 스크립트·MSI 등 검사. |
+| `net-harvest-crop` | dotnet | Farmer 출력 암호화 시 기록된 AES 암호화 Farmer 로그 복호화. |
+| `net-hijack-hunter` | dotnet | PE 헤더 파싱으로 연결 DLL 하이재킹 취약점 및 각 abuse 기법 탐색. |
+| `net-hook-detector` | dotnet | 현재 프로세스 Native API 후크 감지(EDR). x64 전용. |
+| `net-implant-ssp` | dotnet | 사용자 제공 SSP DLL 설치(LSA 부팅 시 로드). SpLsaModeInitialize export 필요. |
+| `net-inspect-assembly` | dotnet | .NET 어셈블리 CIL에서 역직렬화 호출·.NET remoting 검사(권한 상승 트리아지). |
+| `net-internal-monologue` | dotnet | Internal Monologue로 LSASS 접촉 없이 NTLM 해시. NetNTLM 다운그레이드, non-network logon 토큰 가장, 로컬 SSPI NTLMv1 유도. |
+| `net-junction-folder` | dotnet | Windows Accessories 시작 폴더에 junction(Vault 7). verclsid.exe가 DLL 실행. |
+| `net-kee-thief` | dotnet | KeePass 2.x 키 자료 메모리 추출. CLR MD로 KeePass.exe 연결, 힙 PwDatabase/CompositeKey, RtlEncryptMemory blob shellcode 복호화. |
+| `net-koh` | dotnet | 토큰/로그온 세션 유출로 자격 증명 캡처 Koh 서버. SSPI 토큰 협상·저장. 캡처에 SYSTEM·SeTcbPrivilege. |
+| `net-krb-relay-up` | dotnet | KrbRelay+Rubeus 래퍼. LDAP 서명 미적용 도메인에서 로컬 권한 상승 자동화. Kerberos 강제, LDAP/ADCS 릴레이, RBCD/Shadow/ADCS, SYSTEM 서비스. |
+| `net-ldap-sign-check-dotnet` | dotnet | DC 열거 및 LDAP 서명/채널 바인딩으로 릴레이 위험 평가. 각 DC LDAP/LDAPS 테스트. |
+| `net-lock-less` | dotnet | 열린 파일 핸들 열거, 잠금 프로세스 핸들 복제로 잠긴 파일 복사. NtQuerySystemInformation 등으로 종료 없이 읽기. |
+| `net-mlokit` | dotnet | REST API MLOps 플랫폼 공격 툴킷. Azure ML, Vertex AI, MLFlow, SageMaker 등 정찰·데이터/모델 탈취· poisoning·노트북. |
+| `net-moriarty` | dotnet | Watson/Sherlock 확장 .NET 권한 상승 스캐너. 누락 KB, 알려진 취약점, LPE exploit 제안. Win10/11, Server 2016–2022. |
+| `net-nopowershell` | dotnet | System.Management.Automation.dll 없이 .NET PowerShell 유사 실행. execute-assembly 메모리, 로깅 회피. 파이프라인, AD, WMI, 레지스트리, 네트워크, 아카이브. |
+| `net-pass-the-cert` | dotnet | PKINIT 미지원 시 Schannel 클라이언트 인증서 LDAP/LDAPS 인증. RBCD, SPN, 컴퓨터 계정 생성 등. |
+| `net-phantom-service` | dotnet | 내장 도구로 제거 불가 non-ASCII phantom 서비스 검색·선택 제거. |
+| `net-port-bender` | dotnet | 비콘을 통해 로컬 포트를 원격 호스트로 리다이렉트. |
+| `net-restricted-admin` | dotnet | WMI StdRegProv로 RDP pass-the-hash용 Restricted Admin Mode 원격 활성/비활성. HKLM\\System\\CurrentControlSet\\Control\\Lsa DisableRestrictedAdmin. |
+| `net-rubeus` | dotnet | Kerberos raw 상호작용·악용 C# 도구. 티켓, S4U, golden/silver/diamond, Kerberoast, AS-REP, 스프레이, 관리. |
+| `net-runas-cs` | dotnet | 다른 사용자 자격 증명으로 프로세스 실행 .NET 유틸. runas.exe 개선 OSS. 로그온 유형, UAC 우회, 원격 I/O. |
+| `net-safety-katz` | dotnet | LSASS 미니덤프 후 커스텀 in-memory Mimikatz로 logonpasswords/ekeys 추출, 덤프 삭제. |
+| `net-sauron-eye` | dotnet | 레드팀 .NET 파일 검색. 키워드, 내용, Office, VBA, regex. 네트워크 드라이브 포함. |
+| `net-search-outlook` | dotnet | 실행 Outlook 모든 계정·하위 폴더에서 키워드 이메일 검색. |
+| `net-seatbelt` | dotnet | 공격·방어 관점 보안 점검 C# 호스트 열거. 시스템, 사용자, 네트워크, 자격 증명. |
+| `net-session-searcher` | dotnet | 연결 드라이브에서 PuTTY .ppk, RDP 파일 검색·자격 증명 파싱. |
+| `net-shadow-spray` | dotnet | 모든 도메인 사용자·컴퓨터에 Shadow Credentials 스프레이. GenericWrite/GenericAll, KeyCredential, PKINIT, UnPACTheHash. |
+| `net-sharp-chrome` | dotnet | .NET 어셈블리로 Chrome 브라우저 데이터 추출. |
+| `net-sharp-cloud` | dotnet | 사용자 프로필 AWS, Azure, GCP 클라우드 자격 증명 파일 검색. |
+| `net-sharp-cookie-monster` | dotnet | Chrome/Edge 원격 디버깅으로 httpOnly·secure·session 포함 모든 사이트 쿠키 덤프. |
+| `net-sharp-dpapi` | dotnet | DPAPI masterkey, 자격 증명, vault, 인증서, RDG, KeePass, SCCM, Chrome/Edge 복호화. |
+| `net-sharp-dump` | dotnet | Out-Minidump.ps1 C# 포트. MiniDumpWriteDump 압축 미니덤프(기본 LSASS), gzip, 원본 삭제. |
+| `net-sharp-edr-checker` | dotnet | C# EDR/AV 탐지. 프로세스, DLL, 설치 경로, 서비스, 드라이버, 메타데이터 hidden EDR. |
+| `net-sharp-exec` | dotnet | C# 횡적 이동. PSExec, WMI, WMIExec, SMBExec 원격 실행·반대화형 셸. |
+| `net-sharp-exfiltrate` | dotnet | 신뢰 클라우드 채널 파일/디렉터리 유출 모듈 C# 프레임워크. 업로드 전 압축·암호화. 확장자·크기 필터. |
+| `net-sharp-gpo-abuse` | dotnet | GPO 편집 권한 악용. 사용자 권한, 로컬 admin, 로그온/시작 스크립트, 즉시 예약 작업. |
+| `net-sharp-hide` | dotnet | NtSetValueKey UNICODE_STRING null byte 접두로 숨겨진 Run 키 지속, 표준 열거 회피. |
+| `net-sharp-hound` | dotnet | BloodHound CE용 AD 데이터 수집. 사용자, 그룹, 세션, ACL, trust, GPO, ADCS 등. |
+| `net-sharp-hound3` | dotnet | 레거시 BloodHound ingestor(deprecated). BloodHound 4.1+ 비호환. |
+| `net-sharp-katz` | dotnet | LSASS provider 덤프, DCSync, pass-the-hash, Zerologon, PrintNightmare, HiveNightmare. |
+| `net-sharp-laps` | dotnet | ms-mnet-AdmPwd로 AD LAPS 암호. 컴퓨터 ExtendedRight/GenericAll 또는 Domain Admin. |
+| `net-sharp-map-exec` | dotnet | Windows 네이티브 CrackMapExec 대안. Kerberos/NTLM, CIM, Reg32, SMB, WinRM, LDAP, 스프레이. |
+| `net-sharp-move` | dotnet | .NET 인증 원격 실행. WMI, SCM, DCOM, Task Scheduler, 서비스 DLL/DCOM hijack, 기존 서비스·작업 수정. |
+| `net-sharp-no-ps-exec` | dotnet | 파일 없는 횡적 이동. 중지 LocalSystem 서비스 바이너리 경로 임시 교체, 5초 후 복원. |
+| `net-sharp-persist` | dotnet | 레지스트리, 예약 작업, 시작 LNK, KeePass 백도어, 서비스, Tortoise SVN, 작업 백도어 add/remove/check/list. |
+| `net-sharp-printer` | dotnet | ListNetworks 콘솔판. 현재 사용자 접근 가능 네트워크 프린터 열거. |
+| `net-sharp-rdp` | dotnet | RDP 원격 명령 콘솔. Win+R Run 대화상자로 명령. |
+| `net-sharp-rdp-hijack` | dotnet | 개념 증명(PoC) RDP 세션 hijack 유틸. WTSConnectSession/WTSDisconnectSession으로 끊긴 세션 제어. |
+| `net-sharp-roast` | dotnet | 서비스 티켓 요청, hashcat 형식 TGS 해시 출력. |
+| `net-sharp-sccm` | dotnet | SCCM 사후 공격. 횡적 이동, 자격 증명, client push NTLM 강제. |
+| `net-sharp-sec-dump` | dotnet | impacket secretsdump.py .NET 포트. RPC 원격/로컬 SAM·캐시 덤프. |
+| `net-sharp-shares` | dotnet | 도메인 접근 가능 공유 멀티스레드 열거. LDAP 대상, 읽기/쓰기 확인. |
+| `net-sharp-smb-exec` | dotnet | NTLM 해시 SMB pass-the-hash 원격 명령. |
+| `net-sharp-sphere` | dotnet | vSphere 공격. VMware Tools·Web Services API로 VM 실행, 파일, 메모리 덤프. |
+| `net-sharp-stay` | dotnet | .NET 지속. elevated/non-elevated 레지스트리, 작업, 서비스, WMI, COM hijack, LNK. |
+| `net-sharp-token-finder` | dotnet | M365 Desktop Office 평문 인증 토큰 열거(M365 ID 침해). |
+| `net-sharp-up` | dotnet | 일반 Windows LPE 오구성 로컬 감사. |
+| `net-sharp-view` | dotnet | PowerView .NET 포트. 도메인, ACL, 공유, 세션, Kerberoast. |
+| `net-sharp-wifi-grabber` | dotnet | WLAN 프로필 WiFi 암호 평문. Win32 WLAN API. |
+| `net-sharp-wmi` | dotnet | C# WMI 툴킷. 로컬/원격 열거, 프로세스, VBS 구독, 업로드, 방화벽, 프로세스 관리. |
+| `net-sharp-wsus` | dotnet | WSUS 횡적 이동. WSUS 서버로 악성 업데이트 생성·승인·배포. |
+| `net-sharpsh` | dotnet | RunspaceFactory C# PowerShell. 인코딩, 원격 스크립트, 클립보드. inline assembly용. |
+| `net-sigma-potato` | dotnet | GodPotato 파생 서비스 계정→SYSTEM. 디스크, reflection, PowerShell, 내장 reverse shell. |
+| `net-snaffler` | dotnet | AD 파일 공유 크롤러. 규칙·regex로 자격 증명·민감 파일. |
+| `net-sql-recon` | dotnet | SQL Server 공격 정찰·사후 툴킷. 열거, 가장, linked server, SCCM 모듈. |
+| `net-stand-in` | dotnet | 소형 AD 사후 툴킷. LDAP, ACL, Kerberoast, AS-REP, 위임, GPO, ADCS, 컴퓨터 계정. |
+| `net-sweet-potato` | dotnet | 서비스 계정→SYSTEM 네이티브 LPE 모음. RottenPotato, JuicyPotato, PrintSpoofer, EfsRpc. |
+| `net-unquoted-path` | dotnet | System32/SysWow64 외 따옴표 없는 서비스 경로 나열(T1034 PE 심기). |
+| `net-webdav-status` | dotnet | WebDAV 상태 확인 C# 멀티스레드. DAV RPC 파이프 Web Client 탐색. 대상 admin 불필요, 유효 자격 증명 필요. |
+| `net-winpeas` | dotnet | Windows Privilege Escalation Awesome Script. 오구성, 취약 서비스, 자격 증명, AV/EDR, 네트워크, AD, LPE 벡터. |
+| `net-winrmdll` | dotnet | WinRM으로 원격 호스트 명령 실행. |

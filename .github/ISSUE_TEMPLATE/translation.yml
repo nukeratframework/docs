@@ -1,0 +1,63 @@
+name: Docs translation
+description: Fix or improve a translated docs page
+title: "[Translation]: "
+labels:
+  - translation
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Pages live in `src/pages/docs/mdx/<locale>/`. English (`en-us`) is the source. Open a PR when you can.
+
+  - type: dropdown
+    id: locale
+    attributes:
+      label: Locale
+      options:
+        - ja-jp
+        - es-es
+        - ko-kr
+        - fa-ir
+        - ru
+        - zh-cn
+    validations:
+      required: true
+
+  - type: dropdown
+    id: change
+    attributes:
+      label: Change
+      options:
+        - Fix wording
+        - Untranslated text left in English
+    validations:
+      required: true
+
+  - type: input
+    id: page
+    attributes:
+      label: Page path
+      description: Path under the locale folder, same file as English.
+      placeholder: src/pages/docs/mdx/ja-jp/introduction.mdx
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: What to change
+      description: Quote the current text and the suggested wording.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: English page is the reference
+          required: true
+        - label: Code, commands, and identifiers stay unchanged
+          required: true
+        - label: File path matches the English page
+          required: true

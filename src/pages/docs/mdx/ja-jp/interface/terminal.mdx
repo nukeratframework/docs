@@ -1,0 +1,75 @@
+---
+title: ターミナル
+---
+import hostSelect from '@/assets/img/tutorial/terminal.png';
+import terminalSearch from '@/assets/img/tutorial/terminal_search.png';
+import { SquareChevronRight, Bot } from 'lucide-react';
+import { Callout } from '@/ui/custom/callout';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+ターミナルは、侵害されたホストでコマンドを実行するための主要な作業スペースです。
+
+上部バーの <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle"><SquareChevronRight size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> アイコン</span>から **Terminal** タブを開くか、**Tabs** > **Terminal** から開けます。
+
+<Callout type="info">
+  コマンドを実行する前に、タブ名の横にある **Host** をクリックして対象ホストを選択してください。
+</Callout>
+
+<Callout type="info">
+  NukeRat クライアントは各リクエストとともに `source_terminal` 値を送信します。これはどのターミナルタブがコマンドを送ったかを識別するためのものです。参照用のみで、コマンドの実行には影響しません。
+</Callout>
+
+入力欄にコマンドを入力し、**Enter** を押すと選択したホストに送信されます。
+<ImageZoom src={hostSelect} alt="Host select" className="tutorial_img" />
+
+**Ctrl + F** を押すと、ターミナル出力内の検索の表示／非表示を切り替えられます。
+
+<ImageZoom src={terminalSearch} alt="Terminal search" className="tutorial_img" />
+
+## コマンド
+
+`help` を実行すると、利用可能なすべてのコマンドが表示されます。特定のコマンドの詳しい使い方は `help <command>` を使用してください。
+
+| コマンド | 説明 |
+| --- | --- |
+| `help` | 利用可能なコマンドと使い方を表示 |
+| `config` | インプラントの設定を表示 |
+| `delay` | インプラントのコールバック遅延（秒）を設定 |
+| `kill` | インプラントプロセスを終了 |
+| `tasks` | 実行中のタスク ID を一覧表示 |
+| `pwd` | 現在のディレクトリを表示 |
+| `cd` | ディレクトリを変更 |
+| `ls` | ファイルとディレクトリを一覧表示 |
+| `cat` | ファイルの内容を表示 |
+| `echo` | テキストを出力に表示 |
+| `cp` | ファイルをコピー |
+| `mv` | ファイルを移動または名前変更 |
+| `rm` | ファイルを削除 |
+| `mkdir` | ディレクトリを作成 |
+| `rmdir` | ディレクトリを削除 |
+| `echo $` | 環境変数を表示 |
+| `whoami` | 現在のユーザー情報を表示 |
+| `systeminfo` | OS とハードウェアの詳細情報を表示 |
+| `env` | 環境変数を一覧表示 |
+| `tasklist` | WMI 経由で実行中のプロセスを一覧表示 |
+| `enumdrives` | 利用可能なドライブ文字を一覧表示 |
+| `ifconfig` | ネットワークアダプターの設定を表示 |
+| `route` | ルーティングテーブルを表示 |
+| `arp` | ARP キャッシュを表示 |
+| `netstat` | アクティブなネットワーク接続を表示 |
+| `portscan` | リモートホストのポートをスキャン |
+| `shell` | シェルコマンドを実行 |
+| `powershell` | PowerShell スクリプトを実行 |
+| `shellcode` | 生のシェルコードを実行 |
+| `bof` | 組み込み BOF を実行 |
+| `dotnet` | .NET アセンブリを実行 |
+| `spawn` | 新しいプロセスを起動 |
+| `inj` | プロセスにシェルコード、リフレクティブ DLL、または donut ペイロードを注入 |
+| `tokens` | アクセストークンを表示・管理 |
+| `relay` | ピボットリレーを管理 |
+| `keylogger start` | バックグラウンドキーロガーを開始 |
+| `keylogger stop` | バックグラウンドキーロガーを停止 |
+| `screenshot` | スクリーンショットを 1 枚取得 |
+| `screenshot start` | スクリーンショット取得ループを開始 |
+| `screenshot stop` | スクリーンショット取得ループを停止 |
+| `armory` | 利用可能な armory ツールを一覧表示 |

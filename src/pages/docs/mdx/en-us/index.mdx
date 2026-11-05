@@ -1,0 +1,44 @@
+---
+title: Home
+---
+
+import { Card, Cards } from 'fumadocs-ui/components/card';
+
+Main NukeRat topics:
+
+<div className="not-prose [&_[data-card]]:rounded-xl [&_[data-card]]:border-fd-border/80 [&_[data-card]]:p-6 [&_[data-card]]:shadow-lg [&_[data-card]]:transition-none [&_[data-card]:hover]:bg-fd-card [&_[data-card]:hover]:shadow-lg [&_[data-card]>h3]:mb-2 [&_[data-card]>h3]:text-lg [&_[data-card]>h3]:font-semibold [&_[data-card]>h3]:tracking-tight [&_[data-card]>p]:text-base [&_[data-card]>p]:leading-relaxed">
+
+<Cards className="gap-5 sm:grid-cols-2">
+  <Card
+    title="Armory"
+    description="BOFs and .NET tools from the official repository, ready to run from the client."
+    href="/docs/armory"
+  />
+  <Card
+    title="Implants"
+    description="Stageless and loader builds, C2 settings, and compile workflow."
+    href="/docs/client/implants"
+  />
+  <Card
+    title="Pivoting"
+    description="Relay, SOCKS, and port forwarding through implants."
+    href="/docs/pivoting"
+  />
+  <Card
+    title="Custom channels"
+    description="Channels through external platforms like Telegram, Discord, and similar services."
+    href="/docs/custom-channels"
+  />
+  <Card
+    title="Custom implants"
+    description="Bring your own binary and still use the same tasking model."
+    href="/docs/custom-implants"
+  />
+  <Card
+    title="Listeners"
+    description="HTTP, HTTPS, and file server channels for implants and staging."
+    href="/docs/listeners"
+  />
+</Cards>
+
+</div>

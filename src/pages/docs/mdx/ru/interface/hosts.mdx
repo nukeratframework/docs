@@ -1,0 +1,32 @@
+---
+title: Сессии
+---
+
+import { MonitorIcon } from 'lucide-react';
+import hosts from '@/assets/img/tutorial/hosts.png';
+import hostsInfo from '@/assets/img/tutorial/hosts_01.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+Вкладка **Sessions** — основной способ следить за сессиями на всех настроенных team server.
+
+Вкладку можно открыть через значок <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle"><MonitorIcon size={18.5} className="shrink-0 ml-1.5 mr-1.5" /></span> на верхней панели или **Tabs** > **Sessions**.
+
+<ImageZoom src={hosts} alt="Sessions" className="tutorial_img" />
+
+После открытия вкладки сессии со всех настроенных team server подтягиваются автоматически — выбирать сервер отдельно не нужно.
+
+Для поиска используйте поле **Filter sessions...** вверху вкладки: фильтрация по любой подстроке в данных сессии.
+
+## Сведения о сессии
+
+Чтобы увидеть все поля сессии, дважды щёлкните по строке — откроется боковая панель с подробностями.
+
+<ImageZoom src={hostsInfo} alt="Sessions Info" className="tutorial_img" />
+
+На той же панели есть поле заметок: можно добавить комментарии к сессии. Нажмите **Save**, чтобы сохранить. Заметки видны любому оператору с доступом к этому team server.
+
+## Удаление сессии
+
+Чтобы удалить сессию, выделите строку и нажмите **Remove**.
+
+**Важно:** перед удалением убедитесь, что имплант на хосте уже не работает. Иначе сессия появится снова. Совет: остановите имплант командой `kill` в терминале.

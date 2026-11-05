@@ -1,0 +1,87 @@
+---
+title: 빠른 설정
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import keyAdd from '@/assets/img/tutorial/key_2.png';
+import listenerForm from '@/assets/img/tutorial/listener_form.png';
+
+설정부터 첫 임플란트 빌드까지의 빠른 가이드(Linux 서버 기준).
+
+  <Steps>
+    <Step>
+      ### 서버 설치
+      저장소를 클론하고 설치 스크립트를 실행합니다.
+
+      ```bash
+      git clone https://github.com/nukeratframework/nukerat && cd nukerat && sudo bash install.sh
+      ```
+    </Step>
+    <Step>
+      ### 운영자 키 생성
+      서버를 사용하려면 운영자 키가 필요합니다. 저장소 루트에서 다음을 실행합니다.
+
+      ```bash
+      ./nukerat.py server key add test
+      ```
+
+      출력은 대략 다음과 같습니다.
+      ```html
+      test:z6MIe3MbZQL57Hx3fOthGZJ:oxcWICLu9Tnu7GyvwDiwVCRoER4ybKv...
+
+      Operator created successfully: test
+      ```
+
+      생성된 키를 복사해 클라이언트에 붙여 넣을 수 있게 준비합니다.
+    </Step>
+    <Step>
+      ### 서버 시작
+      아래 명령으로 0.0.0.0:9000(기본값)에서 서버를 시작합니다.
+
+      ```bash
+      ./nukerat.py server start
+      ```
+    </Step>
+    <Step>
+      ### 클라이언트 열기
+      클라이언트를 열려면 다음 명령을 사용합니다.
+
+      ```bash
+      ./nukerat.py client start
+      ```
+    </Step>
+    <Step>
+      ### 서버 구성
+      상단 바에서 **NukeRat** > **Servers** > **Add**로 이동합니다. 운영자 키를 붙여 넣고, 포트 9000(기본값)과 서버 IP를 설정한 뒤 **Auth**를 클릭합니다.
+
+      <ImageZoom src={keyAdd} alt="Add server" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+
+    </Step>
+    <Step>
+      ### 리스너 구성
+      임플란트가 통신에 사용할 포트입니다. **NukeRat** > **Listeners** > **Add**로 이동합니다.
+
+      1. 식별용 이름을 입력합니다.
+      2. TYPE 필드에서 "Channel"을 선택합니다.
+      3. channel 필드는 "http"로 둡니다.
+      4. 앞서 만든 서버를 선택합니다.
+      5. 서버에 사용한 포트와 다른 포트를 입력합니다.
+      6. **Create**를 클릭합니다.
+
+      <ImageZoom src={listenerForm} alt="Listener form" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+    </Step>
+    <Step>
+      ### 임플란트 빌드
+      **NukeRat** > **Implants** > **Add**로 이동한 뒤:
+
+      1. COMPILE SERVER에서 앞서 만든 서버를 선택합니다.
+      2. 대상 운영 체제를 선택합니다.
+      3. 왼쪽에서 **Command and control**을 클릭하고 C2를 앞서 만든 리스너로 지정합니다. 예: http://192.168.1.100:9000
+    </Step>
+    <Step>
+      ### 실행 후 해킹을 즐기세요!
+
+      대상 머신에서 임플란트를 실행하면 설정이 올바르다면 새 세션이 나타납니다. 상호 작용하려면 **Tabs** > **Terminal**에서 터미널을 열고, 탭 이름 옆 **Host** 드롭다운에서 세션을 선택한 뒤 사용해 보세요.
+    </Step>
+  </Steps>

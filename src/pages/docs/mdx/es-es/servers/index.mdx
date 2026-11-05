@@ -1,0 +1,22 @@
+---
+title: Servidores
+---
+
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import keyAdd from '@/assets/img/tutorial/key_2.png';
+
+El cliente de NukeRat puede gestionar varios team servers a la vez. Puedes ejecutar comandos para implants en distintos servidores sin abrir otra instancia del cliente.
+
+## Añadir un team server
+
+Para configurar un servidor en el cliente de NukeRat, primero necesitas una operator key. Consulta [Operator key](/docs/operator-key) para saber cómo crear una.
+
+Abre **NukeRat** > **Servers**, haz clic en **Add** y rellena el panel **New Server**. Pega la operator key en **Key (.key)** o usa **Upload .key** para cargar el archivo desde la carpeta del team server. Establece **Protocol** (http o https), **Host** y **Port**, luego haz clic en **Auth**.
+
+<ImageZoom src={keyAdd} alt="Key Add" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+
+Si la autenticación tiene éxito, se guarda un JWT para esa entrada de servidor. Por defecto el token es válido durante 7 días. El team server controla la duración exacta con `server.keys.jwt.duration`. Consulta la sección de duración de sesión en [Operator key](/docs/operator-key).
+
+Cuando la sesión caduca, las funciones que requieren autenticación muestran un toast de error. Selecciona el servidor, abre **Edit** y haz clic en **Auth** para iniciar una sesión nueva. Puedes hacer clic en **Clear Session** en modo edición para eliminar el token almacenado sin borrar la entrada del servidor.
+
+Para host, puerto, TLS, duración del JWT y el resto de `server.conf` en la máquina del team server, usa los comandos del launcher en [Configuration](/docs/servers/configuration).

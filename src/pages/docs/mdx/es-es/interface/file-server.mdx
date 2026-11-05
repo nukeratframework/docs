@@ -1,0 +1,37 @@
+---
+title: Servidor de archivos
+---
+
+import { Globe } from 'lucide-react';
+import fileServer from '@/assets/img/tutorial/file_server.png';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+La pestaña del servidor de archivos te permite gestionar servidores de archivos ya configurados en NukeRat. Te ayuda a alojar archivos de forma rápida y eficiente, por ejemplo payloads.
+
+Puedes abrir la pestaña **File Server** desde el icono <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle"><Globe size={18.5} className="shrink-0 ml-1.5 mr-1.5" /></span> en la barra superior, o desde **Tabs** > **File Server**.
+
+<ImageZoom src={fileServer} alt="File Server" className="tutorial_img" />
+
+## Cómo usar
+
+Para usar la pestaña del servidor de archivos, sigue estos pasos:
+
+  <Steps>
+    <Step>
+      ### Crear un listener de tipo File server
+      Primero, crea un listener de tipo **File server**. Para más detalles, consulta la sección [Listeners](/docs/listeners).
+    </Step>
+    <Step>
+      ### Seleccionar un servidor de archivos
+      En la parte superior de la pestaña, abre el selector de servidor y elige el listener **File server** que quieras gestionar.
+    </Step>
+    <Step>
+      ### Subir un archivo
+      Por último, sube el archivo que quieras alojar.
+    </Step>
+  </Steps>
+
+## Consejo adicional
+
+Los servidores de archivos de NukeRat no se limitan a alojar archivos. También pueden usarse para alojar aplicaciones de ingeniería social, como páginas de inicio de sesión falsas.

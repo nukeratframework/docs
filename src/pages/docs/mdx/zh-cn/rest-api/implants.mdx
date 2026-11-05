@@ -1,0 +1,338 @@
+---
+title: 植入体
+---
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from 'fumadocs-ui/components/ui/collapsible';
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Callout } from '@/ui/custom/callout';
+
+Implant API 由 HTTP/HTTPS **监听器（listener）** 进程对外提供。这与客户端和自动化所使用的[团队服务器管理 REST API](/docs/rest-api/team-server) 不是同一套接口。
+
+每个通道对应植入体的一个路径：即监听器配置中的 `endpointPath`（服务端会规范为以 `/` 开头，除 `/` 外不以 `/` 结尾）。该路径上同时注册 **GET** 与 **POST**。
+
+<Callout type="info" title="正在编写自定义植入体？">
+  建议先阅读进阶指南 [自定义植入体](/docs/custom-implants)，其中详细说明 Implant API，能避免不少弯路。
+</Callout>
+
+---
+
+## 通信加密
+
+植入体发出的每个请求都必须加密，没有例外。团队服务器始终期望收到加密请求体。
+
+加密使用植入体与团队服务器共享的 AES-256 密钥。密钥在构建植入体时生成并写入数据库，以便团队服务器解密入站请求。
+
+**重要**：每个植入体请求体必须包含两部分：
+
+1. **Challenge（挑战）** — 用 AES-256 密钥加密的 9 个随机字节（始终恰好 9 字节）
+2. **Payload（载荷）** — 用同一 AES-256 密钥加密的请求 JSON
+
+两段密文拼接后一并发送。例如：
+
+```
+abcdef = 000000
+{"output": "123"} = 111111
+```
+
+- **abcdef** 表示 challenge
+- `{"output": "123"}` 表示 payload
+
+加密后的结果为：
+
+```
+000000111111
+```
+
+Challenge 用于让监听器匹配正确的密钥以解密 payload。如上所述，challenge 固定为 9 字节，校验很快且无需触碰通常大得多的真实 payload。
+
+若没有密钥能解密，监听器返回 HTTP `200` 且响应体为空。
+
+线路上每个加密段为 **12 字节 nonce**，后接 **含 16 字节 auth tag 的 AES-GCM 密文**。监听器将前 **37 字节**（`12 + 9 + 16`）视为探测块，其余部分作为 payload 块解密。两段必须使用 `AesKeys` 表中的同一密钥行解密。
+
+POST 请求体的最小长度为 **65 字节**（探测段加至少 1 字节 payload）。更短的主体同样返回 HTTP `200` 且响应为空。
+
+### 请求体模板 (`implantBody`)
+
+当通道配置了 `implantBody`（或旧字段 `beaconBody`）时，原始 HTTP 体必须符合该模板。标记 `§content§` 处放置加密字节。监听器提取 `§content§` 匹配到的子串，仅对该片段解密。
+
+若 `implantBody` 为空或恰好为 `§content§`，则解密整个原始请求体。
+
+若配置了非空模板而请求体不匹配，监听器返回 HTTP `200` 且响应体为空（不进行解密）。
+
+### 响应体模板（`listenerResponse`）
+
+处理程序返回的 JSON 与植入体请求一样加密为单个 blob。默认该 blob 即为整个响应体。设置 `listenerResponse` 时，加密字节替换模板中的 `§content§`。
+
+成功的加密响应使用 `Content-Type: application/octet-stream`。HTTP 状态为 **200**，除非下文另有说明。
+
+### 静默 HTTP `200`（空响应体）
+
+以下情况返回 HTTP **200**、**空**响应体且无加密 JSON：
+
+- 对监听器路径的 **GET**
+- **POST** 且请求体为空
+- 请求体短于线路上的最小长度
+- 数据库中没有任何 AES 密钥能解密探测块与 payload
+- `implantBody` 模板不匹配
+- 解密后 JSON 解析失败
+- 植入体 payload 校验失败（`option` 缺失或无效、必填字段缺失等）
+
+### 主机校验
+
+解密后，若 payload 为带 `host` 字段的**单个 JSON 对象**，监听器会检查该 tag 是否存在于主机注册表。若不存在，返回 HTTP **400** 及加密 JSON：
+
+```json
+{ "status": "failure", "error": "Missing host" }
+```
+
+JSON **数组**（批量 `output`）跳过此预检。若首个数组元素包含 `host`，仍会据此更新 `last_seen`。
+
+## 主端点
+
+<Collapsible className="mb-4" defaultOpen={true}>
+  <CollapsibleTrigger className="flex w-full items-center gap-3 rounded-[11px] border border-fd-border bg-fd-card px-[15px] py-[10px] text-left text-sm font-medium">
+    <span className="rounded-[6px] bg-emerald-500/15 px-2 py-1 font-semibold text-emerald-400">POST</span>
+    <span className="font-[400] text-[16px]">{`{endpointPath}`}</span>
+  </CollapsibleTrigger>
+  <CollapsibleContent className="mt-3 rounded-lg border border-fd-border bg-fd-card p-4 text-sm text-fd-muted-foreground">
+    <h2 className="api-section-title api-section-title--explanation">说明</h2>
+    
+    这是监听器的主路径（`endpointPath`）。**GET** 始终返回 HTTP `200` 且响应体为空。**POST** 承载如上所述的加密植入体流量。
+
+    **POST** 处理顺序：读取原始 body → 按 `implantBody` 提取（若配置）→ 解密 → JSON 解析 → `parse_implant_payload` → 主机注册表校验（若需要）→ 处理器（`main_core` → `main_actions`）。
+
+    请求主要分为三种模式：
+
+    1. `new` — 发送指纹并在首次联络时注册主机
+    2. `input` — 轮询队列中的待执行命令
+    3. `output` — 回传命令执行结果
+
+    另有可选的辅助模式：
+
+    1. `kill_task` — 取消队列中的任务
+    2. `error` — 在无 `option` 字段时上报任务失败
+
+    <h2 className="api-section-title api-section-title--primary">请求</h2>
+
+    <Tabs className="api-tabs" items={['new', 'input', 'output', 'kill_task', 'error']}>
+      <Tab value="new">
+        ```json
+        {
+          "option": "new",
+          "tag": "600d4",
+          "ip": "",
+          "hostname": "DESKTOP-B08TFNF",
+          "user": "Lab",
+          "arch": "x64",
+          "pid": 4212,
+          "os": "Windows 10 Pro",
+          "listener": "http",
+          "delay": 2,
+          "implant_config": {
+            "channel": "http",
+            "host": "192.168.15.10",
+            "port": "9090",
+            "host_tag": "600d4",
+            "delay": 2
+          },
+          "metadata": {
+            "relays": [],
+            "privilege": "default",
+            "internal_ip": "192.168.15.7",
+            "host": "192.168.15.10",
+            "port": "9090"
+          }
+        }
+        ```
+      </Tab>
+      <Tab value="input">
+        ```json
+        {
+          "option": "input",
+          "host": "600d4",
+          "metadata": {
+            "relays": [],
+            "privilege": "default",
+            "internal_ip": "192.168.15.7",
+            "host": "192.168.15.10",
+            "port": "9090"
+          }
+        }
+        ```
+      </Tab>
+      <Tab value="output">
+        ```json
+        [
+          {
+            "option": "output",
+            "type": "terminal",
+            "task_tag": "Z7upre",
+            "host": "600d4",
+            "output": " Volume in drive C has no label.\n Directory of C:/Users/Lab/Desktop\n"
+          },
+          {
+            "option": "output",
+            "type": "folders",
+            "task_tag": "ArBYCq",
+            "host": "600d4",
+            "content": [
+              { "name": "desktop.ini", "type": "file", "size": "552", "modified": "2026-06-25 13:05:59" }
+            ]
+          }
+        ]
+        ```
+      </Tab>
+      <Tab value="kill_task">
+        ```json
+        {
+          "option": "kill_task",
+          "task_tag": "Z7upre"
+        }
+        ```
+      </Tab>
+      <Tab value="error">
+        ```json
+        {
+          "error": "command failed",
+          "task_tag": "Z7upre"
+        }
+        ```
+      </Tab>
+    </Tabs>
+
+
+    <h2 className="api-section-title api-section-title--compact">响应</h2>
+
+    <Tabs className="api-tabs" items={['new', 'input', 'output', 'task error', 'Failure']}>
+      <Tab value="new">
+        ```json
+        {
+          "status": "success",
+          "message": "host included"
+        }
+        ```
+
+        重复的 `tag`（唯一约束）：`"status": "success"` 且 `"message": "host already exists"`。
+      </Tab>
+      <Tab value="input">
+        ```json
+        {
+          "commands": [
+            {
+              "status": "success",
+              "type": "terminal",
+              "task_tag": "Z7upre",
+              "host": "600d4",
+              "input": "shell",
+              "parameters": {
+                "args": "dir",
+                "mode": "shell",
+                "raw": "shell"
+              }
+            }
+          ]
+        }
+        ```
+      </Tab>
+      <Tab value="output">
+        ```json
+        {
+          "status": "success",
+          "message": "output received successfully"
+        }
+        ```
+      </Tab>
+      <Tab value="task error">
+        独立 payload，含 `error` 与 `task_tag` 且无 `option`（植入体上报的任务失败）：
+
+        ```json
+        {
+          "status": "success",
+          "message": "output received successfully"
+        }
+        ```
+      </Tab>
+      <Tab value="Failure">
+        加密 JSON（除非另有说明，HTTP 为 **200**）：
+
+        ```json
+        {
+          "status": "failure",
+          "error": "<msg>"
+        }
+        ```
+
+        示例：`"Missing host"`（**HTTP 400**）、`"internal error"`、`"Task processing error"`，以及来自 `kill_task` / 无效 `option` / output 处理失败的任务中止消息。
+
+        `main_core` 内未捕获的错误返回 `{ "status": "failure", "error": "internal error" }`，HTTP **200**。
+      </Tab>
+    </Tabs>
+
+    ---
+
+    <h2 className="api-section-title api-section-title--compact">字段说明</h2>
+
+    <table className="api-schema-table" style={{ borderCollapse: 'collapse', width: '100%' }}>
+      <thead>
+        <tr>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>字段</th>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>类型</th>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>必填</th>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>说明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style={{ padding: '8px 12px' }}><code>option</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}>请求模式：<code>new</code>、<code>input</code>、<code>output</code> 或 <code>kill_task</code>。仅在独立任务错误 payload 中可省略。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>tag</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}>仅 <code>new</code>。分配给植入体的主机 tag。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>host</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}>用于 <code>input</code> 与 <code>output</code>。注册表中的主机 tag。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>task_tag</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}><code>input</code> 响应中的队列事件 tag。在 <code>output</code>、<code>kill_task</code> 及任务错误 payload 中必填。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>body (output)</code></td><td style={{ padding: '8px 12px' }}>array</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}><code>output</code> 时植入体发送 JSON 结果数组，每项遵循下述结构。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>type</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}>每个 <code>output</code> 数组元素。取值为 <code>terminal</code>、<code>folders</code>、<code>process</code>、<code>keylogger</code>、<code>screenshot</code>、<code>socks</code>、<code>proxychains</code> 或 <code>port_forwarding</code> 之一。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>output</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}><code>terminal</code> 及隧道模式的命令文本。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>content</code></td><td style={{ padding: '8px 12px' }}>array | string</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}><code>folders</code>、<code>keylogger</code>、<code>screenshot</code> 的结构化结果。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>tree</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}><code>process</code> 输出中的进程树。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>error</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}>任务错误文本。可出现在 <code>output</code> 内或独立 error payload 中。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>metadata</code></td><td style={{ padding: '8px 12px' }}>object</td><td style={{ padding: '8px 12px' }}>否</td><td style={{ padding: '8px 12px' }}><code>new</code> 与 <code>input</code> 中的主机元数据，可完全省略。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>metadata.relays</code></td><td style={{ padding: '8px 12px' }}>array</td><td style={{ padding: '8px 12px' }}>否</td><td style={{ padding: '8px 12px' }}>主机 relay 列表。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>metadata.privilege</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>否</td><td style={{ padding: '8px 12px' }}>植入体进程权限级别。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>metadata.internal_ip</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>否</td><td style={{ padding: '8px 12px' }}>失陷主机的内网 IP。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>metadata.host</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>否</td><td style={{ padding: '8px 12px' }}>植入体使用的监听器地址。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>metadata.port</code></td><td style={{ padding: '8px 12px' }}>string | integer</td><td style={{ padding: '8px 12px' }}>否</td><td style={{ padding: '8px 12px' }}>植入体使用的监听器端口。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>hostname</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}>仅 <code>new</code>。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>user</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}>仅 <code>new</code>。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>arch</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}>仅 <code>new</code>。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>pid</code></td><td style={{ padding: '8px 12px' }}>integer</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}>仅 <code>new</code>。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>os</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}>仅 <code>new</code>。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>listener</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}>仅 <code>new</code>。通道名称，如 <code>http</code>。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>delay</code></td><td style={{ padding: '8px 12px' }}>integer</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}>仅 <code>new</code>。植入体回连间隔（秒）。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>implant_config</code></td><td style={{ padding: '8px 12px' }}>object | string</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}>仅 <code>new</code>。写入主机行的运行时植入体配置。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[]</code></td><td style={{ padding: '8px 12px' }}>array</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}><code>input</code> 响应。该主机待执行的队列事件。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].status</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>是</td><td style={{ padding: '8px 12px' }}>命令下发时恒为 <code>success</code>。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].type</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>是</td><td style={{ padding: '8px 12px' }}>队列事件类型，如 <code>terminal</code> 或 <code>port_forwarding</code>。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].input</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>是</td><td style={{ padding: '8px 12px' }}>下发给植入体的命令名。BOF、shellcode、DLL 等可能包含服务端解析后的二进制内容。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters</code></td><td style={{ padding: '8px 12px' }}>object</td><td style={{ padding: '8px 12px' }}>是</td><td style={{ padding: '8px 12px' }}>由操作员输入解析出的命令参数，字段取决于 <code>type</code> 与具体命令。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.mode</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}><code>terminal</code> 命令的执行模式，如 <code>shell</code>、<code>bof</code>、<code>tasks kill</code>。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.args</code></td><td style={{ padding: '8px 12px' }}>string | object</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}><code>terminal</code> 命令参数。多数模式为字符串，部分 BOF 为对象。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.raw</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}><code>terminal</code> 命令。映射表中的原始命令动词。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.file</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}>来自 <code>-f</code> / <code>--file</code>。服务端解析前的 BOF 文件名或路径。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.delay</code></td><td style={{ padding: '8px 12px' }}>string | integer</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}>来自 <code>-d</code> / <code>--delay</code>。用于 <code>tokens-find</code>、截图等命令。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.pid</code></td><td style={{ padding: '8px 12px' }}>string | integer</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}>来自 <code>-p</code> / <code>--pid</code>。目标进程 ID。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.ppid</code></td><td style={{ padding: '8px 12px' }}>string | integer</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}>来自 <code>--ppid</code>。spawn / 注入用的父进程 ID。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.inject</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}>来自 <code>--inject</code>。注入目标或手法。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.inline</code></td><td style={{ padding: '8px 12px' }}>boolean</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}>来自 <code>-i</code> / <code>--inline</code>。仅标志位，无取值。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.target</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}>来自 <code>-t</code> / <code>--target</code> / <code>--destination</code>。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.flag</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}>来自 <code>--flag</code>。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.status</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}>来自 <code>--status</code> / <code>-st</code>。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.method</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}>来自 <code>--method</code>。<code>keylogger</code> 使用（<code>keystate</code> 或 <code>boardstate</code>）。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.host</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}>来自 <code>--host</code>。relay 与隧道命令。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.port</code></td><td style={{ padding: '8px 12px' }}>string | integer</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}>来自 <code>--port</code>。relay、隧道与 SOCKS 命令。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.user</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}>来自 <code>-u</code> / <code>--user</code>。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.pass</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}>来自 <code>--pass</code>。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.listen</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}>来自 <code>-l</code> / <code>--listen</code>。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.channel</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}>来自 <code>-c</code> / <code>--channel</code>。relay 传输，如 <code>http</code>、<code>tcp</code>、<code>smb</code>。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.pipe</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}>来自 <code>--pipe</code>。SMB relay 管道路径。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.id</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}>来自 <code>--id</code>。relay 或任务标识。</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.getContent</code></td><td style={{ padding: '8px 12px' }}>boolean</td><td style={{ padding: '8px 12px' }}>条件</td><td style={{ padding: '8px 12px' }}><code>folders</code> 命令。为 <code>true</code> 时下载文件内容而非列目录。</td></tr>
+      </tbody>
+    </table>
+  </CollapsibleContent>
+</Collapsible>

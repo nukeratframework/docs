@@ -1,0 +1,22 @@
+---
+title: サーバー
+---
+
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import keyAdd from '@/assets/img/tutorial/key_2.png';
+
+NukeRat クライアントは複数のチームサーバーを同時に管理できます。別のクライアントインスタンスを開かずに、異なるサーバー上のインプラント向けコマンドを実行できます。
+
+## チームサーバーを追加
+
+NukeRat クライアントでサーバーを設定するには、まずオペレーターキーが必要です。作成方法は [Operator key](/docs/operator-key) を参照してください。
+
+**NukeRat** > **Servers** を開き、**Add** をクリックして **New Server** パネルに入力します。**Key (.key)** にオペレーターキーを貼り付けるか、**Upload .key** でチームサーバーフォルダからファイルを読み込みます。**Protocol**（http または https）、**Host**、**Port** を設定し、**Auth** をクリックします。
+
+<ImageZoom src={keyAdd} alt="キーを追加" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+
+認証に成功すると、そのサーバー項目用の JWT が保存されます。デフォルトではトークンは 7 日間有効です。正確な期間はチームサーバーが `server.keys.jwt.duration` で制御します。詳細は [Operator key](/docs/operator-key) のセッション期間の節を参照してください。
+
+セッションが期限切れになると、認証が必要な機能ではエラートーストが表示されます。サーバーを選択し **Edit** を開いて **Auth** をクリックし、新しいセッションを開始してください。編集モードで **Clear Session** をクリックすると、サーバー項目を削除せずに保存済みトークンを削除できます。
+
+チームサーバー側のホスト、ポート、TLS、JWT 期間、`server.conf` のその他の項目については、[Configuration](/docs/servers/configuration) のランチャーコマンドを使用してください。

@@ -1,0 +1,85 @@
+---
+title: 创建
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import compileServer from '@/assets/img/tutorial/base.png';
+import arch from '@/assets/img/tutorial/arch.png';
+import c2 from '@/assets/img/tutorial/c2.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import urlStage from '@/assets/img/tutorial/url_stage.png';
+import relayImplant from '@/assets/img/tutorial/relay_implant.png';
+
+本文介绍如何在 NukeRat 客户端中创建植入体。客户端提供两种植入体基座：**Stageless（无阶段）** 与 **Loader（加载器）**。
+
+- **Stageless**：完整植入体，可通过 HTTP、HTTPS、自定义 HTTP、TCP 或 SMB 连接 listener（SMB 仅 Windows）
+- **Loader**：最小植入体，从你配置的 URL 下载外部 stage
+- **Relay stageless（中继无阶段）**（配置项）：仍基于 Stageless，但使用 pivot 通道（各平台 **TCP**，Windows 上还有 **SMB**），与另一植入体通信而非直连 team server
+
+## Stageless 植入体
+
+创建基础 Stageless 植入体的步骤：
+
+  <Steps>
+    <Step>
+      ### 打开植入体创建页
+      进入 **NukeRat > Implants（植入体）**。
+    </Step>
+    <Step>
+      ### 选择植入体基座
+      选择 **Stageless** 基座。
+    </Step>
+    <Step>
+      ### 选择编译服务器
+      编译服务器用于编译植入体。须已在 **NukeRat** > **Servers（服务器）** 中配置好服务器。
+      <ImageZoom src={compileServer} alt="Compile Server" className="h-[4.5rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+      服务器配置详见 [Servers（服务器）](/docs/servers)。
+    </Step>
+    <Step>
+      ### 选择操作系统与架构
+      选择植入体运行的平台与架构。Windows 仅构建 **x64**。Linux 与 macOS 可选 **amd** 或 **arm** CPU；无论哪种 CPU，客户端均构建 **x64（64 位）** 植入体。
+      <ImageZoom src={arch} alt="Architecture" className="h-[12rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+    </Step>
+    <Step>
+      ### 配置 C2
+      将通信指向 listener 中创建的通道。下例使用 HTTP 通道。
+      <ImageZoom src={c2} alt="C2" className="h-[11rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+      创建 HTTP 通道见 [Creating an HTTP channel（创建 HTTP 通道）](/docs/listeners/channel#creating-an-http-channel)。加密 POST 协议（路径、body 模板、状态码）见 [Implant listener API（植入体 listener API）](/docs/rest-api/implants)。
+    </Step>
+    <Step>
+      ### 构建植入体
+      点击 **Build（构建）** 编译植入体。
+    </Step>
+  </Steps>
+
+
+## Loader 植入体
+
+创建流程与 Stageless 类似，但有几点不同。Loader 的 C2 仅支持 **HTTP** 与 **custom（自定义）** 通道。步骤如下：
+
+  <Steps>
+    <Step>
+      ### 选择 Loader 基座
+      将基座从 **Stageless** 改为 **Loader**。
+    </Step>
+    <Step>
+      ### 配置载荷
+      在 **Stage** 标签页中设置 payload URL。
+
+      shellcode 应为 shellcode 格式的 Stageless 植入体。
+      <ImageZoom src={urlStage} alt="URL Stage" className="h-[4.5rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+    **提示**：可用 NukeRat 的 **File server（文件服务器）** 功能快速托管 payload。详见 [File server（文件服务器）](/docs/listeners/file-server#creating-a-file-server)。
+    </Step>
+  </Steps>
+
+## Relay stageless 植入体
+
+Relay stageless 仍是 **Stageless** 基座构建，区别在于 C2：在 **Channel（通道）** 中选择 pivot 协议（**TCP**，Windows 上还有 **SMB**）。在 **Relay implant（中继植入体）** 字段中指向上游植入体（主机、端口或 SMB 管道），由它转发流量至 team server。
+
+适用于目标主机无法直接出网的情况。
+
+创建步骤与 Stageless 相同，仅 C2 配置不同。
+
+<ImageZoom src={relayImplant} alt="Relay Implant" className="h-[18rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+
+各支持平台均可使用 **TCP**。**SMB** 仅用于 Windows 植入体。目标主机须已在上游植入体上配置好 relay。更多信息见 [Relay（中继）](/docs/pivoting/relay#how-to-use)。

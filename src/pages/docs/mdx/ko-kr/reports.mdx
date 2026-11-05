@@ -1,0 +1,76 @@
+---
+title: 보고서
+---
+
+import { Callout } from '@/ui/custom/callout';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import activityReport from '@/assets/img/tutorial/report.png';
+
+NukeRat에서는 작전 중 발생한 모든 내용에 대한 보고서를 생성할 수 있습니다. 각 보고서는 PDF(기본), HTML, JSON으로 내보낼 수 있습니다. 사용 가능한 보고서 유형은 다음과 같습니다.
+
+- **Activity**: 실행된 터미널 명령 및 캡처된 자격 증명
+- **Hosts Report**: 침해된 호스트 상세
+- **Indicators of Compromise**: 침해 지표(IOC) 목록
+
+## Activity 보고서
+
+Activity 보고서는 작전 중 무슨 일이 있었는지 고수준 개요를 제공합니다. 구조는 다음과 같습니다.
+
+| 섹션 | 설명 |
+|---------|-------------|
+| Target scope | 침해된 호스트 목록 |
+| Queue activity | 터미널 명령 최대 200개(시간, 호스트명, 사용자, 명령) |
+| Captured credentials | 캡처된 자격 증명 최대 200개 |
+
+Activity 보고서를 만들 때 **Hide credentials**를 켜면 내보내기에서 자격 증명 내용을 마스킹할 수 있습니다.
+
+<Callout type="info">
+  팁: queue activity 행은 터미널 큐 항목에서 옵니다. **NukeRat** > **Queue**에서 큐의 명령을 제거할 수 있습니다. 보고서를 만들기 전에 원치 않는 캡처를 빼는 데 유용합니다.
+</Callout>
+
+## Hosts 보고서
+
+가장 단순한 보고서입니다. 침해된 호스트를 최대 200개까지 하나의 표로 나열하며 항목은 다음과 같습니다.
+
+- Hostname
+- User
+- Operating system
+- Internal IP
+- External IP
+- PID of the NukeRat implant
+
+## Indicators of Compromise
+
+IOC 보고서는 세 가지 중 가장 복잡합니다. 작전에 저장된 모든 IOC를 다음 섹션으로 나눕니다.
+
+| 섹션 | 설명 |
+|---------|-------------|
+| Target scope | 침해된 호스트 목록 |
+| IP Addresses | IP 주소 목록 |
+| Domains | 도메인 목록 |
+| Files | 명령 출력에서 감지된 파일 경로 목록 |
+| Hashes | 파일 해시 목록(MD5, SHA1, SHA256) |
+
+NukeRat는 IOC 데이터베이스를 자동으로 채웁니다. 터미널 명령은 IPv4 주소, 도메인, 알려진 파일 확장자에 대한 정규식 규칙으로 스캔됩니다. 파일 서버를 통해 전송된 파일에도 MD5, SHA1, SHA256 해시가 기록됩니다. 출력을 AI 모델이 처리하는 것처럼 동적으로 돌아가는 것은 없습니다. 그래서 지표가 어긋나거나 단순 캡처 오류가 날 수 있지만, 그렇게 흔하지는 않습니다.
+
+<Callout type="info">
+    팁: 지표 캡처 문제를 다루려면 NukeRat에 IOC 편집기가 있어 캡처된 지표를 검토하고 제거할 수 있습니다. **NukeRat** > **IOCs**에서 엽니다.
+</Callout>
+
+## 보고서 예시
+
+아래는 보고서 스타일이 어떻게 보이는지에 대한 예입니다.
+<ImageZoom src={activityReport} alt="Activity report" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+보고서를 열 때 주의하세요. 화이트 모드라 시각적으로 번쩍일 수 있습니다 ¯\\_(ツ)_/¯
+
+## 제한 사항
+
+모든 보고서는 선택한 팀 서버에서 생성됩니다. 즉 각 보고서는 해당 서버에 연결된 호스트로 제한됩니다.
+
+팀 서버를 여러 대 사용 중이면 서버마다 보고서를 따로 생성해야 합니다.
+
+## 피드백
+
+보고서 생성은 아직 실험 단계입니다. NukeRat의 다른 기능보다 더 자주 바뀔 수 있습니다. 주로 운영자가 보고서에서 실제로 무엇을 필요로 하는지 아직 정리 중이기 때문입니다.
+
+피드백이나 제안이 있으면 GitHub에 이슈를 열어 주세요.

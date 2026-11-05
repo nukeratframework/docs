@@ -1,0 +1,49 @@
+---
+title: نصب
+---
+
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Callout } from '@/ui/custom/callout';
+
+در زیر دستورهای نصب کلاینت و سرور NukeRat آمده است. سرور فقط روی **Linux** اجرا می‌شود. کلاینت روی **Windows**، **Linux** و **macOS** اجرا می‌شود.
+
+<Callout
+  type="info"
+  title="نکته"
+  className="rounded-[6px] border-blue-500/25 bg-blue-500/5 shadow-none [&_svg]:text-blue-600/70 dark:[&_svg]:text-blue-400/60 [&_.text-fd-muted-foreground]:text-fd-muted-foreground [&_p.font-medium]:text-fd-foreground"
+>
+  اگر برای اولین بار با NukeRat کار می‌کنید، [راه‌اندازی سریع](/docs/fast-setup) را باز کنید تا در چند مرحله اولین ایمپلنت فعال خود را راه بیندازید.
+</Callout>
+
+## دستورات
+
+  <Tabs items={['Linux', 'Windows', 'macOS']} groupId="installation-os" persist>
+    <Tab value="Linux">
+      **سرور:**
+      ```bash
+      git clone https://github.com/nukeratframework/nukerat && cd nukerat && sudo bash install.sh server
+      ```
+
+      **کلاینت:**
+      ```bash
+      git clone https://github.com/nukeratframework/nukerat && cd nukerat && sudo bash install.sh client
+      ```
+
+      **هر دو:**
+      ```bash
+      git clone https://github.com/nukeratframework/nukerat && cd nukerat && sudo bash install.sh all
+      ```
+    </Tab>
+    <Tab value="Windows">
+      **کلاینت:**
+      ```bash
+      git clone https://github.com/nukeratframework/nukerat && cd nukerat && install\windows.bat client
+      ```
+    </Tab>
+    <Tab value="macOS">
+      **کلاینت:**
+      ```bash
+      git clone https://github.com/nukeratframework/nukerat && cd nukerat && bash install/mac.sh client
+      ```
+    </Tab>
+  </Tabs>

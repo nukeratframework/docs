@@ -1,0 +1,119 @@
+---
+title: ИИ-агенты
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import agentBodyForm from '@/assets/img/tutorial/agent_body.png';
+import agentResponseKeys from '@/assets/img/tutorial/agent_body_keys.png';
+import { Bot } from 'lucide-react';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+NukeRat поддерживает интеграцию с внешними моделями ИИ через API, так что с ними можно работать прямо из интерфейса NukeRat.
+
+
+## Совместимость
+
+Большинство моделей совместимы со схемой интеграции NukeRat: запрос можно настроить — тело, заголовки и т. д.
+
+При этом NukeRat поддерживает только модели с форматом сообщений и ролями system, user и assistant, как в примере ниже:
+
+```json
+{
+    "model": "deepseek-flash",
+    "messages": [
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Hello!"}
+    ]
+}
+```
+
+У некоторых провайдеров другие соглашения об именах полей — из‑за этого интеграция может ломаться.
+
+
+## Пресеты агентов
+
+Собирать запрос вручную не обязательно. В NukeRat есть пресет **DeepSeek**: при создании агента выберите тип **DeepSeek** и укажите API-ключ. team server обращается к `https://api.deepseek.com/chat/completions` с моделью `deepseek-v4-pro`.
+
+Дополнительные пресеты мы не планируем: у каждого провайдера свои нюансы, особенно у тех, у кого жёсткие правила использования в контексте кибербезопасности (OpenAI, Anthropic и т. п.).
+
+## Создание агента
+
+Чтобы создать агента, выполните шаги ниже:
+
+  <Steps>
+    <Step>
+      ### Откройте **Agents**
+      Откройте **NukeRat** > **Agents** и нажмите **New**.
+    </Step>
+    <Step>
+      ### Заполните поля
+      Задайте имя и team server, на котором агент будет храниться. Тип **Custom** — ручное сопоставление HTTP-запроса; **DeepSeek** — встроенный пресет.
+    </Step>
+    <Step>
+      ### Настройка запроса
+      В этом примере используется модель Grok.
+
+      Сначала возьмите базовую команду curl из документации Grok:
+
+      ```bash
+      curl https://api.x.ai/v1/chat/completions \
+        -H "Authorization: Bearer $XAI_API_KEY" \
+        -H "Content-Type: application/json" \
+        -d '{
+            "model": "grok-4.6",
+            "messages": [
+            {"role": "user", "content": "Hello, Grok!"}
+            ]
+        }
+      ```
+
+      Затем перенесите URL, тело и заголовки в поля агента. Так это выглядит в форме:
+      <ImageZoom src={agentBodyForm} alt="Agent Body Form" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+
+      Обратите внимание на два момента:
+
+      1. В шаблоне тела нет сообщения с ролью `system`
+      2. В шаблоне уже есть сообщение с ролью `user`
+
+      Это не мешает создать агента, потому что:
+
+      1. Если в шаблоне нет `system`, NukeRat подставляет системный промпт сессии в начало массива `messages`
+      2. Сообщения из шаблона сохраняются, а сообщения чата из интерфейса добавляются после них
+    </Step>
+    <Step>
+      ### Извлечение ответа
+      Чтобы показать ответ модели, нужно указать JSON-ключ (путь) к тексту ответа.
+
+      Проще всего выполнить curl и посмотреть формат ответа.
+
+      У Grok ответ выглядит так:
+
+      ```json
+       {
+        [... остальная часть JSON ...]
+        "choices": [{
+            "index": 0,
+            "message": {
+                "role": "assistant",
+                "content": "Hello! How can I help you today?",
+                "reasoning_content": "The user said: \"Hello, Grok!\"\n",
+                "refusal": null
+            },
+            "finish_reason": "stop"
+        }]
+        [... остальная часть JSON ...]
+      }
+      ```
+
+      По ответу пройдите по JSON до поля с текстом ответа. Используйте путь через точку с необязательными индексами в скобках для каждого сегмента. Здесь это `choices[0].message.content` — его указывают в поле **Response field**.
+
+      <ImageZoom src={agentResponseKeys} alt="Agent Response Keys" className="h-[5rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+    </Step>
+    <Step>
+      ### Проверка агента
+      Чтобы пользоваться агентом, откройте вкладку **AI Agent** через значок <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle"><Bot size={18.5} className="shrink-0 ml-1.5 mr-1.5" /></span> на верхней панели или **Tabs** > **AI Agent**.
+
+      Подробнее о вкладке **AI Agent** — в разделе [AI Agent](/docs/interface/ai-agent).
+
+    </Step>
+  </Steps>

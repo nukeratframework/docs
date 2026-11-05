@@ -1,0 +1,119 @@
+---
+title: عامل‌های هوش مصنوعی
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import agentBodyForm from '@/assets/img/tutorial/agent_body.png';
+import agentResponseKeys from '@/assets/img/tutorial/agent_body_keys.png';
+import { Bot } from 'lucide-react';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+NukeRat ادغام با مدل‌های AI خارجی از طریق API را پشتیبانی می‌کند تا بتوانید مستقیماً از رابط NukeRat با آن‌ها کار کنید.
+
+
+## سازگاری
+
+بیشتر مدل‌ها با مدل ادغام NukeRat سازگارند، چون می‌توانید درخواست را سفارشی کنید، از جمله body، headerها و غیره.
+
+با این حال، NukeRat فقط مدل‌هایی را پشتیبانی می‌کند که از قالب پیام با نقش‌های system، user و assistant استفاده کنند، مثل مثال زیر:
+
+```json
+{
+    "model": "deepseek-flash",
+    "messages": [
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Hello!"}
+    ]
+}
+```
+
+برخی مدل‌ها ممکن است قرارداد نام‌گذاری متفاوت بخواهند و آن در ادغام مشکل ایجاد می‌کند.
+
+
+## presetهای agent
+
+لازم نیست حتماً درخواست را دستی بسازید. NukeRat preset **DeepSeek** دارد. هنگام ساخت agent نوع **DeepSeek** را انتخاب کنید و API key بدهید. team server به `https://api.deepseek.com/chat/completions` با مدل `deepseek-v4-pro` درخواست می‌زند.
+
+برنامه‌ای برای presetهای بیشتر نداریم، چون هر مورد ادغام تنظیمات متفاوت می‌خواهد، به‌ویژه برای ارائه‌دهندگانی با سیاست استفاده سخت‌گیرانه‌تر دربارهٔ cybersecurity، مثل OpenAI و Anthropic.
+
+## ساخت agent
+
+برای ساخت agent مراحل زیر را دنبال کنید:
+
+  <Steps>
+    <Step>
+      ### باز کردن تب AI agents
+      **NukeRat** > **Agents** را باز کنید، سپس **New** را بزنید.
+    </Step>
+    <Step>
+      ### پر کردن فیلدها
+      نامی انتخاب کنید و team serverی را که agent روی آن ذخیره می‌شود مشخص کنید. برای mapping دستی HTTP نوع **Custom** را بگذارید، یا **DeepSeek** برای preset داخلی.
+    </Step>
+    <Step>
+      ### تنظیم درخواست
+      در این مثال از مدل Grok استفاده می‌کنیم.
+
+      اول دستور curl پایه را از مستندات Grok برمی‌داریم:
+
+      ```bash
+      curl https://api.x.ai/v1/chat/completions \
+        -H "Authorization: Bearer $XAI_API_KEY" \
+        -H "Content-Type: application/json" \
+        -d '{
+            "model": "grok-4.6",
+            "messages": [
+            {"role": "user", "content": "Hello, Grok!"}
+            ]
+        }
+      ```
+
+      سپس URL، body و headerها را در فیلدهای agent map می‌کنیم. شکلش این‌طور است:
+      <ImageZoom src={agentBodyForm} alt="Agent Body Form" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+
+      دو نکتهٔ مهم:
+
+      1. در قالب body پیام `system` نیست
+      2. در قالب body از قبل پیام `user` هست
+
+      این دو جزئیات ساخت agent را خراب نمی‌کنند، چون:
+
+      1. وقتی در قالب body پیام `system` نباشد، NukeRat system prompt session را در ابتدای آرایهٔ `messages` درج می‌کند
+      2. پیام‌های موجود در قالب body حفظ می‌شوند و نوبت‌های چت از UI بعد از آن‌ها append می‌شوند
+    </Step>
+    <Step>
+      ### گرفتن پاسخ
+      برای ثبت پاسخ درخواست باید بدانید کدام کلید JSON از پاسخ استفاده می‌شود.
+
+      ساده‌ترین راه اجرای curl و بررسی قالب پاسخ مدل است.
+
+      در مثال Grok، پاسخ این‌شکل است:
+
+      ```json
+       {
+        [... rest of the JSON ...]
+        "choices": [{
+            "index": 0,
+            "message": {
+                "role": "assistant",
+                "content": "Hello! How can I help you today?",
+                "reasoning_content": "The user said: \"Hello, Grok!\"\n",
+                "refusal": null
+            },
+            "finish_reason": "stop"
+        }]
+        [... rest of the JSON ...]
+      }
+      ```
+
+      بر اساس پاسخ، مسیر JSON را تا مقداری که جواب را نگه می‌دارد دنبال کنید. مسیر با نقطه جدا شده و در صورت نیاز اندیس bracket برای هر segment. اینجا `choices[0].message.content` است که در **Response field** می‌رود.
+
+      <ImageZoom src={agentResponseKeys} alt="Agent Response Keys" className="h-[5rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+    </Step>
+    <Step>
+      ### آزمایش agent
+      برای استفاده از agent تب **AI Agent** را از <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">آیکون <Bot size={18.5} className="shrink-0 ml-1.5 mr-1.5" /></span> در نوار بالا باز کنید، یا از **Tabs** > **AI Agent**.
+
+      برای بیشتر دربارهٔ تب **AI Agent**، [AI Agent](/docs/interface/ai-agent) را ببینید.
+
+    </Step>
+  </Steps>

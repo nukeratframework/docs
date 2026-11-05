@@ -1,0 +1,37 @@
+---
+title: ポート転送
+---
+
+import socks from '@/assets/img/tutorial/port_fw.png';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+NukeRat では、侵害済みホスト経由でポート転送を設定し、内部ネットワーク上の特定ポートへ到達できます。
+
+チームサーバーがリッスンポートをバインドします。接続は、選択したインプラントを経由して内部ホストとポートへ転送されます。
+
+## 設定方法
+
+ポート転送を作成するには、次の手順に従います。
+
+  <Steps>
+    <Step>
+      ### Network ウィンドウを開く
+      **NukeRat** > **Network** に移動し、**Add** をクリックします。
+    </Step>
+    <Step>
+      ### ポート転送を設定する
+      <ImageZoom src={socks} alt="Port forward add" className="h-[15rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+      - **Team server**: リスナー API エンドポイント（フォーム上部のホストとポート）
+      - **Type**: `port forwarding`
+      - **Host tag**: 内部ターゲットへの接続を開くインプラント
+      - **Listen port**: チームサーバーで開くポート
+      - **Protocol**: TCP のみ（現時点でチームサーバーが受け付けるプロトコル）
+      - **Forward host**: インプラント経由で到達する内部 IP またはホスト名
+      - **Forward port**: インプラント経由で到達する内部ポート
+
+      各フィールドを設定したら **Create** をクリックします。
+    </Step>
+  </Steps>
+
+完了すると、ポート転送が Network テーブルに表示されます。`<team_server_host>:<listen_port>` に接続すると、インプラント経由で `forward_host:forward_port` に到達できます。

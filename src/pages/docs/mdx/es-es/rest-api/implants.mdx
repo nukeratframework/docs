@@ -1,0 +1,338 @@
+---
+title: Implants
+---
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from 'fumadocs-ui/components/ui/collapsible';
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Callout } from '@/ui/custom/callout';
+
+Implant API expuesta a través del proceso del **listener** HTTP/HTTPS. No es la [REST API de gestión del team server](/docs/rest-api/team-server) que usan el cliente y la automatización.
+
+El implant usa una ruta por canal: `endpointPath` del perfil del listener (normalizada por el servidor para empezar con `/`, sin barra final salvo `/`). En esa ruta se registran **GET** y **POST**.
+
+<Callout type="info" title="¿Construyes un implant personalizado?">
+  Recomendamos leer la guía avanzada sobre [Implants personalizados](/docs/custom-implants), que recorre la Implant API. Puede ahorrarte muchos problemas.
+</Callout>
+
+---
+
+## Cifrado de la comunicación
+
+Cada petición del implant debe ir cifrada. No es opcional. El team server siempre espera un cuerpo cifrado.
+
+El cifrado usa una clave AES-256 compartida por el implant y el team server. La clave se crea al compilar el implant y se guarda en la base de datos para que el team server pueda descifrar las peticiones entrantes.
+
+**Importante**: cada cuerpo de petición del implant debe contener dos partes:
+
+1. **Challenge** — 9 bytes aleatorios cifrados con la clave AES-256 (siempre exactamente 9 bytes)
+2. **Payload** — el JSON de la petición cifrado con la misma clave AES-256
+
+Los dos bloques se concatenan y se envían juntos. Por ejemplo:
+
+```
+abcdef = 000000
+{"output": "123"} = 111111
+```
+
+- **abcdef** es el challenge
+- `{"output": "123"}` es el payload
+
+La salida cifrada sería:
+
+```
+000000111111
+```
+
+El challenge permite al listener encontrar la clave correcta para descifrar el payload. Como se indicó, el challenge tiene siempre 9 bytes. Eso mantiene la validación rápida sin tocar el payload real, que suele ser mucho mayor.
+
+Si ninguna clave funciona, el listener devuelve HTTP `200` con cuerpo vacío.
+
+En la red, cada segmento cifrado es un **nonce de 12 bytes** seguido del **texto cifrado AES-GCM incluyendo el tag de autenticación de 16 bytes**. El listener trata los primeros **37 bytes** (`12 + 9 + 16`) como el blob de prueba y descifra el resto como el blob del payload. Ambos deben descifrarse con la misma fila de clave de la tabla `AesKeys`.
+
+El tamaño mínimo del cuerpo POST es **65 bytes** (segmento de prueba más al menos un byte de payload). Cuerpos más cortos reciben HTTP `200` con respuesta vacía.
+
+### Plantilla del cuerpo de petición (`implantBody`)
+
+Cuando el canal define `implantBody` (o el legacy `beaconBody`), el cuerpo HTTP en bruto debe coincidir con esa plantilla. El marcador `§content§` es donde van los bytes cifrados. El listener extrae la subcadena que coincide en `§content§` y solo ese fragmento se descifra.
+
+Si `implantBody` está vacío o es exactamente `§content§`, se descifra todo el cuerpo en bruto.
+
+Si hay una plantilla no vacía configurada y el cuerpo no coincide, el listener devuelve HTTP `200` con cuerpo vacío (sin descifrado).
+
+### Plantilla del cuerpo de respuesta (`listenerResponse`)
+
+El JSON del handler se cifra en un solo blob igual que las peticiones del implant. Por defecto ese blob es todo el cuerpo de la respuesta. Cuando `listenerResponse` está definido, los bytes cifrados sustituyen `§content§` en esa plantilla.
+
+Las respuestas cifradas con éxito usan `Content-Type: application/octet-stream`. El estado HTTP es **200** salvo que se indique lo contrario abajo.
+
+### HTTP `200` silencioso (cuerpo vacío)
+
+Estos casos devuelven HTTP **200** con cuerpo **vacío** y sin JSON cifrado:
+
+- **GET** en la ruta del listener
+- **POST** con cuerpo vacío
+- Cuerpo más corto que la longitud mínima en la red
+- Ninguna clave AES de la base de datos descifra el segmento de prueba y el payload
+- Desajuste de la plantilla `implantBody`
+- Error de parseo JSON tras el descifrado
+- Error de validación del payload del implant (`option` ausente o inválida, campos obligatorios, etc.)
+
+### Validación del host
+
+Tras descifrar, si el payload parseado es un **objeto JSON único** con campo `host`, el listener comprueba que ese tag exista en el registro de hosts. Si no, responde HTTP **400** con JSON cifrado:
+
+```json
+{ "status": "failure", "error": "Missing host" }
+```
+
+Los **arrays** JSON (batch `output`) omiten esta comprobación previa. `last_seen` sigue actualizándose desde el primer elemento del array cuando incluye `host`.
+
+## Endpoint principal
+
+<Collapsible className="mb-4" defaultOpen={true}>
+  <CollapsibleTrigger className="flex w-full items-center gap-3 rounded-[11px] border border-fd-border bg-fd-card px-[15px] py-[10px] text-left text-sm font-medium">
+    <span className="rounded-[6px] bg-emerald-500/15 px-2 py-1 font-semibold text-emerald-400">POST</span>
+    <span className="font-[400] text-[16px]">{`{endpointPath}`}</span>
+  </CollapsibleTrigger>
+  <CollapsibleContent className="mt-3 rounded-lg border border-fd-border bg-fd-card p-4 text-sm text-fd-muted-foreground">
+    <h2 className="api-section-title api-section-title--explanation">Explicación</h2>
+    
+    Esta es la ruta principal del listener (`endpointPath`). **GET** siempre devuelve HTTP `200` con cuerpo vacío. **POST** transporta tráfico cifrado del implant como se describe arriba.
+
+    Orden de procesamiento en **POST**: leer cuerpo en bruto → extracción opcional de `implantBody` → descifrado → parseo JSON → `parse_implant_payload` → comprobación opcional del registro de hosts → handler (`main_core` → `main_actions`).
+
+    Las peticiones se dividen en 3 modos principales:
+
+    1. `new` envía la huella y registra el host en el primer contacto
+    2. `input` consulta la cola de comandos pendientes
+    3. `output` envía resultados de comandos
+
+    También hay modos auxiliares opcionales:
+
+    1. `kill_task` cancela una tarea de la cola
+    2. `error` informa de un fallo de tarea sin `option`
+
+    <h2 className="api-section-title api-section-title--primary">Request</h2>
+
+    <Tabs className="api-tabs" items={['new', 'input', 'output', 'kill_task', 'error']}>
+      <Tab value="new">
+        ```json
+        {
+          "option": "new",
+          "tag": "600d4",
+          "ip": "",
+          "hostname": "DESKTOP-B08TFNF",
+          "user": "Lab",
+          "arch": "x64",
+          "pid": 4212,
+          "os": "Windows 10 Pro",
+          "listener": "http",
+          "delay": 2,
+          "implant_config": {
+            "channel": "http",
+            "host": "192.168.15.10",
+            "port": "9090",
+            "host_tag": "600d4",
+            "delay": 2
+          },
+          "metadata": {
+            "relays": [],
+            "privilege": "default",
+            "internal_ip": "192.168.15.7",
+            "host": "192.168.15.10",
+            "port": "9090"
+          }
+        }
+        ```
+      </Tab>
+      <Tab value="input">
+        ```json
+        {
+          "option": "input",
+          "host": "600d4",
+          "metadata": {
+            "relays": [],
+            "privilege": "default",
+            "internal_ip": "192.168.15.7",
+            "host": "192.168.15.10",
+            "port": "9090"
+          }
+        }
+        ```
+      </Tab>
+      <Tab value="output">
+        ```json
+        [
+          {
+            "option": "output",
+            "type": "terminal",
+            "task_tag": "Z7upre",
+            "host": "600d4",
+            "output": " Volume in drive C has no label.\n Directory of C:/Users/Lab/Desktop\n"
+          },
+          {
+            "option": "output",
+            "type": "folders",
+            "task_tag": "ArBYCq",
+            "host": "600d4",
+            "content": [
+              { "name": "desktop.ini", "type": "file", "size": "552", "modified": "2026-06-25 13:05:59" }
+            ]
+          }
+        ]
+        ```
+      </Tab>
+      <Tab value="kill_task">
+        ```json
+        {
+          "option": "kill_task",
+          "task_tag": "Z7upre"
+        }
+        ```
+      </Tab>
+      <Tab value="error">
+        ```json
+        {
+          "error": "command failed",
+          "task_tag": "Z7upre"
+        }
+        ```
+      </Tab>
+    </Tabs>
+
+
+    <h2 className="api-section-title api-section-title--compact">Response</h2>
+
+    <Tabs className="api-tabs" items={['new', 'input', 'output', 'task error', 'Failure']}>
+      <Tab value="new">
+        ```json
+        {
+          "status": "success",
+          "message": "host included"
+        }
+        ```
+
+        `tag` duplicado (restricción única): `"message": "host already exists"` con `"status": "success"`.
+      </Tab>
+      <Tab value="input">
+        ```json
+        {
+          "commands": [
+            {
+              "status": "success",
+              "type": "terminal",
+              "task_tag": "Z7upre",
+              "host": "600d4",
+              "input": "shell",
+              "parameters": {
+                "args": "dir",
+                "mode": "shell",
+                "raw": "shell"
+              }
+            }
+          ]
+        }
+        ```
+      </Tab>
+      <Tab value="output">
+        ```json
+        {
+          "status": "success",
+          "message": "output received successfully"
+        }
+        ```
+      </Tab>
+      <Tab value="task error">
+        Payload independiente con `error` + `task_tag` y sin `option` (fallo de tarea informado por el implant):
+
+        ```json
+        {
+          "status": "success",
+          "message": "output received successfully"
+        }
+        ```
+      </Tab>
+      <Tab value="Failure">
+        JSON cifrado (HTTP **200** salvo que se indique):
+
+        ```json
+        {
+          "status": "failure",
+          "error": "<msg>"
+        }
+        ```
+
+        Ejemplos: `"Missing host"` (**HTTP 400**), `"internal error"`, `"Task processing error"`, mensajes de aborto de tarea de `kill_task` / `option` inválida / fallo al procesar output.
+
+        Errores no controlados dentro de `main_core` devuelven `{ "status": "failure", "error": "internal error" }` con HTTP **200**.
+      </Tab>
+    </Tabs>
+
+    ---
+
+    <h2 className="api-section-title api-section-title--compact">Schema</h2>
+
+    <table className="api-schema-table" style={{ borderCollapse: 'collapse', width: '100%' }}>
+      <thead>
+        <tr>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>Field</th>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>Type</th>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>Required</th>
+          <th style={{ padding: '8px 12px', textAlign: 'left' }}>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style={{ padding: '8px 12px' }}><code>option</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}>Request mode. One of <code>new</code>, <code>input</code>, <code>output</code>, or <code>kill_task</code>. Omitted only in standalone task error payloads.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>tag</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>new</code> only. Host tag assigned to the implant.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>host</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}>Used in <code>input</code> and <code>output</code>. Host tag from the registry.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>task_tag</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}>Queue event tag from the <code>input</code> response. Required in <code>output</code>, <code>kill_task</code>, and task error payloads.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>body (output)</code></td><td style={{ padding: '8px 12px' }}>array</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}>On <code>output</code>, the implant sends a JSON array of results. Each item follows the schema below.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>type</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}>On each <code>output</code> array item. One of <code>terminal</code>, <code>folders</code>, <code>process</code>, <code>keylogger</code>, <code>screenshot</code>, <code>socks</code>, <code>proxychains</code>, or <code>port_forwarding</code>.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>output</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}>Command text for <code>terminal</code> and tunnel modes.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>content</code></td><td style={{ padding: '8px 12px' }}>array | string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}>Structured result for <code>folders</code>, <code>keylogger</code>, and <code>screenshot</code>.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>tree</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}>Process tree in <code>process</code> output.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>error</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}>Task error text. Can appear inside <code>output</code> or in a standalone error payload.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>metadata</code></td><td style={{ padding: '8px 12px' }}>object</td><td style={{ padding: '8px 12px' }}>no</td><td style={{ padding: '8px 12px' }}>Host metadata in <code>new</code> and <code>input</code>. Can be omitted entirely.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>metadata.relays</code></td><td style={{ padding: '8px 12px' }}>array</td><td style={{ padding: '8px 12px' }}>no</td><td style={{ padding: '8px 12px' }}>Host relay list.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>metadata.privilege</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>no</td><td style={{ padding: '8px 12px' }}>Implant process privilege level.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>metadata.internal_ip</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>no</td><td style={{ padding: '8px 12px' }}>Internal IP of the compromised host.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>metadata.host</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>no</td><td style={{ padding: '8px 12px' }}>Listener address used by the implant.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>metadata.port</code></td><td style={{ padding: '8px 12px' }}>string | integer</td><td style={{ padding: '8px 12px' }}>no</td><td style={{ padding: '8px 12px' }}>Listener port used by the implant.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>hostname</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>new</code> only.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>user</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>new</code> only.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>arch</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>new</code> only.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>pid</code></td><td style={{ padding: '8px 12px' }}>integer</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>new</code> only.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>os</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>new</code> only.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>listener</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>new</code> only. Channel name, such as <code>http</code>.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>delay</code></td><td style={{ padding: '8px 12px' }}>integer</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>new</code> only. Implant beacon delay in seconds.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>implant_config</code></td><td style={{ padding: '8px 12px' }}>object | string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>new</code> only. Runtime implant config stored on the host row.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[]</code></td><td style={{ padding: '8px 12px' }}>array</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>input</code> response. Pending queue events for the host.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].status</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>yes</td><td style={{ padding: '8px 12px' }}>Always <code>success</code> when the command is delivered.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].type</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>yes</td><td style={{ padding: '8px 12px' }}>Queue event type, such as <code>terminal</code> or <code>port_forwarding</code>.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].input</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>yes</td><td style={{ padding: '8px 12px' }}>Command name sent to the implant. For BOF, shellcode, and DLL payloads, this may contain the resolved binary content.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters</code></td><td style={{ padding: '8px 12px' }}>object</td><td style={{ padding: '8px 12px' }}>yes</td><td style={{ padding: '8px 12px' }}>Command arguments parsed from the operator input. Fields depend on <code>type</code> and command.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.mode</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>terminal</code> commands. Execution mode, such as <code>shell</code>, <code>bof</code>, or <code>tasks kill</code>.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.args</code></td><td style={{ padding: '8px 12px' }}>string | object</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>terminal</code> commands. Command arguments. String for most modes, object for some BOF payloads.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.raw</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>terminal</code> commands. Original command verb from the mapping.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.file</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}>From <code>-f</code> / <code>--file</code>. BOF file name or path before server side resolution.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.delay</code></td><td style={{ padding: '8px 12px' }}>string | integer</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}>From <code>-d</code> / <code>--delay</code>. Used by commands such as <code>tokens-find</code> and screenshots.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.pid</code></td><td style={{ padding: '8px 12px' }}>string | integer</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}>From <code>-p</code> / <code>--pid</code>. Target process ID.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.ppid</code></td><td style={{ padding: '8px 12px' }}>string | integer</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}>From <code>--ppid</code>. Parent process ID for spawn and injection commands.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.inject</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}>From <code>--inject</code>. Injection target or technique.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.inline</code></td><td style={{ padding: '8px 12px' }}>boolean</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}>From <code>-i</code> / <code>--inline</code>. Flag only, no value.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.target</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}>From <code>-t</code> / <code>--target</code> / <code>--destination</code>.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.flag</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}>From <code>--flag</code>.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.status</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}>From <code>--status</code> / <code>-st</code>.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.method</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}>From <code>--method</code>. Used by <code>keylogger</code> (<code>keystate</code> or <code>boardstate</code>).</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.host</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}>From <code>--host</code>. Relay and tunnel commands.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.port</code></td><td style={{ padding: '8px 12px' }}>string | integer</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}>From <code>--port</code>. Relay, tunnel, and SOCKS commands.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.user</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}>From <code>-u</code> / <code>--user</code>.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.pass</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}>From <code>--pass</code>.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.listen</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}>From <code>-l</code> / <code>--listen</code>.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.channel</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}>From <code>-c</code> / <code>--channel</code>. Relay transport, such as <code>http</code>, <code>tcp</code>, or <code>smb</code>.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.pipe</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}>From <code>--pipe</code>. SMB relay pipe path.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.id</code></td><td style={{ padding: '8px 12px' }}>string</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}>From <code>--id</code>. Relay or task identifier.</td></tr>
+        <tr><td style={{ padding: '8px 12px' }}><code>commands[].parameters.getContent</code></td><td style={{ padding: '8px 12px' }}>boolean</td><td style={{ padding: '8px 12px' }}>conditional</td><td style={{ padding: '8px 12px' }}><code>folders</code> commands. When <code>true</code>, download file content instead of listing the directory.</td></tr>
+      </tbody>
+    </table>
+  </CollapsibleContent>
+</Collapsible>

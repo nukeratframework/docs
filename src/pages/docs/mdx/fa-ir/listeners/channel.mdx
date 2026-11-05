@@ -1,0 +1,132 @@
+---
+title: کانال
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import listenerForm from '@/assets/img/tutorial/listener_form.png';
+import listenerOk from '@/assets/img/tutorial/listener_ok.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+برای اینکه ایمپلنت با team server ارتباط برقرار کند، باید از قبل کانالی برای آن پیکربندی شده باشد.
+
+در حال حاضر دو دستهٔ کانال وجود دارد:
+- HTTP/HTTPS
+- Custom
+
+## کانال HTTP/HTTPS
+
+ساده‌ترین و رایج‌ترین کانال برای راه‌اندازی است. علاوه بر URLای که ایمپلنت به آن وصل می‌شود، پیکربندی اضافه‌ای لازم نیست.
+
+هنگام ایجاد این کانال می‌توانید تنظیمات پیشرفته‌تری هم تغییر دهید، از جمله:
+
+- تغییر مسیر URL (مثال: `https://example.com/path` -> `https://example.com/path/custom`)
+- هدرهای پاسخ
+- قالب body سفارشی برای درخواست‌های ایمپلنت و پاسخ‌های listener
+
+## کانال Custom
+
+پیچیده‌ترین نوع کانال است، اما انعطاف‌پذیرترین هم هست. کانال custom وقتی ضروری است که ارتباط بسیار خاصی نیاز دارید، مثلاً:
+
+- Telegram
+- Discord
+- Dropbox
+
+preset ندارد؛ بنابراین باید همه‌چیز را دستی پیکربندی کنید. این شامل مرحلهٔ ایجاد ایمپلنت هم می‌شود، جایی که باید snippet کد سفارشی برای ارتباط با کانال بنویسید.
+
+گزینهٔ «custom channel» در رابط ایجاد پیدا نمی‌کنید، چون باید دستی راه‌اندازی شود. برای جزئیات بیشتر [کانال C2 سفارشی](/docs/custom-channels) را ببینید.
+
+## سایر انواع کانال چطور؟
+
+برخی فریم‌ورک‌ها هنوز کانال‌های جایگزینی مثل DNS، DoH، mTLS و غیره را پشتیبانی می‌کنند. ما این دو نوع کانال را انتخاب کردیم تا با روند فعلی—به‌ویژه تقاضا برای یکپارچه‌سازی با سرویس‌های ارتباطی خارجی مثل Telegram، Google Drive و مانند آن—هم‌خوان باشد.
+
+برنامه‌ای برای افزودن رسمی انواع بیشتر کانال در آینده وجود ندارد.
+
+اگر هنوز به نوع کانال خاصی مثل DNS نیاز دارید، باید از **Custom Channel** استفاده کنید و خودتان آن ارتباط را بسازید.
+
+## ایجاد کانال HTTP [#creating-an-http-channel]
+
+کانال HTTP (بدون SSL) ساده‌ترین نوع برای ایجاد است. مراحل زیر را دنبال کنید:
+
+  <Steps>
+    <Step>
+      ### باز کردن تب listeners
+      **NukeRat** > **Listeners** > **Add** را باز کنید.
+    </Step>
+    <Step>
+      ### پر کردن فیلدها
+      <ImageZoom src={listenerForm} alt="Listener Form" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+      - **Name**: نامی انتخاب کنید تا listener را به‌راحتی تشخیص دهید.
+      - **Type**: `Channel` را انتخاب کنید
+      - **Channel**: `http` یا `https` را انتخاب کنید
+      - **Server**: team serverی را انتخاب کنید که listener روی آن ایجاد می‌شود (باید از قبل پیکربندی شده باشد)
+      - **Port to open**: پورتی که استفاده می‌شود
+    </Step>
+    <Step>
+      ### روی **Create** کلیک کنید
+      اگر همه‌چیز درست باشد، listener ایجاد می‌شود و در تب listeners فهرست می‌شود.
+      <ImageZoom src={listenerOk} alt="Listener Ok" className="h-[6.5rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+    </Step>
+  </Steps>
+
+پس از ایجاد، می‌توانید از ایمپلنت برای ارتباط با کانالی که راه‌اندازی کردید استفاده کنید.
+
+کانال HTTP (بدون SSL) درخواست‌های ایمپلنت و پاسخ‌های listener را با کلید مشترک AES 256 از زمان build ایمپلنت رمزنگاری می‌کند. حتی اگر کسی session HTTP را ضبط کند، بدنه‌ها بدون آن کلید خوانا نمی‌مانند. برای شکل payload روی wire، [رمزنگاری ارتباط](/docs/rest-api/implants#communication-encryption) را ببینید.
+
+## HTTPS و گواهی‌ها
+
+برای استفاده از SSL، هنگام ایجاد listener در فیلد **Channel** مقدار `https` را انتخاب کنید. بخش **Certificate** زیر فیلد پورت ظاهر می‌شود. در **Source**، self signed یا manual را انتخاب کنید.
+
+گواهی‌های self signed به‌طور خودکار توسط NukeRat با `openssl` تولید می‌شوند و می‌توانید تنظیمات تولید را سفارشی کنید، از جمله days، CN، SAN، نوع کلید و موارد دیگر.
+
+برخی از این فیلدها مقدار نمونه در placeholder نشان می‌دهند. البته نباید همان مقادیر را عیناً استفاده کنید، چون ممکن است از طریق تطبیق امضای گواهی شناسایی شوید.
+
+برای گواهی manual، PEM گواهی و کلید خصوصی را paste یا upload کنید (مثلاً از ارائه‌دهنده‌ای مثل Namecheap).
+
+مثل کانال HTTP (بدون SSL)، کانال HTTPS همان رمزنگاری AES 256 را برای body ایمپلنت استفاده می‌کند. TLS لایهٔ transport را محافظت می‌کند و bodyها حتی تحت بازرسی SSL/TLS هم رمزنگاری‌شده می‌مانند.
+
+## سفارشی‌سازی‌های پیشرفته
+
+کانال‌های HTTP/HTTPS چند فیلد زیر **Advanced** دارند:
+
+- **Endpoint path**: مسیر URL که ایمپلنت برای ارتباط استفاده می‌کند
+- **Response headers**: هدرهای پاسخ کانال
+- **Custom body**: preset (`off`، `custom`، یا نمونه‌های built in `json` و `xml`) به‌علاوهٔ قالب‌های اختیاری **Listener response** و **Implant request** وقتی custom body برابر `off` نباشد
+
+## Custom body
+
+به‌طور پیش‌فرض، ارتباط بین ایمپلنت و سرور ساده است: یک رشته رمزنگاری می‌شود و به body الصاق می‌شود، مثلاً:
+
+```http
+POST /api HTTP/1.1
+Host: example.com
+
+U2FsdGVkX1/Z8mN3kL9qP2vX7dQ4jK1mR5sT8uW2xY3aB6cD9e...
+```
+
+توجه کنید body فقط یک blob دادهٔ رمزنگاری‌شده است، بدون ساختار مشخص. با custom body می‌توانید ساختار مشترکی بین ایمپلنت و سرور تعریف کنید، مثلاً:
+
+**پاسخ سرور:**
+```http
+{
+  "status": "ok",
+  "data": "§content§"
+}
+```
+
+**درخواست ایمپلنت:**
+```http
+{
+  "type": "telemetry",
+  "event": "sync",
+  "payload": "§content§",
+}
+```
+
+در مثال بالا، پس از پیکربندی، کانال پاسخ‌ها را در قالب تعریف‌شده می‌فرستد و همان قالب را در درخواست‌های ایمپلنت انتظار دارد.
+
+چند نمونهٔ custom body در خود رابط ایجاد کانال اضافه شده، اما توصیه نمی‌شود عیناً همان‌ها را استفاده کنید، چون ممکن است از طریق تطبیق امضای body شناسایی شوند.
+
+### نکات
+
+1. برای ارتباط درست ایمپلنت، همان قالب‌های **Listener response** و **Implant request** را هنگام ایجاد ایمپلنت تکرار کنید. listener مقدار `implantBody` را می‌خواند و پاسخ‌ها را در runtime با `listenerResponse` می‌پیچد (ببینید [API listener ایمپلنت](/docs/rest-api/implants#request-body-template-implantbody)).
+2. روی کانال‌های HTTP/HTTPS، وقتی `implantBody` خالی است یا دقیقاً `§content§` باشد، کل body خام درخواست رمزنگاری می‌شود. با ساختار سفارشی، فقط بخش `§content§` رمزنگاری می‌شود. listener قبل از رمزگشایی آن بخش را استخراج می‌کند.

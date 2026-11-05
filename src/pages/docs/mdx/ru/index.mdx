@@ -1,0 +1,44 @@
+---
+title: Главная
+---
+
+import { Card, Cards } from 'fumadocs-ui/components/card';
+
+Основные темы документации NukeRat:
+
+<div className="not-prose [&_[data-card]]:rounded-xl [&_[data-card]]:border-fd-border/80 [&_[data-card]]:p-6 [&_[data-card]]:shadow-lg [&_[data-card]]:transition-none [&_[data-card]:hover]:bg-fd-card [&_[data-card]:hover]:shadow-lg [&_[data-card]>h3]:mb-2 [&_[data-card]>h3]:text-lg [&_[data-card]>h3]:font-semibold [&_[data-card]>h3]:tracking-tight [&_[data-card]>p]:text-base [&_[data-card]>p]:leading-relaxed">
+
+<Cards className="gap-5 sm:grid-cols-2">
+  <Card
+    title="Armory"
+    description="BOF и .NET-утилиты из официального репозитория — запуск из клиента."
+    href="/docs/armory"
+  />
+  <Card
+    title="Implants"
+    description="Stageless-сборки и лоадеры, настройки C2 и процесс компиляции."
+    href="/docs/client/implants"
+  />
+  <Card
+    title="Pivoting"
+    description="Relay, SOCKS и проброс портов через импланты."
+    href="/docs/pivoting"
+  />
+  <Card
+    title="Custom channels"
+    description="Каналы через внешние платформы: Telegram, Discord и аналоги."
+    href="/docs/custom-channels"
+  />
+  <Card
+    title="Custom implants"
+    description="Свой бинарник при той же модели постановки задач."
+    href="/docs/custom-implants"
+  />
+  <Card
+    title="Listeners"
+    description="HTTP-, HTTPS- и file server-каналы для имплантов и staging."
+    href="/docs/listeners"
+  />
+</Cards>
+
+</div>

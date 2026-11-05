@@ -1,0 +1,55 @@
+---
+title: ファイルブラウザ
+---
+import folderExplorer from '@/assets/img/tutorial/folder_explorer.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import {
+  ArrowDownToLine,
+  ArrowLeft,
+  ArrowRight,
+  Bot,
+  ChevronsRight,
+  Folder,
+  LayoutGrid,
+  List,
+  RefreshCw,
+} from 'lucide-react';
+import { Callout } from '@/ui/custom/callout';
+
+ファイルブラウザでは、ターミナルコマンドに頼らずにホスト上のファイルとディレクトリを閲覧できます。
+
+上部バーの <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle"><Folder size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> アイコン</span>から **File Browser** タブを開くか、**Tabs** > **File Browser** から開けます。
+
+<Callout type="info">
+  ファイルブラウザを使う前に、タブ名の横にある **Host** をクリックして対象ホストを選択してください。
+</Callout>
+
+ホストを選択すると、クライアントはそのホストのディレクトリ一覧を要求します。初回読み込み時に応答がファイルブラウザに反映されます。
+
+<ImageZoom src={folderExplorer} alt="Folder explorer" className="tutorial_img" />
+
+左側のファイル・ディレクトリツリーで、選択したホスト上のフォルダとファイルをより素早く移動できます。ツリー上の検索バーはツリーをローカルでフィルタするだけで、ホストに新しい一覧コマンドは送りません。
+
+## ファイルのダウンロード
+
+ファイルをクリックすると生の内容が表示されます。**Download** ボタンでローカルに保存できます。
+
+画像ファイルはファイルブラウザ内にインラインで表示されます。
+
+ファイルが 25 MB を超える場合、ファイルブラウザは全文を読み込まず警告を表示します。完全なペイロードが必要な場合は、ターミナルからファイルをダウンロードしてください。
+
+## 仕組み
+
+ディレクトリ一覧では、インプラントがディレクトリを読み取り、結果をクライアントが描画するためのカスタム JSON 形式に変換します。ファイルのダウンロードでは、インプラントが生のファイルバイトを返します。
+
+### Windows
+
+`kernel32.dll`（`FindFirstFileW`、`FindNextFileW`、`GetLogicalDriveStringsW`、`GetFileAttributesW`）を使用します。コアロジックは `implants/windows/stageless/capabilities/folders.nim` にあります。
+
+### Linux
+
+POSIX の `opendir`、`readdir`、`stat` を使用します。コアロジックは `implants/linux/stageless/capabilities/folders.nim` にあります。
+
+### MacOS
+
+`macapi` モジュール（`ListDirEntries`、`PathExists`、`PathIsDir`）を使用します。コアロジックは `implants/mac/stageless/capabilities/folders.go` にあります。

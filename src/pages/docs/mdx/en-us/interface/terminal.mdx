@@ -1,0 +1,75 @@
+---
+title: Terminal
+---
+import hostSelect from '@/assets/img/tutorial/terminal.png';
+import terminalSearch from '@/assets/img/tutorial/terminal_search.png';
+import { SquareChevronRight, Bot } from 'lucide-react';
+import { Callout } from '@/ui/custom/callout';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+The terminal is the primary workspace for running commands on a compromised host.
+
+You can open the **Terminal** tab from <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">the <SquareChevronRight size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> icon</span> in the top bar, or from **Tabs** > **Terminal**.
+
+<Callout type="info">
+  Before running any command, select the target host by clicking **Host** next to the tab name.
+</Callout>
+
+<Callout type="info">
+  Note that the NukeRat client sends a `source_terminal` value with each request. It identifies which terminal tab sent the command. It is referential only. It does not affect command execution.
+</Callout>
+
+Type a command in the input and press **Enter** to send it to the selected host.
+<ImageZoom src={hostSelect} alt="Host select" className="tutorial_img" />
+
+Press **Ctrl + F** to toggle search within the terminal output.
+
+<ImageZoom src={terminalSearch} alt="Terminal search" className="tutorial_img" />
+
+## Commands
+
+Run `help` to see all available commands. Use `help <command>` for detailed usage of a specific command.
+
+| Command | Description |
+| --- | --- |
+| `help` | Show available commands and usage |
+| `config` | View implant configuration |
+| `delay` | Set implant callback delay in seconds |
+| `kill` | Terminate the implant process |
+| `tasks` | List running task IDs |
+| `pwd` | Print the current directory |
+| `cd` | Change directory |
+| `ls` | List files and directories |
+| `cat` | Display file contents |
+| `echo` | Print text to output |
+| `cp` | Copy a file |
+| `mv` | Move or rename a file |
+| `rm` | Delete a file |
+| `mkdir` | Create a directory |
+| `rmdir` | Remove a directory |
+| `echo $` | Print an environment variable |
+| `whoami` | Show current user information |
+| `systeminfo` | Show detailed OS and hardware information |
+| `env` | List environment variables |
+| `tasklist` | List running processes via WMI |
+| `enumdrives` | List available drive letters |
+| `ifconfig` | Show network adapter configuration |
+| `route` | Show the routing table |
+| `arp` | Show the ARP cache |
+| `netstat` | Show active network connections |
+| `portscan` | Scan ports on a remote host |
+| `shell` | Run a shell command |
+| `powershell` | Run a PowerShell script |
+| `shellcode` | Execute raw shellcode |
+| `bof` | Run a built-in BOF |
+| `dotnet` | Run a .NET assembly |
+| `spawn` | Spawn a new process |
+| `inj` | Inject shellcode, a reflective DLL, or a donut payload into a process |
+| `tokens` | View and manage access tokens |
+| `relay` | Manage pivot relays |
+| `keylogger start` | Start the background keylogger |
+| `keylogger stop` | Stop the background keylogger |
+| `screenshot` | Capture a single screenshot |
+| `screenshot start` | Start the screenshot capture loop |
+| `screenshot stop` | Stop the screenshot capture loop |
+| `armory` | List available armory tools |

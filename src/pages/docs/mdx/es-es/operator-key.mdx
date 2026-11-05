@@ -1,0 +1,45 @@
+---
+title: Operator key
+---
+
+Una operator key es una clave de autenticación que se usa para iniciar sesión en el team server y obtener una sesión de acceso.
+
+En el host del team server, ejecuta:
+
+```bash
+nukerat server key add bill
+```
+
+La clave se imprime en la salida y se crea un archivo `.key` en el directorio desde el que ejecutas el comando.
+
+Para listar todas las claves generadas, ejecuta:
+
+```bash
+nukerat server key list
+```
+
+Para eliminar una clave:
+
+```bash
+nukerat server key rem bill
+```
+
+## Estructura de la clave
+
+```
+bill:1pDi0uSLlFKfCjjHPL9uZAlP:1789429491513043059V5Kua8T5ug3ZHcVt…
+```
+
+La operator key tiene tres partes, separadas por dos puntos:
+
+1. Nombre del operador (solo para identificación)
+2. Contraseña (verificada con bcrypt en el servidor)
+3. Secret
+
+Cuando se usa la clave, el cliente envía `user`, `pass` y `secret` en una petición POST a `/auth/login` para obtener el JWT de sesión.
+
+## Duración de la sesión
+
+Por defecto, la sesión JWT es válida durante 7 días (`server.keys.jwt.duration` en la configuración del servidor, valor predeterminado `7d`). Cuando caduca, verás un toast de error al intentar usar funciones que requieren autenticación.
+
+Para renovar la sesión, inicia sesión de nuevo con la clave guardada.

@@ -1,0 +1,34 @@
+---
+title: 명령
+---
+
+NukeScript에는 팀 서버에서 동작을 수행하기 위한 기본 명령 세트가 포함되어 있습니다. NukeScript가 기본 명령에만 국한되지 않는다는 점에 유의하세요. Python 위에서 실행되므로 Python 자체의 라이브러리나 함수도 그대로 사용할 수 있습니다.
+
+## 명령 카탈로그
+
+사용 가능한 명령 목록은 다음과 같습니다.
+
+| 명령 | 설명 | 인수 |
+| --- | --- | --- |
+| `cmd` | 출력을 문자열로 반환하는 동기 터미널 명령 | `host_tag`, `command` |
+| `async_cmd` | 명령을 큐에 넣고 즉시 반환 | `host_tag`, `command` |
+| `process` | 프로세스 트리 요청 | `host_tag` |
+| `folders` | 원격 디렉터리 나열 | `host_tag`, `path` |
+| `screenshot` | 스크린샷 캡처. 파일 저장 경로는 선택적 키워드 전용 `output` | `host_tag`, `output` (선택, 키워드 전용) |
+| `approve_cmd` | 작업 실행 허용. `new_queue_line` 스크립트 내부에서 사용 | `queue_tag` |
+| `reject_cmd` | 작업을 차단하고 오류 기록 | `queue_tag` |
+| `conclude` | 사용자 지정 응답으로 작업을 완료로 표시 | `queue_tag`, `message` |
+| `credentials` | 저장된 모든 자격 증명 반환 | |
+| `credentials.add` | 자격 증명을 추가하고 새 태그 반환 | `name`, `host`, `description`, `content` |
+| `credentials.remove` | 태그로 자격 증명 제거 | `tag` |
+| `db.<table>` | 테이블의 모든 행, 또는 모든 행에 걸친 한 열 | 선택적 열. 테이블: `users`, `terminal`, `hosts`, `listeners`, `folders`, `process`, `queue`, `agents`, `agents_history`, `credentials`, `keylogger`, `nukescripts`, `nukescripts_output`, `custom_notifications`, `checkins` |
+| `keylogs` | 모든 키로거 항목 반환 | |
+| `network.add_socks` | SOCKS 피벗. 성공 시 `session_id`가 포함된 상태 문자열 반환 | `host_tag`, `port`, `user` (선택), `password` (선택) |
+| `network.add_forward` | TCP 포트 포워드 | `host_tag`, `local_port`, `target_host`, `target_port` |
+| `network.remove` | SOCKS 또는 포트 포워드 중지 | `type`이 `socks` 또는 `port_forwarding`인 `db.listeners()`의 `tag` |
+| `network.restart` | SOCKS 또는 포트 포워드 재시작 | `type`이 `socks` 또는 `port_forwarding`인 `db.listeners()`의 `tag` |
+| `file_server.upload` | 로컬 파일을 리스너 콘텐츠 디렉터리로 복사 | `port`, `path` |
+| `file_server.delete` | 리스너 콘텐츠 디렉터리에서 파일 제거 | `port`, `filename` |
+| `agent` | 구성된 AI 에이전트에 프롬프트 전송 | `agent_tag`, `prompt` |
+| `echo` | NS Output에 기록 | `content` |
+| `message_box` | 운영자용 알림 | `title`, `body`, `type` (`info`, `error`, 또는 `success`) |

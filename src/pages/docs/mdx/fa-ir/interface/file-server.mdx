@@ -1,0 +1,37 @@
+---
+title: سرور فایل
+---
+
+import { Globe } from 'lucide-react';
+import fileServer from '@/assets/img/tutorial/file_server.png';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+تب سرور فایل مدیریت سرورهای فایلی است که از قبل در NukeRat پیکربندی شده‌اند. برای میزبانی سریع فایل‌ها، مثلاً payload، مفید است.
+
+می‌توانید تب **File Server** را از <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">آیکون <Globe size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> در نوار بالا</span>، یا از **Tabs** > **File Server** باز کنید.
+
+<ImageZoom src={fileServer} alt="File Server" className="tutorial_img" />
+
+## نحوهٔ استفاده
+
+برای استفاده از تب **File Server** این مراحل را دنبال کنید:
+
+  <Steps>
+    <Step>
+      ### ایجاد listener سرور فایل
+      ابتدا listener از نوع **File server** بسازید. جزئیات بیشتر در بخش [Listeners](/docs/listeners) است.
+    </Step>
+    <Step>
+      ### انتخاب سرور فایل
+      بالای تب، انتخابگر سرور را باز کنید و listener سرور فایل مورد نظر را انتخاب کنید.
+    </Step>
+    <Step>
+      ### آپلود فایل
+      در پایان فایلی را که می‌خواهید میزبانی شود آپلود کنید.
+    </Step>
+  </Steps>
+
+## نکتهٔ اضافه
+
+سرورهای فایل NukeRat فقط برای میزبانی فایل محدود نیستند؛ می‌توان برای میزبانی برنامه‌های social engineering، مثل صفحات ورود جعلی، هم استفاده کرد.

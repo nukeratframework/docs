@@ -1,0 +1,62 @@
+---
+title: پیشرفته
+---
+
+import preface from '@/assets/img/tutorial/preface.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+ایجاد ایمپلنت در NukeRat گزینه‌های پیشرفته‌ای مثل preface، runtime و artifactهای PE دارد. این تنظیمات بدون ویرایش سورس ایمپلنت، سفارشی‌سازی عمیق را ممکن می‌کنند.
+
+## Preface
+
+بخش **Preface** جایی است که کد preface را پیکربندی می‌کنید. قبل از شروع routine اصلی ایمپلنت اجرا می‌شود.
+
+در Windows و Linux، کد preface کاربر در `custom.nim` inject می‌شود و از `preface()` قبل از `main_init()` اجرا می‌شود. نقطهٔ ورود به این شکل است:
+
+```nim
+import custom
+import routine/start
+
+proc main(): void =
+  custom.preface()
+  start.main_init()
+main()
+```
+
+در macOS، preface کد Go است که در `custom.go` inject می‌شود. build قبل از `routine.MainInit()` تابع `Custom()` را فراخوانی می‌کند.
+
+کد preface برای اهداف مختلف قابل استفاده است:
+
+- تشخیص sandbox
+- درج junk code
+- بزرگ‌کردن حجم ایمپلنت
+
+برای ایمپلنت‌های Windows و Linux، preface با Nim نوشته می‌شود. برای macOS با Go.
+
+## PE Artifacts
+
+این بخش برای ایمپلنت‌های **Windows** در دسترس است و به تغییر فایل‌های PE (Portable Executable) اختصاص دارد.
+
+تغییرات موجود:
+
+- **EXE icon**: تغییر آیکون executable (فقط فرمت EXE)
+- **PE strings**: embed کردن مقادیر decoy در sectionهای PE (فرمت‌های EXE و DLL)
+- **TimeDateStamp**: تغییر فیلد timestamp در PE
+- **Version fields**: مقادیر major و minor برای linker، OS، image و subsystem
+
+هدف این تغییرات بهبود evasion ایستا یا قانونی‌تر به نظر رسیدن ایمپلنت در تحلیل ایستا است.
+
+## Runtime
+
+بخش **Runtime** گزینه‌های evasion و obfuscation را پیکربندی می‌کند.
+
+در **Windows** می‌توانید تنظیم کنید:
+
+- **API resolution**: بارگذاری پویا (ثابت)
+- **Win API method**: indirect syscalls با stack spoofing (ثابت)
+- **ETW patch** و **AMSI patch**
+- **Sleep mask**: Off، Ekko یا Zilean
+- **String obfuscation**: Off، Xor یا RC4
+- **Wipe PE headers in memory**
+
+در **Linux** و **macOS**، بخش runtime فقط **string obfuscation** (Off، Xor یا RC4) را نشان می‌دهد. sleep masking، ETW، AMSI و wipe کردن هدر PE فقط برای ایمپلنت‌های Windows اعمال می‌شود.

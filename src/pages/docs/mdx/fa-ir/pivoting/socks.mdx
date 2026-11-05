@@ -1,0 +1,35 @@
+---
+title: SOCKS
+---
+
+import socks from '@/assets/img/tutorial/socks.png';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+NukeRat پشتیبانی بومی SOCKS دارد تا ترافیک را از میزبان مشخصی عبور دهید. نسخهٔ پشتیبانی‌شده SOCKS5 است.
+
+team server پورت listener را باز می‌کند. ترافیک از implant انتخاب‌شده به‌عنوان نقطهٔ خروج relay می‌شود.
+
+## پیکربندی
+
+برای ساخت پروکسی SOCKS5 مراحل زیر را انجام دهید:
+
+  <Steps>
+    <Step>
+      ### باز کردن پنجرهٔ Network
+      به **NukeRat** > **Network** بروید و **Add** را بزنید.
+    </Step>
+    <Step>
+      ### پیکربندی پروکسی
+      <ImageZoom src={socks} alt="Socks Add" className="h-[15rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+      - **Team server**: endpoint API listener (میزبان و پورت بالای فرم)
+      - **Type**: `socks`
+      - **Host tag**: implantی که اتصال‌های خروجی را پروکسی می‌کند
+      - **Port target**: پورتی که روی team server برای listener SOCKS باز می‌شود
+      - **User** / **Password**: credential اختیاری برای احراز هویت پروکسی اپراتور
+
+      پس از تکمیل فیلدها **Create** را بزنید.
+    </Step>
+  </Steps>
+
+پس از آن، پروکسی در جدول Network دیده می‌شود. ابزارها را به `socks5://<team_server_host>:<port_target>/` تنظیم کنید؛ اگر احراز هویت پیکربندی کرده‌اید، user و password را در URI بگذارید.

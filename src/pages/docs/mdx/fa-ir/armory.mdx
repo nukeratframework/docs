@@ -1,0 +1,576 @@
+---
+title: آرسنال
+---
+
+آرسنال مجموعهٔ آماده‌ای از ۵۴۳ ابزار (BOF و فایل‌های اجرایی .NET) است تا بتوانید آن‌ها را به‌سرعت روی میزبان مشخص‌شده دانلود و اجرا کنید.
+
+همهٔ ابزارها از مخزن رسمی armory در NukeRat در آدرس [**github.com/nukeratframework/armory**](https://github.com/nukeratframework/armory) دانلود می‌شوند.
+
+به‌صورت پیش‌کامپایل‌شده به‌طور خودکار دانلود می‌شوند، اما می‌توانید آن‌ها را دستی هم بسازید. برای این کار می‌توانید:
+
+1. آن‌ها را بسازید و دستی به پوشهٔ `server/infra/bin/armory/` اضافه کنید
+2. مقدار `repository` را در بخش `[server.armory]` در `server/server.conf` طوری تنظیم کنید که به میزبان release گیت‌هاب خودتان اشاره کند
+
+## دستورات
+
+به‌طور پیش‌فرض، NukeRat همراه با باینری‌های armory ازپیش‌کامپایل‌شده عرضه نمی‌شود. برای نصب آن‌ها روی team server از دستورات armory استفاده کنید:
+
+| دستور | عمل |
+| --- | --- |
+| `armory` | فهرست ابزارهای موجود و توضیحات کوتاه |
+| `armory install all` | دانلود همهٔ ابزارها از آخرین بستهٔ release |
+| `armory install &lt;tool&gt;` | دانلود فایل‌های یک ابزار |
+| `armory update` | به‌روزرسانی اندیس armory (`armory.json`) از مخزن |
+| `armory update &lt;tool&gt;` | به‌روزرسانی اندیس و دانلود مجدد یک ابزار |
+| `armory remove &lt;tool&gt;` | حذف فایل‌های cache‌شدهٔ آن ابزار |
+| `help &lt;command&gt;` | نمایش راهنما برای دستور یک ابزار |
+
+## فهرست
+
+در زیر فهرست کامل هر ۵۴۳ ابزار armory آمده است. نام ابزارها با دستور ترمینالی که به `armory install` می‌دهید یکسان است:
+
+| نام | دسته | توضیح |
+| --- | --- | --- |
+| `bof-aadjoininfo` | bof | نمایش اطلاعات پیوستن Azure AD یا Entra ID برای دستگاه. |
+| `bof-adnet-enum` | bof | شمارش Active Directory Certificate Services. |
+| `bof-adnet-enum-com2` | bof | شمارش CAها و الگوها در AD با استفاده از شی COM IX509PolicyServerListManager. |
+| `bof-adnet-on-behalf` | bof | درخواست گواهی ثبت‌نام AD CS به نمایندگی از کاربر دیگر با گواهی agent ثبت‌نام با پسوند XCN_OID_ENROLLMENT_AGENT. |
+| `bof-add-ace` | bof | افزودن ACE به DACL شی. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-add-attribute` | bof | افزودن/الحاق مقدار attribute. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-add-computer` | bof | ایجاد شی رایانهٔ جدید. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-add-defender-excl` | bof | افزودن استثناهای Windows Defender از طریق کلاس WMI MSFT_MpPreference با COM. |
+| `bof-add-delegation` | bof | تنظیم/جایگزینی SPNهای delegation. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-add-exclusion` | bof | افزودن استثنای جدید به Windows Defender برای پوشه، فایل، فرایند یا پسوند. |
+| `bof-add-firewall-rule` | bof | افزودن قانون فایروال ورودی یا خروجی جدید با COM. |
+| `bof-add-group` | bof | ایجاد گروه جدید. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-add-groupmember` | bof | افزودن کاربر به گروه. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-add-local-cert` | bof | افزودن گواهی (خودامضا) به مخزن گواهی مشخص رایانهٔ محلی. مثلاً افزودن گواهی خودامضا —که باینری مخرب خود را هم با آن امضا کرده‌اید— به پوشهٔ \"Trusted Root Certification Authorities\" (ROOT) روی رایانهٔ محلی هدف. |
+| `bof-add-machine-account` | bof | سوءاستفاده از سهمیهٔ پیش‌فرض حساب رایانهٔ Active Directory (ms-DS- MachineAccountQuota) برای افزودن حساب‌های رایانهٔ مخرب برای حملات بعدی. |
+| `bof-add-ou` | bof | ایجاد واحد سازمانی. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-add-rbcd` | bof | پیکربندی delegation از نوع RBCD. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-add-sidhistory` | bof | افزودن SID به sidHistory. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-add-spn` | bof | افزودن ServicePrincipalName. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-add-uac` | bof | افزودن پرچم UserAccountControl. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-add-user` | bof | ایجاد شی کاربر جدید. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-add-user-by-samr` | bof | افزودن کاربر به گروه محلی با SAMR. به امتیاز مدیر نیاز دارد. روی Active Directory استفاده نکنید. |
+| `bof-adduser` | bof | افزودن کاربر محلی یا از راه دور. |
+| `bof-adduser-to-group` | bof | افزودن کاربر به گروه. |
+| `bof-addusertogroup` | bof | افزودن کاربر مشخص‌شده به گروه دامنهٔ مشخص‌شده. |
+| `bof-adv-audit-policies` | bof | بازیابی سیاست‌های پیشرفتهٔ ممیزی امنیتی. |
+| `bof-ai-surface` | bof | نقشه‌برداری ابزارهای AI روی endpointهای توسعه‌دهنده Windows و برجسته‌کردن agentهای AI و artifactهای MCP آمادهٔ triage که ممکن است دادهٔ workflow، state محلی و credentialها را افشا کنند. |
+| `bof-allow-firewall-rule` | bof | افزودن قانون مجاز فایروال ورودی یا خروجی. |
+| `bof-amsi-etw-detect` | bof | بررسی حضور AMSI و ETW در فرایند فعلی با تشخیص DLLهای بارگذاری‌شده و exportهای مرتبط با ETW. برای انتخاب اهداف با فعالیت امنیتی کمتر مفید است. |
+| `bof-app-count` | bof | شمارش برنامه‌های نصب‌شده از طریق رجیstry، حذف تکراری‌ها و چاپ. با اعمال روی beaconهای زیاد، امکان استنتاج دربارهٔ دستگاه بر اساس تفاوت تعداد برنامه را می‌دهد. |
+| `bof-applocker-policy` | bof | شمارش پیکربندی‌های سیاست AppLocker، مجموعه‌های قانون و حالت‌های اجرا با اسکن کلیدهای مربوط در رجیstry. |
+| `bof-arp` | bof | فهرست جدول ARP. |
+| `bof-ask-mfa` | bof | نمایش دیالوگ تأیید جعلی Microsoft Authenticator با شمارهٔ مشخص‌شده. دیالوگ پس از ۳۰ ثانیه خودکار بسته می‌شود. |
+| `bof-askcreds` | bof | جمع‌آوری credential با CredUIPromptForWindowsCredentialsName. در یک thread اجرا می‌شود و تا ۶۰ ثانیه برای ورودی کاربر منتظر می‌ماند. beacon در این مدت پاسخگو نیست. |
+| `bof-asktgs` | bof | درخواست بلیت سرویس از یک TGT. |
+| `bof-asktgt` | bof | درخواست TGT با رمز عبور، hash یا بدون preauth. |
+| `bof-asr-status` | bof | شمارش قوانین Windows Defender Attack Surface Reduction (ASR) از مکان‌های رجیstry برای شناسایی قوانین پیکربندی‌شده، حالت اجرا (Block/Audit/Warn/ Disabled) و منبع سیاست (Intune/MDM در برابر Group Policy). |
+| `bof-asrenum` | bof | شناسایی قوانین Attack Surface Reduction (ASR)، actionها و مکان‌های استثنا با پرس‌وجوی MSFT_MpPreference از طریق WMI. به context ارتقایافته نیاز دارد. |
+| `bof-asreproasting` | bof | درخواست AS-REP برای کاربران بدون Kerberos preauthentication. |
+| `bof-authenticate-http` | bof | این ابزار برای وادار کردن درخواست HTTP با احراز هویت Windows از context کاربر فعلی به سمت سرور (ntlmrelayx) برای حمله relay (LDAP) احرازشده قابل استفاده است. |
+| `bof-backup-priv-sam` | bof | سوءاستفاده از SeBackupPrivilege از طریق رجیstry از راه دور برای dump کردن hiveهای SAM، SYSTEM و SECURITY از سیستم remote. |
+| `bof-bitlocker-status` | bof | شمارش وضعیت رمزگذاری BitLocker، پیکربندی‌های سیاست و مکان‌های پشتیبان کلید بازیابی با اسکن کلیدهای رجیstry. |
+| `bof-c-enumerate-defender` | bof | شمارش استثناهای Windows Defender از طریق WMI. به context beacon ارتقایافته نیاز دارد. |
+| `bof-cacls` | bof | فهرست مجوزهای کاربر برای فایل مشخص‌شده؛ wildcard پشتیبانی می‌شود |
+| `bof-capture-net-ntlm` | bof | ضبط hash NetNTLMv2 کاربر فعلی. با شبیه‌سازی تبادل احراز هویت NTLM بین client و server برای ضبط hash NetNTLMv2 انجام می‌شود. |
+| `bof-cdp-enable` | bof | فعال‌سازی Chrome DevTools Protocol در Chrome یا Edge در حال اجرای x64. نمادهای داخلی مرورگر در runtime resolve می‌شوند و سرور remote debugging روی thread رابط مرورگر راه می‌افتد. فقط x64. |
+| `bof-cdp-enable-iso` | bof | فعال‌سازی Chrome DevTools Protocol در Chrome در حال اجرای x64 با Windows Process Isolation. از handleهای محدود query به فرایند isolated استفاده می‌کند و نمادها را از image محلی chrome.dll resolve می‌کند. فقط x64. |
+| `bof-certstore-loot` | bof | شمارش مخازن گواهی محلی برای یافتن گواهی‌های با کلید خصوصی قابل export و ارائهٔ مسیر export آن‌ها. |
+| `bof-change-pass` | bof | تنظیم رمز عبور کاربر روی میزبان محلی یا remote. |
+| `bof-changepw` | bof | تغییر رمز عبور کاربر از طریق kpasswd. |
+| `bof-chrome-key` | bof | رمزگشایی کلید Chrome کدگذاری‌شده با base64 از Local State برای رمزگشایی آفلاین کوکی‌های مرورگر. |
+| `bof-chromium-key-dump` | bof | dump کلید اصلی Chrome/Edge و دانلود فایل‌های Cookie/Login Data از پروفایل مرورگر. |
+| `bof-cicd-credential-hunt` | bof | یافتن artifactهای credential رایج CI/CD، cloud و توسعه‌دهنده در پروفایل کاربر Windows فعلی. به‌طور پیش‌فرض مسیر و اندازه را گزارش می‌دهد. .gitconfig و .ssh/config به‌عنوان پیکربندی طبقه‌بندی می‌شوند، نه artifact credential. |
+| `bof-clipboard-grab` | bof | بازیابی دادهٔ متنی از clipboard Windows با APIهای Win32 و برگرداندن محتوا به callback. |
+| `bof-clipboard-monitor` | bof | BOF ناهمزمان که تغییرات clipboard را با GetClipboardSequenceNumber پایش می‌کند و هنگام تشخیص تغییر محتوای clipboard را چاپ می‌کند. از ضبط متن و تصویر پشتیبانی می‌کند (تصاویر به‌صورت base64 BMP در حالت sync). بازیابی تصویر فقط در حالت sync کار می‌کند. |
+| `bof-clipboard-steal` | bof | فعال‌سازی، غیرفعال‌سازی، بررسی و dump قابلیت‌های تاریخچه clipboard Windows. |
+| `bof-cloud-metadata-check` | bof | بررسی سرویس‌های metadata محلی cloud برای AWS، Azure و GCP از فرایند فعلی؛ گزارش هویت provider، context نمونه و بخش‌های محدود credential در صورت دسترسی. |
+| `bof-cloudap-bof` | bof | استخراج کوکی‌های SSO Entra ID، کوکی‌های SSO دستگاه، کوکی‌های SSO سازمانی AD FS و وضعیت cloud provider از طریق LsaCallAuthenticationPackage. به دستگاه joinشده به Entra ID/Azure AD با session ورود cloud فعال نیاز دارد. |
+| `bof-com-probe` | bof | بررسی اینکه آیا شی COM از CLSID داده‌شده قابل instantiate است. ابتدا in-process امتحان می‌کند، سپس به local server برمی‌گردد. |
+| `bof-contact-harvester` | bof | برداشت مخاطبین Outlook Global Address List از طریق COM. |
+| `bof-cookie-graber` | bof | استخراج کلیدهای رمزنگاری اصلی WebKit از فایل‌های Local State Chrome و Edge از طریق DPAPI. ابتدا کلید Edge، سپس کلید Chrome dump می‌شود. از کلید اصلی با CookieProcessor.exe آفلاین برای رمزگشایی کوکی‌ها از پایگاه داده روی دیسک استفاده کنید. |
+| `bof-cookie-monster` | bof | دزدیدن کوکی‌ها و ورودهای مرورگر برای Chrome، Edge و Firefox. کلید اصلی WebKit و کلید رمزنگاری App Bound را استخراج می‌کند، handleها را به فایل‌های Cookies و Login Data duplicate می‌کند برای دانلود بدون فایل. از حالت SYSTEM برای رمزگشایی کلید بدون injection مرورگر پشتیبانی می‌کند. از decrypt.py آفلاین برای رمزگشایی پایگاه‌های دانلودشده استفاده کنید. |
+| `bof-cred-man` | bof | dump Windows Credential Manager با سوءاستفاده از امتیاز SeTrustedCredManAccess. token را از winlogon.exe می‌دزدد تا امتیاز فعال شود. به امتیاز مدیر نیاز دارد. |
+| `bof-cred-prompt` | bof | پنجرهٔ درخواست اعتبارنامهٔ Windows را باز می‌کند تا اعتبار کاربر گرفته شود. اعتبارهای واردشده به‌عنوان خروجی برگردانده می‌شوند. این پنجره پایدار است؛ قربانی نمی‌تواند آن را لغو یا ببندد یا رمز خالی وارد کند. هر تلاش کاربر برای این کار در خروجی نمایش داده می‌شود. در پایان، تایمر روی پنجره تنظیم می‌شود تا beacon حتماً در زمانی برگردد. |
+| `bof-credui` | bof | با Windows API یعنی CredUIPromptForWindowsCredentials پنجرهٔ اعتبارنامه را فراخوانی می‌کند و اعتبار ارسالی را با LogonUser تأیید می‌کند. |
+| `bof-cross-s4u` | bof | سوءاستفاده از constrained delegation نوع S4U بین دامنه‌ها. |
+| `bof-cryptvortex` | bof | رمزگذاری یا رمزگشایی فایل‌ها در یک پوشه. |
+| `bof-curl` | bof | ارسال درخواست HTTP بدون برقراری پروکسی SOCKS. |
+| `bof-cve-2022-26923` | bof | بهره‌برداری privesc دامنه AD CS، CVE-2022-26923. بر پایه AddMachineAccount با تغییر attributeهای dNSHostName و servicePrincipalName. |
+| `bof-dcom-local-server32` | bof | این ابزار می‌تواند روی میزبان مشخص‌شده، بر اساس CLSID داده‌شده یک کلاس DCOM/COM را نمونه‌سازی کند؛ سرور EXE مرتبط out-of-process را راه می‌اندازد و فرایند جداگانه‌ای ایجاد می‌کند. با تمرکز روی EXEهای آسیب‌پذیر به DLL یا COM hijacking و استفاده از موقعیتی که نوشتن در پوشه‌هایی را که این فرایندها ماژول‌هایشان را از آنجا بار می‌کنند ممکن می‌سازد، می‌توان به اجرای کد (از راه دور) رسید. در نتیجه این تکنیک برای حرکت جانبی مؤثر است. |
+| `bof-dcompotato-notify` | bof | با SeImpersonate و ارسال شیء IUnknown مخرب به فراخوانی DCOM PrintNotify، امتیاز SYSTEM به‌دست می‌آورد. |
+| `bof-defender-exclusions` | bof | مسیرها، فرایندها و پسوندهای استثنا شده Windows Defender را از رجیستری فهرست می‌کند. |
+| `bof-del-exclusion` | bof | یک استثنا را از Windows Defender برای پوشه، فایل، فرایند یا پسوند حذف می‌کند. |
+| `bof-del-firewall-rule` | bof | یک قانون فایروال را با COM حذف می‌کند.. |
+| `bof-del-local-cert` | bof | گواهی رایانهٔ محلی را از store مشخص‌شده بر اساس thumbprint یکتا حذف می‌کند. |
+| `bof-del-machine-account` | bof | حساب ماشین rogue ایجادشده در Active Directory را حذف می‌کند. |
+| `bof-del-task-scheduler` | bof | یک task زمان‌بندی‌شده را روی سیستم فعلی یا میزبان از راه دور حذف می‌کند. |
+| `bof-describe` | bof | یک ticket Kerberos را parse و توصیف می‌کند. |
+| `bof-detect-hooks` | bof | hookهای inline در فرایند فعلی را با اسکن توابع Nt و Zw exportشده ntdll برای الگوهای دستور غیرمنتظره تشخیص می‌دهد. |
+| `bof-dir` | bof | فایل‌های یک پوشه را فهرست می‌کند. از wildcard پشتیبانی می‌کند (مثلاً `"C:\Windows\S*"`) برخلاف دستور `ls` در CobaltStrike |
+| `bof-disableuser` | bof | حساب کاربری مشخص‌شده را روی رایانهٔ هدف غیرفعال می‌کند. |
+| `bof-dll-env-hijacking` | bof | این ابزار: ساختار فایل پنهان راه می‌اندازد، DLL پروکسی مخرب موجود روی دیسک را به پوشه system32 جدید منتقل می‌کند، DLL پروکسی را پنهان می‌کند، متغیر محیطی SYSTEMROOT را تغییر می‌دهد، باینری آسیب‌پذیر را به‌عنوان فرایند جعل‌شده اجرا می‌کند تا DLL مخرب اجرا شود، و SYSTEMROOT اصلی را بازنشانی می‌کند تا beacon طبق انتظار کار کند. |
+| `bof-dll-hijack-hunter` | bof | ترتیب resolve DLL در SafeDllSearchMode را از مسیر و نام DLL داده‌شده طی می‌کند. در صورت نیاز بررسی می‌کند آیا فایل مطابق برای write باز می‌شود. |
+| `bof-domaininfo` | bof | اطلاعات دامنه را با Active Directory Domain Services enumerate می‌کند. |
+| `bof-draugr` | bof | جعل پشته Draugr با indirect syscall. حافظه با NtAllocateVirtualMemory تخصیص می‌یابد، User32.dll بارگذاری می‌شود و MessageBoxA با frameهای پشتهٔ synthetic فراخوانی می‌شود. |
+| `bof-driversigs` | bof | Imagepath سرویس‌های نصب‌شده را enumerate می‌کند تا cert امضا را با فروشندگان شناخته‌شده AV/EDR مقایسه کند |
+| `bof-dropspawn` | bof | با رها کردن DLL پروکسی روی دیسک و جعل application directory برای ترتیب جستجوی DLL، فرایند جدید spawn می‌کند. از spawn در معماری x86، x64 و cross-architecture پشتیبانی می‌کند. DLL رها شده باید پس از بارگذاری توسط فرایند جدید خودش را حذف کند. |
+| `bof-dump` | bof | ticketهای Kerberos را از sessionهای logon استخراج می‌کند. |
+| `bof-dump-procargs` | bof | آرگومان‌های خط فرمان فرایند را از PEB dump می‌کند. |
+| `bof-edgedump` | bof | artifactهای اعتبار ذخیره‌شده Microsoft Edge را از حافظهٔ فرایند اصلی msedge.exe استخراج می‌کند. ناحیه‌های حافظهٔ قابل خواندن را برای الگوهای اعتبار اسکن می‌کند. فایل مرورگر، پایگاه SQLite یا DPAPI استفاده نمی‌کند. همان context کاربر می‌تواند فرایند Edge کاربر فعلی را بخواند. context با امتیاز بالاتر می‌تواند فرایندهای Edge در sessionهای logon شده را بخواند. |
+| `bof-elevate-trusted` | bof | beacon فعلی را به SYSTEM ارتقا می‌دهد و با impersonation SetThreadToken امتیاز گروه TrustedInstaller را می‌گیرد. |
+| `bof-enableuser` | bof | حساب کاربری مشخص‌شده را روی رایانهٔ هدف فعال و از قفل خارج می‌کند. |
+| `bof-entra-authcode-flow` | bof | با باز کردن مرورگر روی URL جریان authorization code OAuth، access token و refresh token مایکروسافت Entra را به‌دست می‌آورد. تبادل token روی endpoint می‌ماند و می‌تواند خط‌مشی‌های دسترسی شرطی را دور بزند. نحوه کار: 1. تب جدید مرورگر با URL authorization OAuth باز می‌کند 2. عنوان پنجره‌ها را برای redirect حاوی authorization code پایش می‌کند 3. code را با access token و refresh token مبادله می‌کند |
+| `bof-enum-active-hosts` | bof | میزبان‌های فعال را enumerate می‌کند یا یک پورت باز را تأیید می‌کند. ابزار فهرستی با hostname یا IP از پیش تعریف‌شده می‌پذیرد و از client اپراتور خودتان بارگذاری می‌شود. |
+| `bof-enum-dll-sideloading` | bof | یک .EXE، یک پوشه یا همه پوشه‌ها را به‌صورت بازگشتی enumerate می‌کند تا آسیب‌پذیری DLL sideloading در executableها را بیابد. |
+| `bof-enum-drives` | bof | حرف درایو و نوع را enumerate می‌کند. |
+| `bof-enum-exclusions` | bof | فایل‌ها، پوشه‌ها، پسوندها و فرایندهای مستثنی Windows Defender را enumerate می‌کند. |
+| `bof-enum-files` | bof | فایل‌های مطابق را بر اساس کلمه، پسوند یا کلیدواژه در محتوای فایل جستجو می‌کند. از wildcard پشتیبانی می‌شود. |
+| `bof-enum-filter-driver` | bof | درایورهای filter را enumerate می‌کند |
+| `bof-enum-handles` | bof | handleهای نوع `process` و `thread` بین فرایندها را enumerate می‌کند. |
+| `bof-enum-lib` | bof | ماژول بارگذاری‌شدهٔ مشخص را در همه فرایندها پیدا می‌کند یا همه ماژول‌های بارگذاری‌شده در یک فرایند مشخص را فهرست می‌کند. |
+| `bof-enum-local-cert` | bof | همه گواهی‌های رایانهٔ محلی را از store مشخص فهرست می‌کند. نام‌های رایج store: ROOT، MY، TRUST، CA، USERDS، AuthRoot، Disallowed. |
+| `bof-enum-local-sessions` | bof | sessionهای کاربر متصل فعلی، محلی و از طریق RDP را enumerate می‌کند |
+| `bof-enum-sec-products` | bof | فهرست محصولات امنیتی مثل AV/EDR در حال اجرا روی میزبان فعلی یا از راه دور. با مقایسه فرایندهای در حال اجرا با فهرست hardcodeشده 130 محصول امنیتی انجام می‌شود. |
+| `bof-enum-shares` | bof | shareهای منتشرشده در سیستم‌های دامنه و سطح دسترسی آن‌ها را با فهرست hostname/IP از پیش تعریف‌شده فهرست می‌کند. این ابزار با بررسی سریع TCP/445 میزبان‌های offline را رد می‌کند و با بررسی attributeهای stealthy دسترسی را تأیید می‌کند. |
+| `bof-enum-task-scheduler` | bof | همه taskهای زمان‌بندی‌شده در پوشه root را enumerate و اطلاعات پایه دربارهٔ آن‌ها فهرست می‌کند. |
+| `bof-enum-web-client` | bof | میزبان‌هایی که سرویس WebClient روی آن‌ها در حال اجراست را با فهرست hostname یا IP از پیش تعریف‌شده enumerate می‌کند. فهرست از سیستم مهاجم خودتان بارگذاری می‌شود. |
+| `bof-enumprotections` | bof | فرایندهای سیستم را enumerate می‌کند و سطح protection، ارتباط سرویس، کاربر، session ID و مسیر فایل را گزارش می‌دهد. برای شناسایی فرایندهای سرویس third-party بدون protection که کاندید hijacking DLL باشند مفید است. |
+| `bof-env` | bof | متغیرهای محیط فرایند را فهرست می‌کند. |
+| `bof-esc1-unpac` | bof | زنجیره کامل حمله ADCS ESC1 را انجام می‌دهد. گواهی با Subject Alternative Name دلخواه (و SID برای دور زدن KB5014754) درخواست می‌کند، با PKINIT احراز هویت می‌کند و hash NT را با UnPAC the hash استخراج می‌کند. |
+| `bof-etw` | bof | تابع EtwEventWrite در ntdll.dll را patch و بازگردانی می‌کند تا logging مبتنی بر ETW تضعیف شود. |
+| `bof-event-log-manage` | bof | کانال‌های Event Log را بررسی می‌کند، log و source کلاسیک متعلق به BOF را مدیریت می‌کند، رویداد متنی یا باینری از طریق source ثبت‌شده می‌نویسد و کانال‌ها را با backup اختیاری پاک می‌کند. create، clear و destroy به context Administrator یا SYSTEM با امتیاز بالا نیاز دارند. |
+| `bof-execute-cross-session` | bof | یک باینری روی دیسک را در context کاربر دیگر اجرا می‌کند. با تعامل cross-session از رابط‌های COM یعنی IStandardActivator، ISpecialSystemProperties و IHxHelpPaneServer به این کار می‌رسد. در نتیجه برای اجرای کد به‌جای کاربر logon شدهٔ دیگر، تزریق فرایند لازم نیست. |
+| `bof-find-loaded-module` | bof | مشخص می‌کند *modulepart* در کدام فرایندها بارگذاری شده، با جستجوی اختیاری فقط در *procnamepart* |
+| `bof-find-module` | bof | فرایندها را برای ماژول‌های بارگذاری‌شدهٔ مشخص (مثلاً clr.dll، winhttp.dll، amsi.dll) با direct system call enumerate می‌کند. برای انتخاب کاندید spawnto با opsec امن مفید است. |
+| `bof-find-proc-handle` | bof | فرایندهایی که handle به فرایند هدف دارند (مثلاً lsass.exe) را enumerate می‌کند. می‌تواند handleهای LSASS موجود را برای اجتناب از باز کردن handle جدید شناسایی کند. |
+| `bof-firewall-rule` | bof | قوانین Windows Firewall را از API COM (INetFwPolicy2) بدون spawn کردن netsh.exe یا cmd.exe اضافه، حذف یا query می‌کند. برای pivot داخل شبکه‌ها مفید است. |
+| `bof-force-lock-screen` | bof | صفحه قفل session کاربر فعلی را اجبار می‌کند. |
+| `bof-functionutil` | bof | توابع API ماژول بارگذاری‌شده را با نسخهٔ on-disk DLL می‌خواند، مقایسه و patch می‌کند. برای تشخیص hooking EPP یا EDR و unhook کردن توابع استفاده می‌شود. |
+| `bof-get-acl` | bof | DACL/ACE شیء را نمایش می‌دهد. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-get-attribute` | bof | attribute LDAP مشخص را می‌خواند. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-get-azure-token` | bof | تلاش می‌کند جریان authorization code OAuth را علیه Azure با logonهای ذخیره‌شده مرورگر کامل کند و tokenهای برگشتی را چاپ می‌کند. |
+| `bof-get-clipboard` | bof | هر متنی روی clipboard را با Win32 clipboard API چاپ می‌کند. |
+| `bof-get-computers` | bof | همه رایانه‌های دامنه را فهرست می‌کند. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-get-delegation` | bof | پیکربندی delegation را نمایش می‌دهد. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-get-domain-info` | bof | اطلاعات دامنه فعلی و domain controller را برمی‌گرداند، از جمله نام forest دامنه، نام دامنه، نام DC، آدرس DC و نام site DC. |
+| `bof-get-domaininfo` | bof | اطلاعات دامنه را از rootDSE query می‌کند. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-get-dpapi-system` | bof | کلید DPAPI_SYSTEM و bootkey را می‌گیرد |
+| `bof-get-groupmembers` | bof | اعضای یک گروه را فهرست می‌کند. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-get-groups` | bof | همه گروه‌های دامنه را فهرست می‌کند. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-get-machacct-quota` | bof | مقدار ms-DS-MachineAccountQuota را برای دامنه فعلی می‌خواند. |
+| `bof-get-maq` | bof | سهمیه حساب ماشین را می‌گیرد. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-get-netntlm` | bof | hash NetNTLMv2 را از طریق SSPI ضبط می‌کند. |
+| `bof-get-netsession` | bof | sessionها را روی رایانه محلی یا مشخص‌شده enumerate می‌کند |
+| `bof-get-netsession2` | bof | نسخهٔ اصلاح‌شده `netsession` که از BOFHound پشتیبانی می‌کند |
+| `bof-get-object` | bof | همه attributeهای یک شیء را dump می‌کند. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-get-password-policy` | bof | خط‌مشی رمز عبور و lockout پیکربندی‌شده سرور یا دامنه هدف را می‌گیرد |
+| `bof-get-priv` | bof | privilege token مشخص‌شده را روی فرایند فعلی فعال می‌کند. |
+| `bof-get-rbcd` | bof | Resource-Based Constrained Delegation را نمایش می‌دهد. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-get-session-info` | bof | اطلاعات مربوط به session logon کاربر فعلی را چاپ می‌کند |
+| `bof-get-spn` | bof | ServicePrincipalNameها را فهرست می‌کند. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-get-uac` | bof | پرچم‌های UserAccountControl را نمایش می‌دهد. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-get-usergroups` | bof | گروه‌هایی که کاربر عضو آن‌هاست را فهرست می‌کند. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-get-users` | bof | همه کاربران دامنه را فهرست می‌کند. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-get-webdav-status` | bof | سیستم‌های از راه دور را برای سرویس Web Client (WebDAV) در حال اجرا با probe کردن named pipe RPC SERVICE به نام DAV بررسی می‌کند. به admin روی هدف نیاز ندارد اما credential معتبر لازم است (بدون دسترسی anonymous). |
+| `bof-get-writable` | bof | اشیاء با دسترسی write را پیدا می‌کند. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-getsystem` | bof | با duplicate کردن token winlogon.exe به SYSTEM می‌رسد. به امتیاز administrator نیاز دارد. |
+| `bof-ghost-task` | bof | task زمان‌بندی‌شده را فقط از طریق registry ایجاد یا حذف می‌کند، بدون trigger کردن رویدادهای Windows 4698 و 106. به NT AUTHORITY\SYSTEM نیاز دارد. |
+| `bof-ghostkatz` | bof | اعتبار LSASS را با خواندن حافظه فیزیکی از طریق درایورهای kernel آسیب‌پذیر امضاشده با primitiveهای MmMapIoSpace dump می‌کند. از استخراج اعتبار MSV1 (logonpasswords) و WDigest پشتیبانی می‌کند. به امتیاز administrator نیاز دارد. در صورت شکست درایور حین عملیات ممکن است BSOD رخ دهد. |
+| `bof-global-unprotect` | bof | پیکربندی VPN GlobalProtect و تنظیمات HIP را پیدا، رمزگشایی و دانلود می‌کند. |
+| `bof-handle-finder` | bof | handleهای باز در فرایند هدف را enumerate می‌کند. |
+| `bof-handle-stealer` | bof | فرایندهای NetworkService Chrome یا Edge را پیدا می‌کند، handle باز به پایگاه SQLite Cookies را duplicate می‌کند و کپی را در %LOCALAPPDATA%&lt;pid&gt;.db ذخیره می‌کند. فرایندهای chrome.exe و msedge.exe را خودکار اسکن می‌کند. |
+| `bof-hash` | bof | hash کلید Kerberos را از یک رمز عبور تولید می‌کند. |
+| `bof-hide-file` | bof | پوشه یا فایل را با تغییر attributeها و تنظیم systemfile + hidden از دید ساده پنهان می‌کند. |
+| `bof-ide-extension-surface` | bof | manifestهای extension VS Code، Cursor، Windsurf، Zed، Insiders، OSS و server/remote را از root پروفایل هر کاربر enumerate می‌کند و هویت extension، رویدادهای activation و سیگنال‌های capability را خلاصه می‌کند. |
+| `bof-idle-time` | bof | فعالیت فعلی کاربر را بر اساس آخرین ورودی کاربر بررسی می‌کند. زمان را با قالب HH:MM:SS برمی‌گرداند. |
+| `bof-ipconfig` | bof | آدرس IPv4، hostname و سرور DNS را فهرست می‌کند |
+| `bof-kerb-hash` | bof | رمزها را به کلید Kerberos hash می‌کند: rc4_hmac، aes128_cts_hmac_sha1، aes256_cts_hmac_sha1، des_cbc_md5. |
+| `bof-kerberoast` | bof | برای Service Principal Name داده‌شده ticket سرویس Kerberos (AP REQ) درخواست می‌کند و ticket base64 برای crack آفلاین خروجی می‌دهد. خروجی را با apreq2hashcat.py تبدیل کنید. |
+| `bof-kerberoasting` | bof | حساب‌های کاربری یا سرویس دارای SPN را فهرست می‌کند یا برای کرک آفلاین با Hashcat بلیط سرویس (TGS REP) درخواست می‌دهد. بلیط‌های خروجی بین تگ‌های TICKET ظاهر می‌شوند. با TicketToHashcat.py تبدیل کنید. |
+| `bof-kerberos-bof` | bof | بلیط‌های Kerberos کش‌شده را از طریق LsaCallAuthenticationPackage بدون دست زدن به حافظه LSASS فهرست، dump و purge می‌کند. |
+| `bof-kerbeus-asktgs` | bof | یک بلیط سرویس از TGT درخواست می‌دهد. |
+| `bof-kerbeus-asktgt` | bof | یک TGT با رمز عبور، hash یا بدون preauth درخواست می‌دهد. |
+| `bof-kerbeus-asreproasting` | bof | AS REP برای کاربران بدون preauthentication Kerberos درخواست می‌دهد. |
+| `bof-kerbeus-changepw` | bof | رمز عبور کاربر را از طریق kpasswd تغییر می‌دهد. |
+| `bof-kerbeus-cross_s4u` | bof | سوءاستفاده از constrained delegation بین دامنه S4U را انجام می‌دهد. |
+| `bof-kerbeus-describe` | bof | یک بلیط Kerberos را parse و توصیف می‌کند. |
+| `bof-kerbeus-dump` | bof | بلیط‌های Kerberos را از نشست‌های logon استخراج می‌کند. |
+| `bof-kerbeus-hash` | bof | hash کلید Kerberos از یک رمز عبور تولید می‌کند. |
+| `bof-kerbeus-kerberoasting` | bof | یک بلیط سرویس Kerberos برای کرک آفلاین درخواست می‌دهد. |
+| `bof-kerbeus-klist` | bof | بلیط‌های Kerberos را با اطلاعات تفصیلی فهرست می‌کند. |
+| `bof-kerbeus-ptt` | bof | یک بلیط را به نشست logon فعلی یا مشخص‌شده ارسال می‌کند. |
+| `bof-kerbeus-purge` | bof | بلیط‌های Kerberos را از نشست logon فعلی یا مشخص‌شده purge می‌کند. |
+| `bof-kerbeus-renew` | bof | یک TGT را renew می‌کند. |
+| `bof-kerbeus-s4u` | bof | سوءاستفاده از constrained delegation S4U2self و S4U2proxy را انجام می‌دهد. |
+| `bof-kerbeus-tgtdeleg` | bof | یک TGT قابل استفاده را از طریق سوءاستفاده از delegation GSS API بازیابی می‌کند. |
+| `bof-kerbeus-triage` | bof | بلیط‌های Kerberos را در قالب جدول فهرست می‌کند. |
+| `bof-klist` | bof | بلیط‌های Kerberos کش‌شده فعلی را نمایش می‌دهد. فهرست‌کردن، purge و درخواست بلیط سرویس برای یک SPN مشخص را پشتیبانی می‌کند. |
+| `bof-koh-client` | bof | از طریق named pipe Koh برای فهرست، فیلتر، impersonate و آزاد کردن tokenهای capture‌شده ارتباط برقرار می‌کند. برای impersonate کردن tokenهای capture‌شده به SeImpersonatePrivilege نیاز دارد. |
+| `bof-ksl-lsa` | bof | اعتبارنامه‌ها را از حافظه LSASS با استفاده از primitive خواندن حافظه فیزیکی BYOVD KslD.sys استخراج می‌کند. OpenProcess، NtReadVirtualMemory یا MiniDumpWriteDump را روی lsass فراخوانی نمی‌کند. hashهای NT MSV1_0، متن واضح WDigest (در صورت فعال بودن) و کلیدهای رمزنگاری LSA را استخراج می‌کند. به امتیازات administrator نیاز دارد. |
+| `bof-lapsdump` | bof | رمزهای LAPS را از رایانه‌های مشخص‌شده در Active Directory dump می‌کند. به امتیازات AD elevated نیاز دارد. |
+| `bof-lastpass` | bof | حافظه فرآیند Chrome یا Brave را برای رمزها و داده‌های LastPass جستجو می‌کند. |
+| `bof-ldap-sign-check` | bof | یک Domain Controller را اسکن می‌کند تا بررسی کند LdapEnforceChannelBinding یا LdapServerIntegrity برای کاهش حملات relay LDAP تغییر کرده‌اند یا نه. binding هر دو LDAP (389) و LDAPS (636) را آزمایش می‌کند. |
+| `bof-ldapsearch` | bof | جستجوهای LDAP را اجرا می‌کند (توجه: اگر همه attributeها به‌علاوه ACL base64-encoded اشیاء را می‌خواهید، *,ntsecuritydescriptor را به‌عنوان پارامتر attribute مشخص کنید؛ سپس می‌توان با BOFHound resolve کرد. ممکن است pagination را بشکند، اگرچه در آزمایش همه‌چیز درست به نظر رسید.) |
+| `bof-ldapsecuritycheck` | bof | الزامات LDAP signing و channel binding را روی domain controller بررسی می‌کند. |
+| `bof-lin-arp` | bof | (linux) جدول ARP را از /proc/net/arp با resolve کردن hostname نمایش می‌دهد. |
+| `bof-lin-awk` | bof | (linux) awk حداقلی (فقط چاپ ستون‌ها). |
+| `bof-lin-base64` | bof | (linux) رمزگذاری/رمزگشایی Base64. |
+| `bof-lin-basename` | bof | (linux) پوشه را از مسیر حذف می‌کند. |
+| `bof-lin-cat` | bof | (linux) فایل‌ها را به هم متصل و چاپ می‌کند. |
+| `bof-lin-chmod` | bof | (linux) مجوزهای فایل را تغییر می‌دهد. |
+| `bof-lin-chown` | bof | (linux) مالکیت فایل را تغییر می‌دهد. |
+| `bof-lin-cp` | bof | (linux) فایل‌ها را کپی می‌کند. |
+| `bof-lin-cut` | bof | (linux) فیلدها/ستون‌ها را استخراج می‌کند. |
+| `bof-lin-date` | bof | (linux) تاریخ/زمان فعلی را چاپ می‌کند. |
+| `bof-lin-df` | bof | (linux) مصرف فضای دیسک. |
+| `bof-lin-diff` | bof | (linux) دو فایل را مقایسه می‌کند. |
+| `bof-lin-dirname` | bof | (linux) نام فایل را از مسیر حذف می‌کند. |
+| `bof-lin-dmesg` | bof | (linux) بافر ring هسته را چاپ می‌کند. |
+| `bof-lin-du` | bof | (linux) مصرف دیسک را تخمین می‌زند. |
+| `bof-lin-env` | bof | (linux) متغیرهای محیطی را از /proc/self/environ چاپ می‌کند. |
+| `bof-lin-find` | bof | (linux) فایل‌ها را جستجو می‌کند. |
+| `bof-lin-free` | bof | (linux) مصرف حافظه را نمایش می‌دهد. |
+| `bof-lin-grep` | bof | (linux) محتوای فایل را جستجو می‌کند. |
+| `bof-lin-groups` | bof | (linux) عضویت‌های گروه را چاپ می‌کند. |
+| `bof-lin-head` | bof | (linux) بخش اول فایل را خروجی می‌دهد. |
+| `bof-lin-hostname` | bof | (linux) hostname را چاپ می‌کند. |
+| `bof-lin-id` | bof | (linux) شناسه‌های user/group را چاپ می‌کند. |
+| `bof-lin-ifconfig` | bof | (linux) رابط‌های شبکه را نمایش می‌دهد. |
+| `bof-lin-kill` | bof | (linux) سیگنال به فرآیند می‌فرستد. |
+| `bof-lin-ln` | bof | (linux) لینک ایجاد می‌کند. |
+| `bof-lin-logger` | bof | (linux) پیام را در syslog می‌نویسد. |
+| `bof-lin-ls` | bof | (linux) محتوای پوشه را فهرست می‌کند. |
+| `bof-lin-lsmod` | bof | (linux) ماژول‌های بارگذاری‌شده هسته را فهرست می‌کند. |
+| `bof-lin-md5sum` | bof | (linux) hash md5 محاسبه می‌کند. |
+| `bof-lin-mkdir` | bof | (linux) پوشه ایجاد می‌کند. |
+| `bof-lin-mount` | bof | (linux) نقاط mount را فهرست می‌کند. |
+| `bof-lin-mv` | bof | (linux) فایل‌ها را جابه‌جا/تغییر نام می‌دهد. |
+| `bof-lin-netstat` | bof | (linux) اتصالات TCP/UDP را از /proc/net نمایش می‌دهد (flags: -tlnpu). |
+| `bof-lin-nl` | bof | (linux) خطوط فایل را شماره‌گذاری می‌کند. |
+| `bof-lin-nslookup` | bof | (linux) جستجوی DNS از طریق getaddrinfo. |
+| `bof-lin-od` | bof | (linux) خروجی octal فایل. |
+| `bof-lin-paste` | bof | (linux) خطوط فایل‌ها را ادغام می‌کند. |
+| `bof-lin-ping` | bof | (linux) دسترسی‌پذیری میزبان را آزمایش می‌کند. |
+| `bof-lin-ps` | bof | (linux) فرآیندها را فهرست می‌کند. |
+| `bof-lin-pwd` | bof | (linux) پوشه کاری را چاپ می‌کند. |
+| `bof-lin-rev` | bof | (linux) خطوط فایل را معکوس می‌کند. |
+| `bof-lin-rm` | bof | (linux) فایل‌ها/پوشه‌ها را حذف می‌کند. |
+| `bof-lin-rmdir` | bof | (linux) پوشه‌های خالی را حذف می‌کند. |
+| `bof-lin-route` | bof | (linux) جدول مسیریابی را نمایش می‌دهد. |
+| `bof-lin-sed` | bof | (linux) ویرایشگر stream (s/old/new/g). |
+| `bof-lin-sha256sum` | bof | (linux) hash sha-256 محاسبه می‌کند. |
+| `bof-lin-sort` | bof | (linux) خطوط فایل را مرتب می‌کند. |
+| `bof-lin-stat` | bof | (linux) وضعیت فایل را نمایش می‌دهد. |
+| `bof-lin-strings` | bof | (linux) رشته‌های قابل چاپ را پیدا می‌کند. |
+| `bof-lin-sysctl` | bof | (linux) پارامترهای هسته را می‌خواند/می‌نویسد. |
+| `bof-lin-tail` | bof | (linux) بخش آخر فایل را خروجی می‌دهد. |
+| `bof-lin-tar` | bof | (linux) آرشیو tar ایجاد، فهرست و استخراج می‌کند. |
+| `bof-lin-touch` | bof | (linux) فایل ایجاد یا timestampها را به‌روز می‌کند. |
+| `bof-lin-tr` | bof | (linux) نویسه‌ها را translate/حذف می‌کند. |
+| `bof-lin-traceroute` | bof | (linux) مسیر تا میزبان را trace می‌کند. |
+| `bof-lin-tree` | bof | (linux) فهرست درختی بازگشتی پوشه. |
+| `bof-lin-uname` | bof | (linux) اطلاعات سیستم را چاپ می‌کند. |
+| `bof-lin-uniq` | bof | (linux) خطوط مجاور تکراری را حذف می‌کند. |
+| `bof-lin-uptime` | bof | (linux) uptime سیستم، میانگین بار و زمان فعلی را چاپ می‌کند. |
+| `bof-lin-wc` | bof | (linux) شمارش کلمه، خط و بایت. |
+| `bof-lin-wget` | bof | (linux) دانلود HTTP GET. |
+| `bof-lin-whoami` | bof | (linux) نام کاربر مؤثر را چاپ می‌کند. |
+| `bof-lin-xxd` | bof | (linux) خروجی hex فایل. |
+| `bof-list-chrome-cookies` | bof | زیرفرآیندهای مرورگر قابل هدف‌گیری برای dump کوکی را فهرست می‌کند. PID برگشتی را با bof- cookie-katz استفاده کنید. فقط x64. |
+| `bof-list-firewall-rules` | bof | قوانین فایروال Windows را فهرست می‌کند |
+| `bof-list-process-handles` | bof | handleهای باز در یک فرآیند را فهرست می‌کند. |
+| `bof-listdns` | bof | ورودی‌های کش DNS را فهرست می‌کند. تلاش می‌کند هر کدام را query و resolve کند |
+| `bof-listmods` | bof | ماژول‌های فرآیند (DLL) را فهرست می‌کند. اگر PID خالی باشد فرآیند فعلی هدف قرار می‌گیرد. مکمل driversigs برای تشخیص اینکه آیا فرآیند ما توسط AV/EDR inject شده است |
+| `bof-locale` | bof | زبان locale سیستم، شناسه locale، تاریخ، زمان و کشور را فهرست می‌کند |
+| `bof-make-token-cert` | bof | با استفاده از گواهی PFX جعل هویت می‌کند. |
+| `bof-md5` | bof | نام فایل را با md5 هش می‌کند. |
+| `bof-mdm-policy-artifacts` | bof | از یک مدل امتیازدهی برای ارزیابی وضعیت ثبت‌نام MDM در سیستم‌های Windows با بررسی شاخص‌هایی از جمله وضعیت join، وظایف زمان‌بندی‌شده، پیکربندی policy و artifactهای ثبت‌نام استفاده می‌کند. |
+| `bof-mem-read` | bof | اولین بایت‌های توابع exportشده از یک DLL بارگذاری‌شده را می‌خواند. |
+| `bof-mem-search` | bof | حافظهٔ فرایند را برای یک رشته جستجو می‌کند. |
+| `bof-memreader` | bof | حافظهٔ فرایند هدف را برای یک الگوی رشتهٔ مشخص جستجو می‌کند و همهٔ رخدادهای منطبق را به خروجی Beacon برمی‌گرداند. |
+| `bof-move-object` | bof | شیء را به OU دیگری منتقل می‌کند. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-msi-lateral-mv` | bof | برای حرکت جانبی از MSI Server روی DCOM استفاده می‌کند تا یک درایور ODBC را از طریق Custom Action Server نصب و پیکربندی کند. همهٔ آرگومان‌ها wide string هستند. |
+| `bof-msi-search` | bof | C:\Windows\Installer\ را برای فایل‌های MSI کش‌شده اسکن می‌کند و آن‌ها را با نام نرم‌افزار مرتبط فهرست می‌کند. به شناسایی نصب‌کننده‌های MSI برای تحقیق ارتقای امتیاز محلی از طریق آسیب‌پذیری‌های MSI repair کمک می‌کند. |
+| `bof-msv1-0-bof` | bof | کلیدهای credential مربوط به DPAPI را بازیابی می‌کند و پاسخ‌های NTLMv1 را از طریق LsaCallAuthenticationPackage بدون باز کردن handle به LSASS تولید می‌کند. برای بازیابی کلید credential از PPL و Credential Guard عبور می‌کند. |
+| `bof-nanorobeus` | bof | مدیریت بلیت Kerberos. از فهرست کردن LUIDها، sessionها، بلیت‌ها، dump، import (ptt)، purge، TGT delegation و Kerberoasting پشتیبانی می‌کند. |
+| `bof-netgroup` | bof | گروه‌های دامنه یا اعضای گروه را از دامنهٔ پیش‌فرض یا مشخص‌شده فهرست می‌کند. |
+| `bof-netjoin-query` | bof | اطلاعات join دامنهٔ Windows و جزئیات workstation را پرس‌وجو می‌کند و مشخص می‌کند سیستم به دامنه join شده یا در workgroup است. |
+| `bof-netlocalgroup` | bof | گروه‌های محلی یا اعضای گروه محلی را روی رایانهٔ محلی یا مشخص‌شده فهرست می‌کند. |
+| `bof-netlocalgroup2` | bof | نسخهٔ اصلاح‌شدهٔ `netLocalGroupListMembers` که از BOFHound پشتیبانی می‌کند. |
+| `bof-netloggedon` | bof | کاربران واردشده روی رایانهٔ محلی یا راه‌دور را برمی‌گرداند. |
+| `bof-netloggedon2` | bof | نسخهٔ اصلاح‌شدهٔ `netloggedon` که از BOFHound پشتیبانی می‌کند. |
+| `bof-netshares` | bof | shareها را روی رایانهٔ محلی یا راه‌دور فهرست می‌کند. |
+| `bof-netstat` | bof | پورت‌های TCP و UDP IPv4 را فهرست می‌کند. |
+| `bof-nettime` | bof | زمان روی رایانهٔ راه‌دور را نمایش می‌دهد. |
+| `bof-netuptime` | bof | اطلاعات زمان boot روی رایانهٔ محلی یا راه‌دور را برمی‌گرداند. |
+| `bof-netuser` | bof | اطلاعات کاربر مشخص را می‌گیرد. در صورت مشخص بودن domainname از دامنه می‌خواند. |
+| `bof-netuserenum` | bof | حساب‌های کاربری روی رایانهٔ محلی یا دامنهٔ فعلی را شمارش می‌کند. |
+| `bof-netview` | bof | رایانه‌های در دسترس در دامنهٔ فعلی را فهرست می‌کند. |
+| `bof-nonpagedldapsearch` | bof | جستجوهای LDAP را بدون paging اجرا می‌کند. |
+| `bof-notepad` | bof | پنجره‌های باز Notepad و Notepad++ را جستجو می‌کند و متن را از کنترل ویرایشگر می‌گیرد. |
+| `bof-notepad-grab` | bof | با خواندن حافظه، متن ساده را مستقیماً از پنجره‌های باز Notepad استخراج و برمی‌گرداند و به اپراتورها امکان بازیابی یادداشت‌های ذخیره‌نشده یا در حافظه را می‌دهد. |
+| `bof-notethief` | bof | با یافتن کنترل Edit در Notepad و خواندن متن آن از طریق WM_GETTEXT، محتوای پنجرهٔ باز Notepad را می‌دزدد. |
+| `bof-nslookup` | bof | یک پرس‌وجوی DNS انجام می‌دهد. DNS server سروری است که می‌خواهید از آن پرس‌وجو کنید (برای پیش‌فرض مشخص نکنید یا 0 بگذارید). نوع رکورد چیزی مثل A، AAAA یا ANY است. در بعضی موقعیت‌ها به‌دلیل crashهای مشاهده‌شده محدود است. |
+| `bof-office-tokens` | bof | توکن‌های دسترسی JWT مربوط به Office را از حافظهٔ فرایند Office مشخص‌شده جمع‌آوری می‌کند. |
+| `bof-p-sremote` | bof | فهرست همهٔ فرایندهای در حال اجرا روی میزبان راه‌دور را می‌گیرد. |
+| `bof-password-spray-a-d` | bof | یک رمز عبور واحد را در برابر چند حساب با احراز هویت simple bind از طریق LDAP، LDAPS، GC یا GCS اعتبارسنجی می‌کند. |
+| `bof-password-spray-local` | bof | یک نام کاربری و رمز عبور محلی واحد را در برابر فهرستی از hostnameهای هدف با احراز هویت SMB (IPC$) اعتبارسنجی می‌کند. |
+| `bof-patchit` | bof | AMSI و ETW را برای فرایندهای x64 patch، بررسی و بازگردانی می‌کند. 10+ بایت اول AmsiScanBuffer و EtwEventWrite را مقایسه می‌کند. اگر amsi.dll از قبل در فرایند فعلی نباشد آن را بارگذاری نمی‌کند. فقط x64. |
+| `bof-port-scan` | bof | یک میزبان IPv4 واحد را برای پورت‌های TCP و/یا UDP باز از طریق Winsock با فهرست پورت محدود، timeout قابل پیکربندی و خروجی مختصر پورت‌های باز اسکن می‌کند. |
+| `bof-power-state` | bof | با استفاده از دادهٔ chassis در SMBIOS و fallback وضعیت برق، نوع فرم میزبان را Laptop، Desktop، Tablet، Server، Embedded یا Unknown تشخیص می‌دهد. |
+| `bof-powershell-history` | bof | artifactهای تاریخچهٔ PowerShell را از مکان‌های پیش‌فرض PSReadLine و transcript جمع‌آوری می‌کند. برای یافتن credential یا زیرساخت مفید است. |
+| `bof-privkit-autorun-check` | bof | کلیدهای رجیstry autorun قابل تغییر را بررسی می‌کند. |
+| `bof-privkit-cred-check` | bof | Windows Credential Manager را برای credentialهای ذخیره‌شده بررسی می‌کند. |
+| `bof-privkit-elev-check` | bof | AlwaysInstallElevated را در HKCU و HKLM بررسی می‌کند. |
+| `bof-privkit-hijack-check` | bof | ورودی‌های PATH قابل hijack را بررسی می‌کند. |
+| `bof-privkit-logon-check` | bof | credentialهای AutoLogon در رجیstry را بررسی می‌کند. |
+| `bof-privkit-pshist-check` | bof | فایل‌های تاریخچهٔ دستور PowerShell را بررسی می‌کند. |
+| `bof-privkit-service-check` | bof | سرویس‌های Windows قابل تغییر را بررسی می‌کند. |
+| `bof-privkit-token-check` | bof | امتیازهای token فعلی را از نظر پتانسیل سوءاستفاده بررسی می‌کند. |
+| `bof-privkit-uac-check` | bof | وضعیت پیکربندی UAC را بررسی می‌کند. |
+| `bof-privkit-unquoted-svc` | bof | مسیرهای سرویس unquoted را بررسی می‌کند. |
+| `bof-probe` | bof | بررسی می‌کند آیا پورت مشخصی باز است. |
+| `bof-proc-version` | bof | نسخهٔ فایل ماژول اصلی یک فرایند را می‌گیرد. |
+| `bof-procargs` | bof | آرگومان‌های خط فرمان فرایند مشخص‌شده را استخراج می‌کند. |
+| `bof-procdump` | bof | فرایند مشخص‌شده را با MiniDumpWriteDump در یک فایل dump می‌کند. ابتدا SeDebugPrivilege را فعال می‌کند. |
+| `bof-process-destroy` | bof | یک handle مشخص یا همهٔ handleها در فرایند مشخص‌شده را می‌بندد. |
+| `bof-process-list-handles` | bof | همهٔ handleهای باز در فرایند مشخص‌شده را فهرست می‌کند. |
+| `bof-process-tokens-list` | bof | tokenهای در دسترس از فرایندهای در حال اجرا را شمارش می‌کند و زمینهٔ کاربر، نوع token (primary/impersonation) و سطح impersonation را نشان می‌دهد. از فیلتر اختیاری بر اساس PID یا نام فرایند پشتیبانی می‌کند. SeDebugPrivilege به‌طور پیش‌فرض برای OPSEC غیرفعال است. |
+| `bof-procinfo` | bof | اطلاعات نسخهٔ فایل برای executable فرایند (نام، نسخه، شرکت و غیره) را نمایش می‌دهد. |
+| `bof-prockill` | bof | فرایند هدف را با PID خاتمه می‌دهد. |
+| `bof-procsearch` | bof | حافظهٔ قابل خواندن فرایند را برای یک رشته جستجو می‌کند و زمینهٔ ASCII اطراف را نمایش می‌دهد. |
+| `bof-proxy-enum` | bof | وضعیت پیکربندی proxy در Windows را در WinINET، WinHTTP، کلیدهای policy، متغیرهای محیطی، شاخص‌های WPAD، تنظیمات Chrome و مقادیر defaultProxy در .NET شمارش می‌کند. |
+| `bof-psw` | bof | عنوان پنجره‌ها را از فرایندهای دارای Windows فعال نشان می‌دهد. |
+| `bof-ptt` | bof | یک بلیت را به session ورود فعلی یا مشخص‌شده ارسال می‌کند. |
+| `bof-purge` | bof | بلیت‌های Kerberos را از session ورود فعلی یا مشخص‌شده purge می‌کند. |
+| `bof-recon-ad` | bof | اشیاء و attributeهای Active Directory را از طریق ADSI پرس‌وجو می‌کند. از فیلترهای LDAP سفارشی، پرس‌وجوی user/computer/group، ارتباط رمزنگاری‌شده Kerberos و جستجوی Global Catalog پشتیبانی می‌کند. یک باینری از چهار حالت پرس‌وجو پشتیبانی می‌کند. |
+| `bof-reg-del` | bof | یک کلید یا مقدار رجیstry را حذف می‌کند. |
+| `bof-reg-delete` | bof | یک کلید یا مقدار رجیstry را روی سیستم محلی یا راه‌دور حذف می‌کند. |
+| `bof-reg-query` | bof | یک مقدار رجیstry را پرس‌وجو می‌کند یا یک کلید واحد را شمارش می‌کند. از رایانه‌های راه‌دور پشتیبانی می‌کند. |
+| `bof-reg-query-recursive` | bof | یک کلید رجیstry را از مسیر شروع به‌صورت بازگشتی شمارش می‌کند. از رایانه‌های راه‌دور پشتیبانی می‌کند. |
+| `bof-reg-save` | bof | یک کلید رجیstry را به فایل export می‌کند. |
+| `bof-reg-set` | bof | یک مقدار رجیstry روی میزبان محلی یا راه‌دور ایجاد یا تنظیم می‌کند. |
+| `bof-regsave` | bof | امتیازهای لازم را کسب می‌کند و کلیدهای رجیstry SAM، SYSTEM و SECURITY را برای parse آفلاین و استخراج hash dump می‌کند. به امتیاز administrator نیاز دارد. |
+| `bof-regsession` | bof | SID کاربران واردشده را با شمارش HKEY_USERS برمی‌گرداند. سازگار با BOFHound |
+| `bof-remotereg` | bof | کاربران واردشده روی سرورهای راه‌دور، VDI یا domain controller را با API رجیstry راه‌دور پرس‌وجو می‌کند. |
+| `bof-remove-ace` | bof | ACE را از DACL حذف می‌کند. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-remove-attribute` | bof | مقدار attribute را حذف می‌کند. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-remove-delegation` | bof | SPNهای delegation را پاک می‌کند. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-remove-groupmember` | bof | کاربر را از گروه حذف می‌کند. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-remove-object` | bof | شیء AD را حذف می‌کند. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-remove-rbcd` | bof | پیکربندی RBCD را پاک می‌کند. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-remove-spn` | bof | SPN مشخص را حذف می‌کند. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-remove-uac` | bof | پرچم UAC را حذف می‌کند. از LDAP استاندارد (389) با signing/sealing و LDAPS (636) پشتیبانی می‌کند. |
+| `bof-renew` | bof | یک TGT را تمدید می‌کند. |
+| `bof-resources` | bof | مصرف حافظه و فضای دیسک موجود روی درایو سخت اصلی را فهرست می‌کند. |
+| `bof-routeprint` | bof | مسیرهای IPv4 را فهرست می‌کند. |
+| `bof-runpe` | bof | یک PE دلخواه را درون یک فرایند قربانی از طریق پیاده‌سازی جزئی process herpaderping اجرا می‌کند. فایل راه‌دور مشخص‌شده به‌عنوان اولین آرگومان را ایجاد می‌کند، payload PE را می‌نویسد، سپس قبل از اجرا محتوای فایل را با الگوی 0x82 0x7f 0x76 0x7c بازنویسی می‌کند. |
+| `bof-s4u` | bof | سوءاستفاده constrained delegation از S4U2self و S4U2proxy را انجام می‌دهد. |
+| `bof-sc-config` | bof | یک سرویس Windows موجود را روی سیستم محلی یا راه‌دور پیکربندی می‌کند. |
+| `bof-sc-create` | bof | یک سرویس Windows جدید روی سیستم محلی یا راه‌دور ایجاد می‌کند. |
+| `bof-sc-delete` | bof | یک سرویس Windows موجود را حذف می‌کند. |
+| `bof-sc-description` | bof | توضیحات یک سرویس Windows موجود را تنظیم می‌کند. |
+| `bof-sc-enum` | bof | سرویس‌ها را برای اطلاعات qc، query، qfailure و qtriggers شمارش می‌کند. |
+| `bof-sc-failure` | bof | اقدامات failure را برای یک سرویس Windows موجود پیکربندی می‌کند. |
+| `bof-sc-qc` | bof | پیاده‌سازی sc qc در BOF |
+| `bof-sc-qdescription` | bof | پیاده‌سازی sc qdescription در BOF |
+| `bof-sc-qfailure` | bof | یک سرویس را برای شرایط failure پرس‌وجو می‌کند. |
+| `bof-sc-qtriggerinfo` | bof | یک سرویس را برای شرایط trigger پرس‌وجو می‌کند. |
+| `bof-sc-query` | bof | پیاده‌سازی sc query در BOF |
+| `bof-sc-start` | bof | یک سرویس Windows موجود را راه‌اندازی می‌کند. |
+| `bof-sc-stop` | bof | یک سرویس Windows موجود را متوقف می‌کند. |
+| `bof-schtask-enum` | bof | با رابط COM Task Scheduler، وظایف زمان‌بندی‌شده در سیستم‌های Windows را فهرست می‌کند. خلاصه‌ای از وظایف شامل وضعیت، زمان‌بندی و پیکربندی ارائه می‌دهد، بدون آنکه beacon را با داده XML غرق کند. |
+| `bof-schtasks-del` | bof | یک وظیفه یا پوشه زمان‌بندی‌شده را حذف می‌کند. |
+| `bof-schtasks-run` | bof | یک وظیفه زمان‌بندی‌شده را اجرا می‌کند. |
+| `bof-schtasks-stop` | bof | یک وظیفه زمان‌بندی‌شده در حال اجرا را متوقف می‌کند. |
+| `bof-schtaskscreate` | bof | یک وظیفه زمان‌بندی‌شده را از فایل تعریف XML وظیفه ایجاد یا به‌روزرسانی می‌کند. |
+| `bof-schtasksdelete` | bof | یک وظیفه یا پوشه زمان‌بندی‌شده را حذف می‌کند. |
+| `bof-schtasksenum` | bof | وظایف زمان‌بندی‌شده را در رایانه محلی یا راه‌دور فهرست می‌کند |
+| `bof-schtasksquery` | bof | وظیفه مشخص‌شده را در رایانه محلی یا راه‌دور پرس‌وجو می‌کند |
+| `bof-schtasksrun` | bof | یک وظیفه زمان‌بندی‌شده را فوراً شروع می‌کند. |
+| `bof-schtasksstop` | bof | یک وظیفه زمان‌بندی‌شده در حال اجرا را متوقف می‌کند. |
+| `bof-screenshot` | bof | با WinAPI و بدون fork-and-run، اسکرین‌شات می‌گیرد. فشرده‌سازی JPEG، سیاه‌وسفید، کیفیت، مقیاس‌بندی و ضبط پنجره minimized را پشتیبانی می‌کند. |
+| `bof-self-delete` | bof | با تکنیک تغییر نام alternate data stream در NTFS، یک فایل اجرایی قفل‌شده یا در حال اجرا را از دیسک حذف می‌کند. |
+| `bof-service-control` | bof | سرویس‌های محلی Windows را از طریق SCM مدیریت می‌کند: پرس‌وجو (فهرست محدود یا یک سرویس)، ایجاد، شروع، توقف، حذف و پیکربندی اقدامات failure. برای تغییرات معمولاً به حقوق elevated نیاز است. |
+| `bof-session-view` | bof | نشست‌های Windows Terminal Services را فهرست می‌کند و شناسه نشست، نام کاربری، دامنه، وضعیت اتصال و LUID نشست را نمایش می‌دهد. |
+| `bof-set-attribute` | bof | مقدار attribute را جایگزین می‌کند. LDAP استاندارد (389) با signing/sealing و LDAPS (636) را پشتیبانی می‌کند. |
+| `bof-set-delegation` | bof | پیکربندی delegation را جایگزین می‌کند. LDAP استاندارد (389) با signing/sealing و LDAPS (636) را پشتیبانی می‌کند. |
+| `bof-set-owner` | bof | مالک object را تغییر می‌دهد. LDAP استاندارد (389) با signing/sealing و LDAPS (636) را پشتیبانی می‌کند. |
+| `bof-set-password` | bof | رمز عبور کاربر را تغییر می‌دهد. LDAP استاندارد (389) با signing/sealing و LDAPS (636) را پشتیبانی می‌کند. |
+| `bof-set-spn` | bof | همه SPNها را جایگزین می‌کند. LDAP استاندارد (389) با signing/sealing و LDAPS (636) را پشتیبانی می‌کند. |
+| `bof-set-uac` | bof | پرچم‌های UAC را تنظیم می‌کند (جایگزینی). LDAP استاندارد (389) با signing/sealing و LDAPS (636) را پشتیبانی می‌کند. |
+| `bof-setuserpass` | bof | رمز عبور حساب کاربری مشخص‌شده را تنظیم می‌کند. |
+| `bof-sha1` | bof | نام فایل را با sha1 hash می‌کند |
+| `bof-sha256` | bof | نام فایل را با sha256 hash می‌کند |
+| `bof-shadowcreds` | bof | یک KeyCredential در attribute هدف msDS- KeyCredentialLink می‌نویسد، از طریق PKINIT احراز هویت می‌کند، هش NT را با UnPAC the hash استخراج می‌کند، سپس shadow credential را حذف می‌کند. به دسترسی نوشتن روی attribute هدف msDS- KeyCredentialLink نیاز دارد. |
+| `bof-sharefolder` | bof | یک پوشه اشتراکی world-readable و world-writable ایجاد می‌کند، یا یک پوشه خالی را حذف می‌کند. |
+| `bof-shutdown` | bof | خاموش‌کردن سیستم محلی یا راه‌دور را آغاز می‌کند. |
+| `bof-signal-key` | bof | کلیدهای رمزگشایی پایگاه داده Signal Desktop را روی میزبان‌های Windows که Signal Desktop نصب شده و استفاده شده است بازیابی می‌کند. |
+| `bof-silentchrome` | bof | با تغییر فایل‌های Preferences و Secure Preferences، یک افزونه مرورگر را در Chrome یا Edge به‌صورت خاموش نصب یا برمی‌گرداند. پورت SharpSilentChrome. |
+| `bof-silentharvest` | bof | dumper اعتبارنامه فقط از رجیstry که هش‌های SAM و secrets را از HKLM\\SECURITY\\Policy\\Secrets استخراج می‌کند. فقط به SeBackupPrivilege نیاز دارد (بدون SYSTEM). |
+| `bof-slack-cookie` | bof | کوکی احراز هویت Slack را از حافظه فرآیند Slack مشخص‌شده جمع‌آوری می‌کند. |
+| `bof-slack-key` | bof | کلید Slack رمزگذاری‌شده base64 را از %APPDATA%\Slack\Local State برای رمزگشایی کوکی رمزگشایی می‌کند. |
+| `bof-sleeper` | bof | SetThreadExecutionState را فراخوانی می‌کند تا از خواب رفتن میزبان جلوگیری کند. |
+| `bof-smbinfo` | bof | با API NetWkstaGetInfo اطلاعات نسخه سیستم راه‌دور را جمع‌آوری می‌کند. نسخه Windows، دامنه و اطلاعات مرتبط را بدون اجرای port scanner جمع می‌کند. |
+| `bof-sprayad` | bof | با LogonUserSSPI، password spray مبتنی بر LDAP یا Kerberos علیه Active Directory انجام می‌دهد. در صورت تعیین، از حساب‌های غیرفعال، قفل‌شده و کاربران با BadPwdCount بالا عبور می‌کند. |
+| `bof-sql-1434udp` | bof | اطلاعات اتصال SQL Server را از طریق سرویس SQL Server Browser روی UDP 1434 فهرست می‌کند. |
+| `bof-sql-adsi` | bof | اعتبارنامه ADSI را از یک linked server ADSI به‌دست می‌آورد. |
+| `bof-sql-agentcmd` | bof | با jobهای SQL Server agent یک دستور سیستم اجرا می‌کند. |
+| `bof-sql-agentstatus` | bof | وضعیت SQL agent و jobها را روی یک سرور فهرست می‌کند. |
+| `bof-sql-checkrpc` | bof | linked serverها و وضعیت RPC آن‌ها را فهرست می‌کند. |
+| `bof-sql-clr` | bof | یک assembly .NET را در stored procedure SQL از طریق یکپارچه‌سازی CLR بارگذاری و اجرا می‌کند. |
+| `bof-sql-columns` | bof | ستون‌ها را در یک جدول روی سرور SQL فهرست می‌کند. |
+| `bof-sql-databases` | bof | پایگاه‌های داده را روی یک سرور SQL فهرست می‌کند. |
+| `bof-sql-impersonate` | bof | loginهای SQL که روی یک سرور قابل impersonate هستند را فهرست می‌کند. |
+| `bof-sql-info` | bof | اطلاعاتی درباره یک سرور SQL راه‌دور جمع‌آوری می‌کند. |
+| `bof-sql-links` | bof | سرورهای SQL linked را فهرست می‌کند. |
+| `bof-sql-olecmd` | bof | با procedureهای OLE automation روی سرور SQL یک دستور سیستم اجرا می‌کند. |
+| `bof-sql-query` | bof | یک پرس‌وجوی SQL سفارشی روی سرور SQL راه‌دور اجرا می‌کند. |
+| `bof-sql-rows` | bof | تعداد سطر یک جدول روی سرور SQL را برمی‌گرداند. |
+| `bof-sql-search` | bof | نام یک ستون را در جداول یک پایگاه داده جست‌وجو می‌کند. |
+| `bof-sql-smb` | bof | از سرور SQL با xp_dirtree به یک listener UNC، احراز هویت NetNTLM را coerce می‌کند. |
+| `bof-sql-tables` | bof | جداول را در یک پایگاه داده روی سرور SQL فهرست می‌کند. |
+| `bof-sql-togglemodule` | bof | قابلیت‌های SQL Server را فعال یا غیرفعال می‌کند: RPC، CLR، xp_cmdshell یا OLE automation. |
+| `bof-sql-users` | bof | کاربران دارای دسترسی به پایگاه داده روی سرور SQL را فهرست می‌کند. |
+| `bof-sql-whoami` | bof | کاربر واردشده، کاربر map‌شده و نقش‌های SQL روی سرور را جمع‌آوری می‌کند. |
+| `bof-sql-xpcmd` | bof | با xp_cmdshell روی سرور SQL یک دستور سیستم اجرا می‌کند. |
+| `bof-sspi-uac-bypass` | bof | دور زدن UAC از طریق جعل token context datagram SSPI، impersonation و ایجاد سرویس SYSTEM با CreateSvcRpc. |
+| `bof-start-web-client` | bof | سرویس WebClient را از context کاربر و با service trigger به‌صورت برنامه‌ای شروع می‌کند. برای coercion PetitPotam مبتنی بر WebDAV روی سیستم‌هایی که سرویس در حال اجرا نیست لازم است. |
+| `bof-static-syscalls-dump` | bof | NtReadVirtualMemory را unhook می‌کند و با MiniDumpWriteDump dump حافظه فرآیند می‌سازد. فقط x64. |
+| `bof-suspendresume` | bof | یک فرآیند را با PID suspend یا resume می‌کند. 1 برای suspend و 0 برای resume. |
+| `bof-syscallsdump` | bof | NtReadVirtualMemory را unhook می‌کند و با MiniDumpWriteDump dump حافظه فرآیند می‌سازد. فقط x64. |
+| `bof-tasklist` | bof | فرآیندهای در حال اجرا شامل PID، PPID و ComandLine را فهرست می‌کند (از wmi استفاده می‌کند) |
+| `bof-teams-cookies` | bof | با اجرا داخل فرآیند ms-teams.exe، کوکی‌های Microsoft Teams را می‌دزدد. کلید رمزگذاری را استخراج می‌کند و پایگاه داده Cookies را بدون فایل دانلود می‌کند. |
+| `bof-tgtdeleg` | bof | یک TGT قابل استفاده از طریق سوءاستفاده delegation GSS API بازیابی می‌کند. |
+| `bof-toastnotify` | bof | با Application User Model IDهای قرض‌گرفته‌شده، اعلان toast Windows ارسال می‌کند. toast استاندارد و payload XML سفارشی با action و لینک protocol را پشتیبانی می‌کند. |
+| `bof-token-vault` | bof | ذخیره درون‌حافظه‌ای برای access tokenهای Windows دزدیده‌شده یا duplicate‌شده. استفاده مجدد از tokenها بدون duplicate مجدد و نگه‌داشتن tokenها برای استفاده بعدی. |
+| `bof-token2cert` | bof | با impersonation token، templateهای گواهی آسیب‌پذیر ESC1 را سوءاستفاده می‌کند تا هش NT کاربران دلخواه دامنه استخراج شود. token از کاربری با حق enrollment می‌دزدد، گواهی با SAN دلخواه درخواست می‌کند، PKINIT انجام می‌دهد و هش NT هدف را با UnPAC the hash استخراج می‌کند. فقط x64. به حقوق elevated نیاز دارد. |
+| `bof-tray-scout` | bof | executable میزبان taskbar را گزارش می‌دهد و tooltipهای آیکون اعلان system tray را فهرست می‌کند، با مسیر کامل تصویر اختیاری برای میزبان و فرآیند مالک هر آیکون. |
+| `bof-triage` | bof | ticketهای Kerberos را در قالب جدول فهرست می‌کند. |
+| `bof-unexpire-user` | bof | حساب کاربری را طوری تنظیم می‌کند که هرگز منقضی نشود. |
+| `bof-unexpireuser` | bof | حساب کاربری را طوری تنظیم می‌کند که هرگز منقضی نشود. |
+| `bof-uptime` | bof | زمان boot سیستم و مدت uptime را فهرست می‌کند. |
+| `bof-user-idle` | bof | زمان بیکاری کاربر از آخرین ورودی و مصرف منابع GUI (handleهای GDI/USER) در فرآیند فعلی را برای timing intelligence به‌دست می‌آورد. |
+| `bof-useridletime` | bof | مدت بیکاری کاربر را نشان می‌دهد، بر حسب ثانیه، دقیقه، ساعت و روز. |
+| `bof-veeam-dumper` | bof | اعتبارنامه‌های رمزگذاری‌شده را از پایگاه‌های داده Veeam Backup and Replication یا Veeam One استخراج می‌کند. با sqlcmd/psql blobها را پرس‌وجو می‌کند، salt را از رجیstry می‌گیرد و با DPAPI رمزگشایی می‌کند. |
+| `bof-vssenum` | bof | Shadow Copyها را روی برخی سرورهای Server 2012+ فهرست می‌کند |
+| `bof-wallpaper-enum` | bof | با رابط COM مدرن IDesktopWallpaper، مسیر wallpaper دسکتاپ فعلی را برای هر مانیتور متصل فهرست می‌کند. wallpaperهای متمرکز می‌توانند مسیر شبکه، trust دامنه و اعمال policy را آشکار کنند. |
+| `bof-wd-toggle` | bof | کش credential WDigest را فعال می‌کند و در صورت فعال بودن Credential Guard آن را دور می‌زند. wdigest!g_fParameter_UseLogonCredential و wdigest!g_IsCredGuardEnabled را در LSASS با direct syscall patch می‌کند. پس از reboot پایدار نیست. offsetهای حافظه بسته به build Windows متفاوت است. |
+| `bof-webcam-bof` | bof | یک تصویر از دستگاه webcam پیش‌فرض می‌گیرد. ذخیره روی دیسک یا دانلود از طریق beacon به‌صورت فایل یا screenshot را پشتیبانی می‌کند. |
+| `bof-wef-detect` | bof | پیکربندی Windows Event Forwarding (WEF) را که نشان‌دهنده logging متمرکز است تشخیص می‌دهد. در صورت یافتن، یعنی رویدادهای امنیتی به سرور مرکزی forward می‌شوند. |
+| `bof-wer-dump` | bof | LSASS محافظت‌شده را با WerFaultSecure.exe dump می‌کند. WerFaultSecure را با نام فایل تصادفی در temp می‌نویسد و dump را به‌صورت .dll در همان پوشه ذخیره می‌کند. |
+| `bof-wer-resume` | bof | lsass.exe suspend‌شده را قبل از اجرای bof-wer-dump resume می‌کند. به‌دلیل policy محافظت فرآیند باید از beacon process متفاوتی نسبت به WerDump اجرا شود. |
+| `bof-wevt-channel-enum` | bof | channelهای Windows Event Log محلی را با فیلتر زیررشته بدون حساسیت به حروف بزرگ/کوچک اختیاری، خروجی محدود و metadata دسترسی و publishing اختیاری verbose فهرست می‌کند. روی میزبان‌هایی با صدها channel کم‌سیگنال بدون فیلتر اجرا نکنید. |
+| `bof-wevt-logon-enum` | bof | رویدادهای logon موفق و ناموفق اخیر Security log (Event IDهای 4624، 4625، 4672) را از طریق API wevtapi فهرست می‌کند و نام workstation/IP راه‌دور به‌علاوه نام کاربری هدف را چاپ می‌کند. به مجوز خواندن Security log نیاز دارد (معمولاً admin یا SYSTEM). |
+| `bof-whoami` | bof | whoami /all را فهرست می‌کند. |
+| `bof-wi-fi-passwords` | bof | رمزهای Wi-Fi ذخیره‌شده را از سیستم محلی استخراج می‌کند. |
+| `bof-wifi-dump` | bof | رابط‌های WiFi را فهرست می‌کند و credential پروفایل WiFi را به‌صورت clear text dump می‌کند. با WlanGetProfile و WLAN_PROFILE_GET_PLAINTEXT_KEY XML پروفایل شامل رمزهای ذخیره‌شده را بازیابی می‌کند. |
+| `bof-win-version` | bof | رجیstry و APIهای سیستم را پرس‌وجو می‌کند تا نمای کلی مختصر اما دقیقی از نصب Windows ارائه دهد. |
+| `bof-window-handles-enum` | bof | handleهای پنجره را در همه فرآیندهای سیستم فهرست می‌کند و با یک handle پنجره legitimate به clipboard دسترسی پیدا می‌کند. |
+| `bof-window-list` | bof | عنوان همه پنجره‌های visible روی دسکتاپ کاربر فعلی را فهرست می‌کند، با Process ID (PID) اختیاری. |
+| `bof-windowlist` | bof | پنجره‌های visible در نشست کاربر فعلی را فهرست می‌کند. |
+| `bof-winver` | bof | نسخه Windows در حال اجرا، شماره build و patch release (Update Build Revision) را نمایش می‌دهد. |
+| `bof-wmi-query` | bof | یک پرس‌وجوی wmi اجرا می‌کند و نتایج را در قالب CSV نمایش می‌دهد |
+| `bof-wsc-status` | bof | وضعیت سلامت Windows Security Center را پرس‌وجو می‌کند، از جمله Anti Virus، Firewall، Anti Spyware، WSC Service، Auto Update، Internet Settings و User Account Control. |
+| `bof-xpipe` | bof | named pipeهای فعال را فهرست می‌کند و در صورت تمایل مالک و مجوزهای DACL یک pipe مشخص را برمی‌گرداند. |
+| `net-abandoned-com-keys` | dotnet | کلیدهای COM InprocServer32 رها شده‌ای را که DLL ارجاع‌شده دیگر وجود ندارد، فهرست می‌کند. برای پایداری با rundll32.exe -sta `\{CLSID\}` مفید است. |
+| `net-ad-collector` | dotnet | ADCollector ابزاری سبک است که محیط Active Directory را فهرست می‌کند تا بردارهای حملهٔ ممکن را شناسایی کند. درک پایه‌ای از پیکربندی و استقرار محیط را به‌عنوان نقطهٔ شروع شناسایی فراهم می‌کند. به‌جای فهرست کردن همهٔ ویژگی‌ها از هر کاربر و رایانه، روی استخراج ویژگی‌ها، خصوصیات و ACLهای مفید از اهداف باارزش تمرکز دارد. از فضای نام S.DS برای دریافت اطلاعات دامنه و جنگل از کنترلر دامنه و از S.DS.P برای جستجوی LDAP استفاده می‌کند. |
+| `net-adcspwn` | dotnet | ADCSPwn ابزاری برای ارتقای امتیاز در شبکهٔ Active Directory است؛ با اجبار احراز هویت از حساب‌های ماشین (Petitpotam) و relay به سرویس گواهی. |
+| `net-adsearch` | dotnet | ابزاری برای پرس‌وجوی کارآمد Active Directory. از فهرست کردن مدیران دامنه، جستجوی LDAP سفارشی، اتصال LDAPS، خروجی JSON و دریافت ویژگی‌های سفارشی از پرس‌وجوهای عمومی پشتیبانی می‌کند. |
+| `net-certify` | dotnet | ابزار C# برای فهرست کردن و سوءاستفاده از پیکربندی‌های نادرست Active Directory Certificate Services (AD CS). از فهرست CA، کشف قالب گواهی، ارزیابی آسیب‌پذیری، درخواست گواهی و دانلود پشتیبانی می‌کند. |
+| `net-cheese-dcom` | dotnet | اجرای فرمان و حرکت جانبی از طریق DCOM. باید در زمینهٔ کاربر دارای امتیاز اجرا شود. از چند روش DCOM از جمله MMC20.Application، ShellWindows، ShellBrowserWindow، ExcelDDE، VisioAddonEx، OutlookShellEx، ExcelXLL، VisioExecLine و OfficeMacro پشتیبانی می‌کند. اگر با هدف `.` اجرا شود، به‌صورت محلی اجرا می‌شود. |
+| `net-cheese-exec` | dotnet | اجرای فرمان شبیه PsExec و حرکت جانبی از طریق ایجاد سرویس Windows. باید در زمینهٔ کاربر دارای امتیاز اجرا شود. از عملیات create، start، stop، delete و restart روی سرویس از راه دور پشتیبانی می‌کند. |
+| `net-cheese-ps` | dotnet | چارچوب اجرای PowerShell و حرکت جانبی با System.Management.Automation.PowerShell. اجرای محلی و از راه دور از طریق WS Management با دور زدن‌های CLM، AMSI و WLDP، import ماژول، payloadهای رمزنگاری‌شده و تزریق reflective PE. بدون هدف، به‌صورت محلی اجرا می‌شود. برای PowerShell Remoting باید به‌عنوان کاربر دارای امتیاز اجرا شود. |
+| `net-cheese-rdp` | dotnet | دزد اعتبار RDP از طریق تزریق reflective DLL به mstsc.exe. باید در زمینهٔ کاربر دارای امتیاز یا کاربر با SeImpersonatePrivilege اجرا شود. بر پایهٔ RdpThief و برای بارگذاری reflection در .NET بسته‌بندی شده است. |
+| `net-cheese-sql` | dotnet | ابزار سوءاستفاده از اعتماد MSSQL برای اجرای فرمان و حرکت جانبی. از کشف SPN دامنه، فهرست سرورهای linked، impersonation، xp_cmdshell، اتوماسیون OLE، سوءاستفاده از CLR assembly و اجرای OPENQUERY پشتیبانی می‌کند. برای جزئیات آرگومان هر فرمان `net-cheese-sql &lt;command&gt; /help` را بزنید. |
+| `net-cimplant` | dotnet | از عملیات فایل، رجیستری، سرویس‌ها، مدیریت فرایند، تسهیل حرکت جانبی و فهرست‌سازی سیستم پشتیبانی می‌کند. به مجوز مدیر محلی روی سیستم هدف نیاز دارد. |
+| `net-com-hunter` | dotnet | سرورهای COM ثبت‌شده در کلیدهای LocalServer32 و InProcServer32 را با WMI فهرست می‌کند. |
+| `net-cred-phisher` | dotnet | از کاربر فعلی با CredUIPromptForWindowsCredentials درخواست اعتبار می‌کند. |
+| `net-crop` | dotnet | فایل‌های LNK، URL، library-ms یا searchConnector-ms می‌سازد که به سرور WebDAV اشاره می‌کنند. وقتی کاربر پوشه‌ای حاوی فایل را مرور کند، Explorer ممکن است به WebDAV احراز هویت کند و هش NetNTLM را به Farmer نشت دهد. |
+| `net-driver-query` | dotnet | جزئیات درایورهای بارگذاری‌شده را جمع‌آوری می‌کند و اختیاری فقط درایورهای بدون امضای Microsoft را فیلتر می‌کند. |
+| `net-edd` | dotnet | ابزار فهرست‌سازی دامنهٔ .NET مشابه PowerView. دادهٔ جنگل، دامنه، رایانه و کاربر را فهرست می‌کند و از کشف زنجیره‌ای admin و share hunting پشتیبانی می‌کند. |
+| `net-encrypted-zip` | dotnet | فایل/پوشه را فشرده و ZIP را با AES256 CFB رمزنگاری می‌کند. کلید را با RtlZeroMemory از حافظه پاک می‌کند. |
+| `net-etw-event-subscription` | dotnet | اشتراک رویداد مبتنی بر ETW مشابه رویدادهای WMI. در ورود کاربر یا شروع فرایند فعال می‌شود. |
+| `net-farmer` | dotnet | سرور WebDAV محلی برای جمع‌آوری هش NetNTLM در دامنهٔ Windows. کلاینت‌هایی که به سرور وصل می‌شوند از طریق WebDAV Mini Redirector احراز هویت می‌کنند. با Crop یا Fertiliser برای فریب قربانی به listener استفاده کنید. |
+| `net-fertiliser` | dotnet | سند Office موجود (فعلاً .docx) را با کد فیلد مخرب مسموم می‌کند که با باز شدن سند اتصال WebDAV را فعال کرده و هش NetNTLM را به listener Farmer نشت می‌دهد. |
+| `net-forge-cert` | dotnet | گواهی‌های احراز هویت Active Directory را با کلید خصوصی CA دزدیده‌شده (.pfx یا .p12) جعل می‌کند. DPERSIST1 از Certified Pre-Owned را پیاده‌سازی می‌کند. خروجی .pfx برای PKINIT با Rubeus یا بازیابی هش NT قابل استفاده است. |
+| `net-gmsa-password-reader` | dotnet | blob msDS-ManagedPassword را از Group Managed Service Account (gMSA) از طریق LDAP می‌خواند و مقادیر را به هش NTLM برای استفادهٔ مجدد parse می‌کند. |
+| `net-god-potato-dotnet` | dotnet | ارتقای امتیاز از SeImpersonatePrivilege به NT AUTHORITY\SYSTEM با تکنیک Potato مبتنی بر DCOM. روی Windows Server 2012 تا 2022 و Windows 8 تا 11 کار می‌کند. |
+| `net-gopher` | dotnet | ایستگاه کاری محلی را برای artifactهای اعتبار آسان و اطلاعات مفید ارتقای امتیاز جستجو می‌کند. بدون آرگومان همهٔ بررسی‌های داخلی را اجرا می‌کند. |
+| `net-gps-coordinates` | dotnet | در صورت فعال بودن Location Services، مختصات GPS سیستم (حدود ±۱ کیلومتر) را ردیابی می‌کند. Windows 10+. |
+| `net-group3r` | dotnet | تنظیمات Group Policy در Active Directory را فهرست و پیکربندی‌های نادرست قابل سوءاستفاده را شناسایی می‌کند. کنترلرهای دامنه را از LDAP پرس‌وجو می‌کند، فایل‌های GPO از SYSVOL را parse می‌کند و اسکریپت‌ها، بسته‌های MSI و فایل‌های ارجاع‌شده روی shareها را بررسی می‌کند. |
+| `net-harvest-crop` | dotnet | فایل‌های log رمزنگاری‌شدهٔ AES Farmer را که هنگام فعال بودن رمزنگاری خروجی Farmer نوشته شده‌اند، رمزگشایی می‌کند. |
+| `net-hijack-hunter` | dotnet | هدر PE را parse می‌کند تا DLLهای لینک‌شدهٔ آسیب‌پذیر به hijacking با تکنیک‌های abuse برای هر کدام پیدا کند. |
+| `net-hook-detector` | dotnet | توابع Native API قلاب‌شده در فرایند فعلی را تشخیص می‌دهد که نشان‌دهندهٔ حضور EDR است. فقط x64. |
+| `net-implant-ssp` | dotnet | DLL SSP تأمین‌شده توسط کاربر را روی سیستم نصب می‌کند تا LSA در بوت بارگذاری کند. DLL باید SpLsaModeInitialize را export کند. |
+| `net-inspect-assembly` | dotnet | CIL یک assembly .NET را برای فراخوانی‌های deserializer و استفاده از .NET remoting برای triage ارتقای امتیاز بررسی می‌کند. |
+| `net-internal-monologue` | dotnet | حملهٔ Internal Monologue را برای بازیابی هش NTLM بدون دست زدن به LSASS انجام می‌دهد. تنظیمات NetNTLM را downgrade می‌کند، توکن‌های non-network logon را impersonate می‌کند و پاسخ NetNTLMv1 را از طریق تعامل SSPI محلی با بستهٔ احراز هویت NTLM elicit می‌کند. |
+| `net-junction-folder` | dotnet | پوشهٔ junction در پوشهٔ Startup Accessories ویندوز می‌سازد (تکنیک Vault 7). DLL توسط verclsid.exe اجرا می‌شود. |
+| `net-kee-thief` | dotnet | مواد کلید KeePass 2.x را از حافظه استخراج می‌کند. به فرایند در حال اجرای KeePass.exe با CLR MD متصل می‌شود، KeePassLib.PwDatabase و CompositeKey را روی heap پیدا می‌کند و blobهای کلید محافظت‌شده با RtlEncryptMemory را از طریق shellcode تزریق‌شده رمزگشایی می‌کند. |
+| `net-koh` | dotnet | سرور Koh که مواد اعتبار کاربر را از طریق نشت token/نشست logon ضبط می‌کند. نشست‌های logon را پایش، توکن‌ها را با SSPI مذاکره و برای impersonation بعدی ذخیره می‌کند. برای عملیات capture به زمینه SYSTEM و SeTcbPrivilege نیاز دارد. |
+| `net-krb-relay-up` | dotnet | wrapper دور KrbRelay و Rubeus که ارتقای امتیاز محلی را در محیط‌های دامنه که LDAP signing اعمال نشده خودکار می‌کند. احراز Kerberos حساب ماشین را coerce می‌کند، به LDAP (یا ADCS) relay می‌کند، primitive کنترل (RBCD، Shadow Credentials یا ADCS) برقرار می‌کند و سرویس SYSTEM spawn می‌کند. |
+| `net-ldap-sign-check-dotnet` | dotnet | ابزار .NET که کنترلرهای دامنه را فهرست و تنظیمات LDAP signing/channel binding را برای ارزیابی ریسک حملهٔ relay بررسی می‌کند. LDAP و LDAPS را روی هر DC کشف‌شده آزمایش می‌کند. |
+| `net-lock-less` | dotnet | handleهای فایل باز را فهرست و فایل‌های قفل‌شده را با duplicate کردن handle از فرایندهای قفل‌کننده کپی می‌کند. از NtQuerySystemInformation، DuplicateHandle، CreateFileMapping و MapViewOfFile برای خواندن محتوای فایل قفل‌شده بدون پایان دادن به فرایند قفل‌کننده استفاده می‌کند. |
+| `net-mlokit` | dotnet | MLOps Attack Toolkit برای حمله به پلتفرم‌های MLOps از طریق REST API. از شناسایی، سرقت دادهٔ آموزش، سرقت مدل، مسموم‌سازی مدل و حمله به notebook در Azure ML، BigML، Google Vertex AI، MLFlow، Palantir و AWS SageMaker پشتیبانی می‌کند. |
+| `net-moriarty` | dotnet | اسکنر ارتقای امتیاز .NET که Watson و Sherlock را گسترش می‌دهد. KBهای گم‌شده را فهرست، آسیب‌پذیری‌های شناخته‌شدهٔ Windows را تشخیص و exploitهای احتمالی برای ارتقای امتیاز محلی روی Windows 10/11 و Server 2016/2019/2022 پیشنهاد می‌کند. |
+| `net-nopowershell` | dotnet | اجرای شبیه PowerShell در .NET بدون System.Management.Automation.dll. در حافظه از طریق execute-assembly اجرا می‌شود و از logging PowerShell اجتناب می‌کند. از pipeline، cmdletهای AD، WMI، رجیستری، شبکه و عملیات archive پشتیبانی می‌کند. |
+| `net-pass-the-cert` | dotnet | ابزار .NET برای احراز هویت به LDAP/LDAPS از طریق Schannel با گواهی کلاینت وقتی PKINIT پشتیبانی نمی‌شود. از ارتقای امتیاز، RBCD، دستکاری SPN و ایجاد حساب رایانهٔ دامنه از طریق bindهای LDAP مبتنی بر گواهی پشتیبانی می‌کند. |
+| `net-phantom-service` | dotnet | سرویس‌های phantom غیر ASCII را که با ابزارهای داخلی قابل حذف نیستند جستجو و اختیاری حذف می‌کند. |
+| `net-port-bender` | dotnet | یک پورت محلی را از طریق beacon به میزبان از راه دور redirect می‌کند. |
+| `net-restricted-admin` | dotnet | ابزار .NET که Restricted Admin Mode را برای RDP pass-the-hash از راه دور از طریق WMI StdRegProv فعال یا غیرفعال می‌کند. DisableRestrictedAdmin در HKLM\System\CurrentControlSet\Control\Lsa را تغییر می‌دهد. |
+| `net-rubeus` | dotnet | ابزار C# برای تعامل و سوءاستفادهٔ خام Kerberos. از درخواست و تمدید ticket، S4U constrained delegation، golden/silver/diamond ticket، Kerberoasting، AS-REP roasting، password spraying و مدیریت ticket پشتیبانی می‌کند. |
+| `net-runas-cs` | dotnet | ابزار .NET برای اجرای فرایندها با اعتبار کاربر متفاوت. جایگزین open-source بهبودیافتهٔ runas.exe با پشتیبانی از logon type، دور زدن UAC، I/O از راه دور و انتخاب خودکار تابع CreateProcess. |
+| `net-safety-katz` | dotnet | ابزار .NET که LSASS را به minidump dump می‌کند و Mimikatz سفارشی in-memory برای استخراج logonpasswords و ekeys از dump اجرا می‌کند، سپس فایل dump را حذف می‌کند. |
+| `net-sauron-eye` | dotnet | ابزار جستجوی فایل .NET برای تیم‌های red. پوشه‌ها (شامل درایوهای شبکه) را برای فایل‌های منطبق با کلیدواژه جستجو می‌کند، با جستجوی اختیاری محتوا، parse فایل Office، تشخیص ماکرو VBA و پشتیبانی regex. |
+| `net-search-outlook` | dotnet | ابزار .NET که همهٔ حساب‌های ایمیل و زیرپوشه‌ها در نمونهٔ Outlook در حال اجرا را برای ایمیل‌های حاوی کلیدواژهٔ مشخص جستجو می‌کند. |
+| `net-seatbelt` | dotnet | ابزار فهرست‌سازی میزبان C# که از دید تهاجمی و دفاعی بررسی‌های امنیتی انجام می‌دهد. artifactهای سیستم، کاربر، شبکه و اعتبار را جمع‌آوری می‌کند. |
+| `net-session-searcher` | dotnet | همهٔ درایوهای متصل را برای کلیدهای خصوصی PuTTY (.ppk) و فایل‌های اتصال RDP جستجو و اعتبار را parse می‌کند. |
+| `net-shadow-spray` | dotnet | ابزار .NET که Shadow Credentials را روی همهٔ کاربران و رایانه‌های دامنه spray می‌کند و GenericWrite/GenericAll را برای افزودن KeyCredentials و به‌دست آوردن هش NT از طریق PKINIT و UnPACTheHash امتحان می‌کند. |
+| `net-sharp-chrome` | dotnet | دادهٔ مرورگر Chrome را با assembly .NET استخراج می‌کند. |
+| `net-sharp-cloud` | dotnet | ابزار C# که پروفایل‌های کاربر را برای فایل‌های اعتبار cloud مربوط به Amazon Web Services، Microsoft Azure و Google Compute جستجو می‌کند. |
+| `net-sharp-cookie-monster` | dotnet | کوکی‌های مرورگر برای همهٔ سایت‌ها از جمله httpOnly، secure و session را از طریق پروتکل remote debugging Chrome/Edge dump می‌کند. |
+| `net-sharp-dpapi` | dotnet | masterkey، اعتبار، vault، گواهی، RDG، KeePass، secretهای SCCM و دادهٔ Chrome/Edge DPAPI را رمزگشایی می‌کند. |
+| `net-sharp-dump` | dotnet | پورت C# از Out-Minidump.ps1. minidump فشرده از فرایند (پیش‌فرض LSASS) با MiniDumpWriteDump می‌سازد، gzip می‌کند و dump خام را حذف می‌کند. |
+| `net-sharp-edr-checker` | dotnet | ابزار تشخیص EDR/AV به C#. فرایندها، DLLهای بارگذاری‌شده، مسیر نصب، سرویس‌ها و درایورها را برای محصولات دفاعی شناخته‌شده از جمله EDR پنهان از طریق metadata بررسی می‌کند. |
+| `net-sharp-exec` | dotnet | ابزار حرکت جانبی تهاجمی C#. از ماژول‌های PSExec، WMI، WMIExec و SMBExec برای اجرای فرمان از راه دور و shell نیمه‌تعاملی پشتیبانی می‌کند. |
+| `net-sharp-exfiltrate` | dotnet | چارچوب modular C# برای exfiltrate فایل یا پوشه از کانال‌های cloud مورد اعتماد. داده قبل از آپلود فشرده و رمزنگاری می‌شود. از فیلتر پسوند و اندازه پشتیبانی می‌کند. |
+| `net-sharp-gpo-abuse` | dotnet | ابزار .NET برای سوءاستفاده از حقوق ویرایش GPO. Group Policy Objectها را برای افزودن user right، admin محلی، اسکریپت logon، اسکریپت startup و scheduled task فوری تغییر می‌دهد. |
+| `net-sharp-hide` | dotnet | ابزار پایداری که کلیدهای Run مخفی رجیستری با NtSetValueKey و پیشوند null byte در نام مقدار کلید UNICODE_STRING می‌سازد و از فهرست‌سازی استاندارد رجیستری اجتناب می‌کند. |
+| `net-sharp-hound` | dotnet | جمع‌آور داده BloodHound برای Active Directory. کاربران، گروه‌ها، نشست‌ها، ACLها، trustها، GPOها، سرویس‌های گواهی و دادهٔ مسیر حملهٔ دیگر را برای import به BloodHound CE فهرست می‌کند. |
+| `net-sharp-hound3` | dotnet | ingestor قدیمی BloodHound (منسوخ). بازنویسی C# جمع‌آور اصلی BloodHound. داده از این نسخه با BloodHound 4.1+ سازگار نیست. |
+| `net-sharp-katz` | dotnet | اعتبار را از providerهای LSASS dump می‌کند؛ DCSync، pass the hash، Zerologon، PrintNightmare و HiveNightmare انجام می‌دهد. |
+| `net-sharp-laps` | dotnet | رمزهای LAPS را از Active Directory با خواندن ویژگی ms-mnet-AdmPwd بازیابی می‌کند. به ExtendedRight/GenericAll روی شیء رایانه یا امتیاز Domain Admin نیاز دارد. |
+| `net-sharp-map-exec` | dotnet | جایگزین بومی Windows برای CrackMapExec. چاقوی سوئیسی تست نفوذ شبکه با احراز Kerberos و NLM روی CIM، Reg32، SMB، WinRM، LDAP و spray دامنه. |
+| `net-sharp-move` | dotnet | جعبه‌ابزار اجرای از راه دور احراز هویت‌شدهٔ .NET. از WMI، SCM، DCOM، Task Scheduler، hijack DLL سرویس، hijack سرور DCOM و تغییر سرویس‌ها و taskهای زمان‌بندی‌شدهٔ موجود پشتیبانی می‌کند. |
+| `net-sharp-no-ps-exec` | dotnet | ابزار حرکت جانبی بدون فایل. سرویس LocalSystem متوقف‌شدهٔ موجود را با جایگزینی موقت مسیر باینری آن hijack می‌کند، payload را اجرا و پس از ۵ ثانیه پیکربندی اصلی سرویس را بازمی‌گرداند. |
+| `net-sharp-persist` | dotnet | جعبه‌ابزار پایداری Windows با کلیدهای رجیستری، task زمان‌بندی‌شده، فایل LNK پوشه startup، backdoor پیکربندی KeePass، سرویس‌های Windows، hookهای Tortoise SVN و backdoor task زمان‌بندی‌شده با عملیات add، remove، check و list. |
+| `net-sharp-printer` | dotnet | نسخهٔ کنسول ListNetworks. چاپگرهای شبکهٔ قابل دسترس در زمینهٔ کاربر فعلی را فهرست می‌کند. |
+| `net-sharp-rdp` | dotnet | برنامهٔ کنسول RDP برای اجرای فرمان از راه دور احراز هویت‌شده. از طریق Remote Desktop Protocol وصل می‌شود و فرمان‌ها را از دیالوگ Run ویندوز (Win+R) اجرا می‌کند. |
+| `net-sharp-rdp-hijack` | dotnet | ابزار اثبات مفهوم hijack نشست RDP. با WTSConnectSession و WTSDisconnectSession کنترل نشست‌های تعاملی login قطع‌شده را می‌گیرد. |
+| `net-sharp-roast` | dotnet | service ticket درخواست می‌کند و هش TGS قابل crack در قالب hashcat خروجی می‌دهد. |
+| `net-sharp-sccm` | dotnet | ابزار post exploitation برای Microsoft Endpoint Configuration Manager (SCCM). از حرکت جانبی، جمع‌آوری اعتبار و سوءاستفاده از client push installation برای coercion NTLM پشتیبانی می‌کند. |
+| `net-sharp-sec-dump` | dotnet | پورت .NET از impacket secretsdump.py برای dump از راه دور SAM و LSA Secrets. SAM محلی و اعتبار cache را از سیستم‌های از راه دور یا محلی از طریق RPC dump می‌کند. |
+| `net-sharp-shares` | dotnet | assembly C# چندنخی برای فهرست shareهای شبکهٔ قابل دسترس در دامنه. اهداف را از LDAP پرس‌وجو و دسترسی read/write روی shareهای کشف‌شده بررسی می‌کند. |
+| `net-sharp-smb-exec` | dotnet | فرمان‌ها را روی هدف از راه دور از طریق SMB با احراز هویت هش NTLM (pass-the-hash روی SMB) اجرا می‌کند. |
+| `net-sharp-sphere` | dotnet | ابزار حمله به زیرساخت VSphere. از طریق VMware Tools و vSphere Web Services API با VM مهمان برای اجرا، انتقال فایل و dump حافظه تعامل می‌کند. |
+| `net-sharp-stay` | dotnet | جعبه‌ابزار پایداری .NET با کلیدهای رجیستری elevated و non-elevated، task زمان‌بندی‌شده، سرویس‌ها، اشتراک رویداد WMI، hijack handler COM و backdoor LNK. |
+| `net-sharp-token-finder` | dotnet | برنامه‌های M365 Desktop Office را برای tokenهای احراز هویت plain text که برای compromise هویت M365 کاربر قابل استفاده‌اند فهرست می‌کند. |
+| `net-sharp-up` | dotnet | سیستم محلی را برای پیکربندی‌های نادرست رایج ارتقای امتیاز Windows ممیزی می‌کند. |
+| `net-sharp-view` | dotnet | پورت .NET از PowerView، جعبه‌ابزار شناسایی Active Directory. فهرست‌سازی دامنه، تحلیل ACL، کشف share، فهرست نشست و Kerberoasting را فراهم می‌کند. |
+| `net-sharp-wifi-grabber` | dotnet | رمزهای WiFi را به‌صورت plain text از همهٔ پروفایل‌های WLAN ذخیره‌شده روی ایستگاه کاری بازیابی می‌کند. ابزار آگاهی situational با APIهای بومی Win32 WLAN. |
+| `net-sharp-wmi` | dotnet | جعبه‌ابزار WMI به C#. فهرست‌سازی محلی و از راه دور، ایجاد فرایند، اجرای VBS از طریق اشتراک رویداد، آپلود فایل، فهرست firewall و مدیریت فرایند. |
+| `net-sharp-wsus` | dotnet | ابزار C# برای حرکت جانبی از طریق WSUS. به‌روزرسانی‌های مخرب را روی سرور WSUS ایجاد، تأیید و روی ماشین‌های هدف deploy می‌کند. |
+| `net-sharpsh` | dotnet | اجرای PowerShell C# از طریق RunspaceFactory. از فرمان‌های encoded، بارگذاری اسکریپت از راه دور و اجرای اسکریپت از clipboard پشتیبانی می‌کند. برای استفادهٔ inline assembly طراحی شده است. |
+| `net-sigma-potato` | dotnet | مشتق بهبودیافته GodPotato برای ارتقای امتیاز از حساب سرویس به SYSTEM. از اجرای دیسک، reflection .NET، فرمان PowerShell و reverse shell داخلی پشتیبانی می‌کند. |
+| `net-snaffler` | dotnet | crawler share فایل Active Directory که با قوانین و الگوهای regex قابل پیکربندی اعتبار و فایل‌های حساس را روی رایانه‌های دامنه پیدا می‌کند. |
+| `net-sql-recon` | dotnet | جعبه‌ابزار شناسایی تهاجمی و post exploitation Microsoft SQL Server. از فهرست‌سازی، impersonation، سرور linked و اجرای ماژول SCCM پشتیبانی می‌کند. |
+| `net-stand-in` | dotnet | جعبه‌ابزار کوچک post exploitation Active Directory. از پرس‌وجوی LDAP، دستکاری ACL، Kerberoasting، ASREP roasting، سوءاستفاده delegation، سوءاستفاده GPO، حملات ADCS و عملیات حساب ماشین پشتیبانی می‌کند. |
+| `net-sweet-potato` | dotnet | مجموعهٔ تکنیک‌های بومی ارتقای امتیاز Windows از حساب‌های سرویس به SYSTEM. RottenPotato، JuicyPotato، PrintSpoofer و روش‌های exploit EfsRpc را ترکیب می‌کند. |
+| `net-unquoted-path` | dotnet | مسیرهای سرویس unquoted خارج از System32/SysWow64 مناسب برای کاشت PE (T1034) را فهرست می‌کند. |
+| `net-webdav-status` | dotnet | نسخهٔ C# چندنخی بررسی وضعیت WebDAV. سیستم‌های از راه دور را برای سرویس Web Client از طریق named pipe DAV RPC SERVICE پروب می‌کند. به حقوق admin روی هدف نیاز ندارد اما به اعتبار معتبر نیاز دارد. |
+| `net-winpeas` | dotnet | Windows Privilege Escalation Awesome Script. پیکربندی‌های نادرست، سرویس‌های آسیب‌پذیر، اعتبار، AV/EDR، شبکه، AD و بردارهای ارتقای امتیاز را روی Windows فهرست می‌کند. |
+| `net-winrmdll` | dotnet | فرمان‌ها را روی میزبان‌های از راه دور از طریق WinRM اجرا می‌کند. |

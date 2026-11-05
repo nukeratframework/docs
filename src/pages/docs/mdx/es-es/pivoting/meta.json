@@ -1,0 +1,7 @@
+{
+  "pages": [
+    "relay",
+    "socks",
+    "portforward"
+  ]
+}

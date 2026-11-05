@@ -1,0 +1,35 @@
+---
+title: Gráfico de ataque
+---
+
+import { Share2 } from 'lucide-react';
+import attackGraphs from '@/assets/img/tutorial/graphs.png';
+import attackGraphsInfo from '@/assets/img/tutorial/graphs_01.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+La pestaña del gráfico de ataque es una vista gráfica de las sesiones conectadas y activas. Su objetivo principal es ayudar a visualizar el pivoting en la red y las rutas de relay.
+
+Puedes abrir la pestaña **Attack Graph** desde el icono <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle"><Share2 size={18.5} className="shrink-0 ml-1.5 mr-1.5" /></span> en la barra superior, o desde **Tabs** > **Attack Graph**.
+
+Al abrir la pestaña, el cliente envía una solicitud a cada team server configurado y construye un gráfico independiente para cada uno.
+
+<ImageZoom src={attackGraphs} alt="Attack Graph" className="tutorial_img" />
+
+Los gráficos se actualizan automáticamente cuando se conecta una sesión o cuando cambia el nivel de privilegios, por ejemplo de usuario a admin.
+
+## Información de la sesión
+
+Cada sesión se muestra como un icono de monitor con la imagen del sistema operativo en su interior. Si la sesión ya tiene privilegios elevados, el monitor aparece en rojo.
+
+También puedes hacer doble clic en una sesión para abrir un panel lateral con más información.
+
+<ImageZoom src={attackGraphsInfo} alt="Attack Graph Info" className="tutorial_img" />
+
+## Conexiones relay
+
+Cuando dos sesiones están conectadas mediante un relay, se dibuja una flecha entre ellas con una etiqueta que indica el tipo de relay, ya sea **TCP** o **SMB**.
+
+En algunos casos, una sesión desaparecerá de la vista del gráfico. Esto puede ocurrir por dos motivos:
+
+1. La sesión padre ya no tiene un relay activo
+2. La sesión hija se conectó sin usar un relay

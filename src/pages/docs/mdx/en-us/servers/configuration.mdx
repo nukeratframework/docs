@@ -1,0 +1,70 @@
+---
+title: Configuration
+---
+
+Team server settings go through `./nukerat.py server config`. Do not mix this up with adding a server in the client under **NukeRat** > **Servers**.
+
+`server.conf` covers, roughly:
+
+- Management API host and port
+- TLS (certificate and key)
+- Operator JWT (lifetime and signing secret)
+- SQLite size limits
+- Armory repository URL
+- AES relay key between implants
+
+Plus other sections when you need them.
+
+## Commands
+
+This is the launcher syntax (`./nukerat.py server config …`). There is no `import` subcommand.
+
+List everything:
+
+```bash
+./nukerat.py server config list
+```
+
+Change a key (`<key>` as `section.option`; the value can contain spaces if it comes after the key):
+
+```bash
+./nukerat.py server config set server.port 8080
+```
+
+More examples:
+
+```bash
+./nukerat.py server config set server.host 192.168.1.100
+./nukerat.py server config set server.keys.jwt.duration 30m
+```
+
+Reset to default (only keys the launcher knows; secrets get a **new** value, not the old one):
+
+```bash
+./nukerat.py server config reset server.port
+```
+
+Replace the whole `server.conf` with a file (copy over, same INI layout as the live conf):
+
+```bash
+./nukerat.py server config load /path/to/server.conf
+```
+
+The file must be a valid `server.conf`, for example:
+
+```ini
+[server]
+host = 0.0.0.0
+port = 8080
+
+[server.keys]
+jwt.duration = 7d
+```
+
+Self signed certificate and TLS enabled in the conf:
+
+```bash
+./nukerat.py server config create-tls
+```
+
+Requires `openssl`. Then authenticate in the client with **Protocol** `https` ([Servers](/docs/servers)).

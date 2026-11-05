@@ -1,0 +1,34 @@
+---
+title: Comandos
+---
+
+NukeScript incluye un conjunto de comandos nativos para realizar acciones en el team server. Ten en cuenta que NukeScript no se limita solo a los comandos nativos. Al ejecutarse en Python, puedes seguir usando cualquier biblioteca o función de Python.
+
+## Catálogo de comandos
+
+A continuación, la lista de comandos disponibles:
+
+| Comando | Descripción | Args |
+| --- | --- | --- |
+| `cmd` | Comando de terminal síncrono que devuelve la salida como cadena | `host_tag`, `command` |
+| `async_cmd` | Encola un comando y devuelve de inmediato | `host_tag`, `command` |
+| `process` | Solicita el árbol de procesos | `host_tag` |
+| `folders` | Lista un directorio remoto | `host_tag`, `path` |
+| `screenshot` | Captura una pantalla; admite la palabra clave opcional `output` como ruta de guardado | `host_tag`, `output` (opcional, solo keyword) |
+| `approve_cmd` | Permite ejecutar la tarea. Usar dentro de un script `new_queue_line` | `queue_tag` |
+| `reject_cmd` | Bloquea la tarea y registra un error | `queue_tag` |
+| `conclude` | Marca la tarea como completada con una respuesta personalizada | `queue_tag`, `message` |
+| `credentials` | Devuelve todas las credenciales almacenadas | |
+| `credentials.add` | Añade una credencial y devuelve el tag nuevo | `name`, `host`, `description`, `content` |
+| `credentials.remove` | Elimina una credencial por tag | `tag` |
+| `db.<table>` | Todas las filas de la tabla, o una columna en todas las filas | columna opcional. Tablas: `users`, `terminal`, `hosts`, `listeners`, `folders`, `process`, `queue`, `agents`, `agents_history`, `credentials`, `keylogger`, `nukescripts`, `nukescripts_output`, `custom_notifications`, `checkins` |
+| `keylogs` | Devuelve todas las entradas del keylogger | |
+| `network.add_socks` | Pivot SOCKS que devuelve una cadena de estado con `session_id` si tiene éxito | `host_tag`, `port`, `user` (opcional), `password` (opcional) |
+| `network.add_forward` | Reenvío de puerto TCP | `host_tag`, `local_port`, `target_host`, `target_port` |
+| `network.remove` | Detiene SOCKS o reenvío de puerto | `tag` de `db.listeners()` donde `type` es `socks` o `port_forwarding` |
+| `network.restart` | Reinicia SOCKS o reenvío de puerto | `tag` de `db.listeners()` donde `type` es `socks` o `port_forwarding` |
+| `file_server.upload` | Copia un archivo local al directorio de contenido del listener | `port`, `path` |
+| `file_server.delete` | Elimina un archivo del directorio de contenido del listener | `port`, `filename` |
+| `agent` | Envía un prompt a un agente de IA configurado | `agent_tag`, `prompt` |
+| `echo` | Escribe en NS Output | `content` |
+| `message_box` | Notificación para el operador | `title`, `body`, `type` (`info`, `error` o `success`) |

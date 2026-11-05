@@ -1,0 +1,34 @@
+---
+title: Команды
+---
+
+NukeScript включает набор встроенных команд для действий на team server. Имейте в виду: NukeScript не ограничен только ими — поскольку скрипты выполняются на Python, доступны любые библиотеки и функции языка.
+
+## Каталог команд
+
+Ниже перечислены доступные команды:
+
+| Команда | Описание | Аргументы |
+| --- | --- | --- |
+| `cmd` | Синхронная команда в терминале; возвращает вывод строкой | `host_tag`, `command` |
+| `async_cmd` | Ставит команду в очередь и сразу возвращает управление | `host_tag`, `command` |
+| `process` | Запрашивает дерево процессов | `host_tag` |
+| `folders` | Выводит содержимое удалённого каталога | `host_tag`, `path` |
+| `screenshot` | Делает снимок экрана; необязательный аргумент только по ключу `output` — путь сохранения файла | `host_tag`, `output` (необязательно, только keyword) |
+| `approve_cmd` | Разрешает выполнение задачи. Используйте в скрипте `new_queue_line` | `queue_tag` |
+| `reject_cmd` | Блокирует задачу и записывает ошибку | `queue_tag` |
+| `conclude` | Помечает задачу выполненной с пользовательским ответом | `queue_tag`, `message` |
+| `credentials` | Возвращает все сохранённые учётные данные | |
+| `credentials.add` | Добавляет учётные данные и возвращает новый tag | `name`, `host`, `description`, `content` |
+| `credentials.remove` | Удаляет учётные данные по tag | `tag` |
+| `db.<table>` | Все строки таблицы или один столбец по всем строкам | необязательный столбец. Таблицы: `users`, `terminal`, `hosts`, `listeners`, `folders`, `process`, `queue`, `agents`, `agents_history`, `credentials`, `keylogger`, `nukescripts`, `nukescripts_output`, `custom_notifications`, `checkins` |
+| `keylogs` | Возвращает все записи кейлоггера | |
+| `network.add_socks` | SOCKS-pivot; при успехе возвращает строку статуса с `session_id` | `host_tag`, `port`, `user` (необязательно), `password` (необязательно) |
+| `network.add_forward` | TCP port forwarding | `host_tag`, `local_port`, `target_host`, `target_port` |
+| `network.remove` | Останавливает SOCKS или port forward | `tag` из `db.listeners()` с `type` `socks` или `port_forwarding` |
+| `network.restart` | Перезапускает SOCKS или port forward | `tag` из `db.listeners()` с `type` `socks` или `port_forwarding` |
+| `file_server.upload` | Копирует локальный файл в каталог контента listener | `port`, `path` |
+| `file_server.delete` | Удаляет файл из каталога контента listener | `port`, `filename` |
+| `agent` | Отправляет промпт настроенному AI-агенту | `agent_tag`, `prompt` |
+| `echo` | Пишет в NS Output | `content` |
+| `message_box` | Уведомление для оператора | `title`, `body`, `type` (`info`, `error` или `success`) |

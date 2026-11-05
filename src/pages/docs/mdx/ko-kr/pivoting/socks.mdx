@@ -1,0 +1,35 @@
+---
+title: SOCKS
+---
+
+import socks from '@/assets/img/tutorial/socks.png';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+NukeRat는 SOCKS를 네이티브로 지원하므로 특정 호스트를 통해 트래픽을 라우팅할 수 있습니다. 지원 버전은 SOCKS5입니다.
+
+팀 서버가 리스너 포트를 엽니다. 트래픽은 종료 지점(exit point)으로 선택한 임플란트를 통해 중계됩니다.
+
+## 구성 방법
+
+SOCKS5 프록시를 만들려면 아래 단계를 따르세요.
+
+  <Steps>
+    <Step>
+      ### Network 창 열기
+      **NukeRat** > **Network**로 이동한 뒤 **Add**를 클릭합니다.
+    </Step>
+    <Step>
+      ### 프록시 구성
+      <ImageZoom src={socks} alt="Socks Add" className="h-[15rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+      - **Team server**: 리스너 API 엔드포인트(폼 상단의 호스트 및 포트)
+      - **Type**: `socks`
+      - **Host tag**: 아웃바운드 연결을 프록시할 임플란트
+      - **Port target**: SOCKS 리스너용으로 팀 서버에서 여는 포트
+      - **User** / **Password**: 운영자 프록시 인증용 선택적 자격 증명
+
+      필드를 설정한 뒤 **Create**를 클릭합니다.
+    </Step>
+  </Steps>
+
+완료되면 프록시가 Network 테이블에 표시됩니다. 도구를 `socks5://<team_server_host>:<port_target>/`에 맞추고, 인증을 구성했다면 URI에 user와 password를 포함합니다.

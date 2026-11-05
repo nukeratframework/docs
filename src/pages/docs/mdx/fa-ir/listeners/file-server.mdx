@@ -1,0 +1,49 @@
+---
+title: سرور فایل
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import fileServerForm from '@/assets/img/tutorial/file_server_form.png';
+import { Globe } from 'lucide-react';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+شنوندهٔ **File server**، همان‌طور که از نامش پیداست، یک سرور فایل است. می‌توانید برای اهداف مختلف از آن استفاده کنید؛ مثلاً میزبانی payload، سرو کردن stage برای loaderها، میزبانی یک برنامهٔ سادهٔ phishing و غیره.
+
+هر listener پوشهٔ محتوای مخصوص به خود را روی team server دارد. فایل‌ها از طریق HTTP یا HTTPS از آدرس listener و با مسیر URL معمولی سرو می‌شوند (مثلاً `http://host:port/payload.bin`).
+
+## ایجاد سرور فایل [#creating-a-file-server]
+
+برای ایجاد سرور فایل، مراحل زیر را دنبال کنید:
+
+
+  <Steps>
+    <Step>
+      ### باز کردن تب listeners
+      **NukeRat** > **Listeners** > **Add** را باز کنید.
+    </Step>
+    <Step>
+      ### پر کردن فیلدها
+      <ImageZoom src={fileServerForm} alt="File Server Form" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+      - **Name**: نامی انتخاب کنید تا listener را به‌راحتی تشخیص دهید.
+      - **Type**: **File server** را انتخاب کنید
+      - **Server**: team serverی را انتخاب کنید که listener روی آن ایجاد می‌شود (باید از قبل پیکربندی شده باشد)
+      - **Port to open**: پورتی که استفاده می‌شود
+    </Step>
+    <Step>
+      ### روی **Create** کلیک کنید
+      پس از ایجاد، workspace **File Server** را از نوار بالا <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">(آیکون <Globe size={18.5} className="shrink-0 ml-1.5 mr-1.5" />)</span> یا **Tabs** > **File Server** باز کنید. listener را انتخاب کنید، سپس با **Upload** فایل اضافه کنید.
+    </Step>
+  </Steps>
+
+
+## SSL و گواهی‌ها
+
+سرور فایل از HTTPS پشتیبانی می‌کند. در فرم ایجاد، **SSL** را فعال کنید، سپس گواهی را در بخش **Certificate** پیکربندی کنید.
+
+در **Source**، self signed یا manual را انتخاب کنید. گواهی‌های self signed به‌طور خودکار توسط NukeRat با دستور `openssl` تولید می‌شوند، با همان گزینه‌های subject و key که در listenerهای channel وجود دارد.
+
+برای گواهی manual، PEM گواهی و کلید خصوصی را paste یا upload کنید.
+
+## هدرهای پاسخ سفارشی
+
+همچنین می‌توانید هدرهای پاسخ را با **Advanced** > **Response headers** پیکربندی کنید.

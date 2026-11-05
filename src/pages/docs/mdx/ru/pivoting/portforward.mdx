@@ -1,0 +1,37 @@
+---
+title: Проброс портов
+---
+
+import socks from '@/assets/img/tutorial/port_fw.png';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+NukeRat позволяет настроить проброс портов через скомпрометированные хосты, чтобы достучаться до нужного порта во внутренней сети.
+
+Team server слушает указанный порт. Подключения перенаправляются на внутренний хост и порт через выбранный имплант.
+
+## Настройка
+
+Чтобы создать port forward, выполните шаги ниже:
+
+  <Steps>
+    <Step>
+      ### Откройте окно Network
+      Перейдите в **NukeRat** > **Network** и нажмите **Add**.
+    </Step>
+    <Step>
+      ### Настройте проброс портов
+      <ImageZoom src={socks} alt="Port forward add" className="h-[15rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+      - **Team server**: endpoint API listener (хост и порт в верхней части формы)
+      - **Type**: `port forwarding`
+      - **Host tag**: имплант, через который открываются соединения к внутренней цели
+      - **Listen port**: порт на team server
+      - **Protocol**: только TCP (на данный момент team server принимает только его)
+      - **Forward host**: внутренний IP или имя хоста, доступные через имплант
+      - **Forward port**: внутренний порт, доступный через имплант
+
+      Когда поля заполнены, нажмите **Create**.
+    </Step>
+  </Steps>
+
+После этого port forward появится в таблице Network. Подключайтесь к `<team_server_host>:<listen_port>`, чтобы через имплант попасть на `forward_host:forward_port`.

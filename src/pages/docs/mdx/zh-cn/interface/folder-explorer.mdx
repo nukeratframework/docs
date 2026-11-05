@@ -1,0 +1,45 @@
+---
+title: 文件浏览器
+---
+import folderExplorer from '@/assets/img/tutorial/folder_explorer.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import { Folder } from 'lucide-react';
+import { Callout } from '@/ui/custom/callout';
+
+文件浏览器让你在不依赖终端命令的情况下浏览主机上的文件与目录。
+
+可通过顶部栏<span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">的 <Folder size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> 图标</span>打开 **File Browser** 标签页，或从 **Tabs** > **File Browser** 进入。
+
+<Callout type="info">
+  使用文件浏览器前，请点击标签名旁的 **Host**，选择目标主机。
+</Callout>
+
+选定主机后，客户端会请求该主机的目录列表；首次加载时，响应用于填充文件浏览器。
+
+<ImageZoom src={folderExplorer} alt="Folder explorer" className="tutorial_img" />
+
+左侧的文件与目录树便于在选定主机上快速导航；树上方的搜索栏仅在本地过滤树，不会向主机发送新的列表命令。
+
+## 文件下载
+
+点击文件可查看其原始内容。使用 **Download** 按钮可将文件保存到本地。
+
+图片文件会在文件浏览器中内联显示。
+
+当文件大于 25 MB 时，文件浏览器会显示警告，而不会加载全部内容。若需要完整文件，请通过终端下载。
+
+## 工作原理
+
+列出目录时，植入体会读取目录并将结果转换为自定义 JSON，供客户端渲染。下载文件时，植入体返回原始文件字节。
+
+### Windows
+
+使用 `kernel32.dll`（`FindFirstFileW`、`FindNextFileW`、`GetLogicalDriveStringsW`、`GetFileAttributesW`）。核心逻辑位于 `implants/windows/stageless/capabilities/folders.nim`。
+
+### Linux
+
+使用 POSIX 的 `opendir`、`readdir` 与 `stat`。核心逻辑位于 `implants/linux/stageless/capabilities/folders.nim`。
+
+### MacOS
+
+使用 `macapi` 模块（`ListDirEntries`、`PathExists`、`PathIsDir`）。核心逻辑位于 `implants/mac/stageless/capabilities/folders.go`。

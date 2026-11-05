@@ -1,0 +1,68 @@
+---
+title: NukeScript
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import debuggerImage from '@/assets/img/tutorial/debugger.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+NukeScript は NukeRat のスクリプトシステムで、主に次の 3 つの目的があります。
+
+1. 操作の自動化
+2. 新機能の作成
+3. NukeRat クライアントとの連携
+
+要するに、NukeScript は **イベント** という追加レイヤーを持つ Python スクリプトにすぎません。
+
+サーバー稼働中、ワーカーが NukeRat データベースを監視してイベントが発火したかを確認し、それに応じて対応するスクリプトを実行します。
+
+## スクリプトの作成
+
+デモとして、新しいホストが接続したときに `whoami` を実行するスクリプトを作成します。
+
+  <Steps>
+    <Step>
+      ### NukeScript タブを開く
+      **NukeRat** > **NukeScripts** に移動し、**Add** をクリックします。
+    </Step>
+    <Step>
+      ### サーバーを選択
+      任意の名前を入力し、スクリプトを実行するチームサーバーを選択します。
+    </Step>
+    <Step>
+      ### スクリプトを作成
+      以下のコードをスクリプト欄に貼り付けます。
+      ```python
+def on_new_host(row):
+        host = row["tag"]
+        output = cmd(host, "whoami")
+        echo(f"Output: {output}")
+
+event.new_host:on_new_host()
+      ```
+    </Step>
+    <Step>
+      ### スクリプトを有効化
+      作成後、実際に実行されるよう有効化する必要があります。スクリプトを選択し **Enable** をクリックします。
+    </Step>
+    <Step>
+      ### スクリプトをテスト
+      検証するには **Tabs** > **NS Debugger** から **NS Debugger**（NS デバッガー）を開きます。
+
+      設定が正しければ、新しいホストが接続したとき **NS Debugger** に `whoami` の出力が表示されます。
+
+      <ImageZoom src={debuggerImage} alt="NS デバッガー" className="h-[6rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+
+    </Step>
+  </Steps>
+
+
+## イベントとコマンド
+
+イベントとコマンドの詳細は次を参照してください。
+- [イベント](/docs/nukescripts/events)
+- [コマンド](/docs/nukescripts/commands)
+
+## 例
+
+スクリプトの例は [例](/docs/nukescripts/examples) を参照してください。

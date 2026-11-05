@@ -1,0 +1,119 @@
+---
+title: AI agents
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import agentBodyForm from '@/assets/img/tutorial/agent_body.png';
+import agentResponseKeys from '@/assets/img/tutorial/agent_body_keys.png';
+import { Bot } from 'lucide-react';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+NukeRat supports integration with external AI models via API, so you can interact with them directly from the NukeRat interface.
+
+
+## Compatibility
+
+Most models are compatible with NukeRat's integration model, since you can customize the request, including the body, headers, and so on.
+
+However, NukeRat only supports models that use the message format with system, user, and assistant roles, as in the example below:
+
+```json
+{
+    "model": "deepseek-flash",
+    "messages": [
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Hello!"}
+    ]
+}
+```
+
+Some models may require different naming conventions, and that will cause problems during integration.
+
+
+## Agent presets
+
+You do not necessarily need to build the request manually to use a model. NukeRat includes a **DeepSeek** preset. Choose type **DeepSeek** when creating the agent and provide an API key. The team server calls `https://api.deepseek.com/chat/completions` with the `deepseek-v4-pro` model.
+
+We do not plan to add more presets, since each integration case needs different adjustments, especially for providers with stricter usage policies around cybersecurity, such as OpenAI and Anthropic.
+
+## Creating an agent
+
+To create an agent, follow the steps below:
+
+  <Steps>
+    <Step>
+      ### Open the AI agents tab
+      Open **NukeRat** > **Agents**, then click **New**.
+    </Step>
+    <Step>
+      ### Fill in the fields
+      Choose a name and the team server where the agent will be stored. Set type to **Custom** for a manual HTTP mapping, or **DeepSeek** to use the built in preset.
+    </Step>
+    <Step>
+      ### Adjusting the request
+      In this example, we're going to use the Grok model.
+
+      First, we'll take the base curl command from the Grok documentation:
+
+      ```bash
+      curl https://api.x.ai/v1/chat/completions \
+        -H "Authorization: Bearer $XAI_API_KEY" \
+        -H "Content-Type: application/json" \
+        -d '{
+            "model": "grok-4.6",
+            "messages": [
+            {"role": "user", "content": "Hello, Grok!"}
+            ]
+        }
+      ```
+
+      Then we'll map the URL, body, and headers into the agent fields. Here is how it looks:
+      <ImageZoom src={agentBodyForm} alt="Agent Body Form" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+
+      Notice two important things:
+
+      1. There is no `system` message in the body template
+      2. There is already a `user` message in the body template
+
+      These two details will not break agent creation, because:
+
+      1. When the body template has no `system` message, NukeRat inserts the session system prompt at the start of the `messages` array
+      2. Messages already in the body template are kept, and chat turns from the UI are appended after them
+    </Step>
+    <Step>
+      ### Capturing the response
+      To capture the request response, we need to know which JSON key from the response will be used.
+
+      The easiest way to find out is to run the curl command and check the model's response format.
+
+      In the Grok example, this is what the response looks like:
+
+      ```json
+       {
+        [... rest of the JSON ...]
+        "choices": [{
+            "index": 0,
+            "message": {
+                "role": "assistant",
+                "content": "Hello! How can I help you today?",
+                "reasoning_content": "The user said: \"Hello, Grok!\"\n",
+                "refusal": null
+            },
+            "finish_reason": "stop"
+        }]
+        [... rest of the JSON ...]
+      }
+      ```
+
+      Based on the response, follow the JSON path until you reach the value that holds the answer. Use a dot separated path with optional bracket indices per segment. In this case it is `choices[0].message.content`, which goes in **Response field**.
+
+      <ImageZoom src={agentResponseKeys} alt="Agent Response Keys" className="h-[5rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+    </Step>
+    <Step>
+      ### Testing the agent
+      To use the agent, open the **AI Agent** tab from <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">the <Bot size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> icon</span> in the top bar, or through **Tabs** > **AI Agent**.
+
+      To read more about the **AI Agent** tab, see [AI Agent](/docs/interface/ai-agent).
+
+    </Step>
+  </Steps>

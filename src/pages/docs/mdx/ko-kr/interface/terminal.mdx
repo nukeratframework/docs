@@ -1,0 +1,75 @@
+---
+title: 터미널
+---
+import hostSelect from '@/assets/img/tutorial/terminal.png';
+import terminalSearch from '@/assets/img/tutorial/terminal_search.png';
+import { SquareChevronRight, Bot } from 'lucide-react';
+import { Callout } from '@/ui/custom/callout';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+터미널은 침해된 호스트에서 명령을 실행하는 주요 작업 공간입니다.
+
+상단 바의 <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle"><SquareChevronRight size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> 아이콘</span>에서 **Terminal** 탭을 열거나, **Tabs** > **Terminal**에서 열 수 있습니다.
+
+<Callout type="info">
+  명령을 실행하기 전에 탭 이름 옆 **Host**를 클릭하여 대상 호스트를 선택하세요.
+</Callout>
+
+<Callout type="info">
+  NukeRat 클라이언트는 각 요청과 함께 `source_terminal` 값을 보냅니다. 이 값은 어떤 터미널 탭이 명령을 보냈는지 식별합니다. 참고용일 뿐이며 명령 실행에는 영향을 주지 않습니다.
+</Callout>
+
+입력란에 명령을 입력하고 **Enter**를 눌러 선택한 호스트로 보냅니다.
+<ImageZoom src={hostSelect} alt="Host select" className="tutorial_img" />
+
+**Ctrl + F**를 눌러 터미널 출력 내 검색을 켜거나 끕니다.
+
+<ImageZoom src={terminalSearch} alt="Terminal search" className="tutorial_img" />
+
+## 명령
+
+`help`를 실행하면 사용 가능한 모든 명령을 볼 수 있습니다. 특정 명령의 자세한 사용법은 `help <command>`를 사용하세요.
+
+| 명령 | 설명 |
+| --- | --- |
+| `help` | 사용 가능한 명령 및 사용법 표시 |
+| `config` | 임플란트 구성 보기 |
+| `delay` | 임플란트 콜백 지연(초) 설정 |
+| `kill` | 임플란트 프로세스 종료 |
+| `tasks` | 실행 중인 작업 ID 목록 |
+| `pwd` | 현재 디렉터리 출력 |
+| `cd` | 디렉터리 변경 |
+| `ls` | 파일 및 디렉터리 목록 |
+| `cat` | 파일 내용 표시 |
+| `echo` | 출력에 텍스트 표시 |
+| `cp` | 파일 복사 |
+| `mv` | 파일 이동 또는 이름 변경 |
+| `rm` | 파일 삭제 |
+| `mkdir` | 디렉터리 생성 |
+| `rmdir` | 디렉터리 제거 |
+| `echo $` | 환경 변수 출력 |
+| `whoami` | 현재 사용자 정보 표시 |
+| `systeminfo` | OS 및 하드웨어 상세 정보 표시 |
+| `env` | 환경 변수 목록 |
+| `tasklist` | WMI를 통한 실행 중 프로세스 목록 |
+| `enumdrives` | 사용 가능한 드라이브 문자 목록 |
+| `ifconfig` | 네트워크 어댑터 구성 표시 |
+| `route` | 라우팅 테이블 표시 |
+| `arp` | ARP 캐시 표시 |
+| `netstat` | 활성 네트워크 연결 표시 |
+| `portscan` | 원격 호스트 포트 스캔 |
+| `shell` | 셸 명령 실행 |
+| `powershell` | PowerShell 스크립트 실행 |
+| `shellcode` | 원시 셸코드 실행 |
+| `bof` | 내장 BOF 실행 |
+| `dotnet` | .NET 어셈블리 실행 |
+| `spawn` | 새 프로세스 생성 |
+| `inj` | 프로세스에 셸코드, reflective DLL 또는 donut 페이로드 주입 |
+| `tokens` | 액세스 토큰 보기 및 관리 |
+| `relay` | 피벗 릴레이 관리 |
+| `keylogger start` | 백그라운드 키로거 시작 |
+| `keylogger stop` | 백그라운드 키로거 중지 |
+| `screenshot` | 단일 스크린샷 캡처 |
+| `screenshot start` | 스크린샷 캡처 루프 시작 |
+| `screenshot stop` | 스크린샷 캡처 루프 중지 |
+| `armory` | 사용 가능한 armory 도구 목록 |

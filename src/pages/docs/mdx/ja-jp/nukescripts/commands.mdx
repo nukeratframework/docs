@@ -1,0 +1,34 @@
+---
+title: コマンド
+---
+
+NukeScript には、チームサーバー上で操作を行うためのネイティブコマンドが用意されています。NukeScript はネイティブコマンドだけに限定されません。Python 上で動作するため、Python 自体のライブラリや関数も引き続き利用できます。
+
+## コマンド一覧
+
+利用可能なコマンドは次のとおりです。
+
+| コマンド | 説明 | 引数 |
+| --- | --- | --- |
+| `cmd` | 同期ターミナルコマンド。出力を文字列で返す | `host_tag`, `command` |
+| `async_cmd` | コマンドをキューに入れ、すぐに返る | `host_tag`, `command` |
+| `process` | プロセスツリーを要求 | `host_tag` |
+| `folders` | リモートディレクトリを一覧 | `host_tag`, `path` |
+| `screenshot` | スクリーンショットを取得。保存先はキーワード引数 `output` のみ | `host_tag`, `output`（任意、キーワードのみ） |
+| `approve_cmd` | タスクの実行を許可。`new_queue_line` スクリプト内で使用 | `queue_tag` |
+| `reject_cmd` | タスクをブロックしエラーを記録 | `queue_tag` |
+| `conclude` | カスタム応答付きでタスクを完了としてマーク | `queue_tag`, `message` |
+| `credentials` | 保存済みの資格情報をすべて返す | |
+| `credentials.add` | 資格情報を追加し、新しい `tag` を返す | `name`, `host`, `description`, `content` |
+| `credentials.remove` | `tag` で資格情報を削除 | `tag` |
+| `db.<table>` | テーブルの全行、または全行の 1 列 | 列は任意。テーブル: `users`, `terminal`, `hosts`, `listeners`, `folders`, `process`, `queue`, `agents`, `agents_history`, `credentials`, `keylogger`, `nukescripts`, `nukescripts_output`, `custom_notifications`, `checkins` |
+| `keylogs` | キーロガー条目をすべて返す | |
+| `network.add_socks` | SOCKS ピボット。成功時は `session_id` を含むステータス文字列 | `host_tag`, `port`, `user`（任意）, `password`（任意） |
+| `network.add_forward` | TCP ポートフォワード | `host_tag`, `local_port`, `target_host`, `target_port` |
+| `network.remove` | SOCKS またはポートフォワードを停止 | `db.listeners()` の `type` が `socks` または `port_forwarding` の `tag` |
+| `network.restart` | SOCKS またはポートフォワードを再起動 | `db.listeners()` の `type` が `socks` または `port_forwarding` の `tag` |
+| `file_server.upload` | ローカルファイルをリスナーコンテンツディレクトリにコピー | `port`, `path` |
+| `file_server.delete` | リスナーコンテンツディレクトリからファイルを削除 | `port`, `filename` |
+| `agent` | 設定済み AI エージェントにプロンプトを送信 | `agent_tag`, `prompt` |
+| `echo` | NS 出力に書き込む | `content` |
+| `message_box` | オペレーター向け通知 | `title`, `body`, `type`（`info`, `error`, `success`） |

@@ -1,0 +1,37 @@
+---
+title: File server
+---
+
+import { Globe } from 'lucide-react';
+import fileServer from '@/assets/img/tutorial/file_server.png';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+The file server tab lets you manage file servers already configured in NukeRat. It helps you host files quickly and efficiently, for example payloads.
+
+You can open the **File Server** tab from <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">the <Globe size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> icon</span> in the top bar, or from **Tabs** > **File Server**.
+
+<ImageZoom src={fileServer} alt="File Server" className="tutorial_img" />
+
+## How to use
+
+To use the file server tab, follow these steps:
+
+  <Steps>
+    <Step>
+      ### Create a file server listener
+      First, create a listener of type **File server**. For more details, see the [Listeners](/docs/listeners) section.
+    </Step>
+    <Step>
+      ### Select a file server
+      At the top of the tab, open the server selector and choose the file server listener you want to manage.
+    </Step>
+    <Step>
+      ### Upload a file
+      Finally, upload the file you want to host.
+    </Step>
+  </Steps>
+
+## Extra tip
+
+NukeRat file servers are not limited to hosting files. They can also be used to host applications for social engineering, such as fake login pages.

@@ -1,0 +1,44 @@
+---
+title: 홈
+---
+
+import { Card, Cards } from 'fumadocs-ui/components/card';
+
+NukeRat 주요 주제:
+
+<div className="not-prose [&_[data-card]]:rounded-xl [&_[data-card]]:border-fd-border/80 [&_[data-card]]:p-6 [&_[data-card]]:shadow-lg [&_[data-card]]:transition-none [&_[data-card]:hover]:bg-fd-card [&_[data-card]:hover]:shadow-lg [&_[data-card]>h3]:mb-2 [&_[data-card]>h3]:text-lg [&_[data-card]>h3]:font-semibold [&_[data-card]>h3]:tracking-tight [&_[data-card]>p]:text-base [&_[data-card]>p]:leading-relaxed">
+
+<Cards className="gap-5 sm:grid-cols-2">
+  <Card
+    title="Armory"
+    description="공식 저장소의 BOF 및 .NET 도구를 클라이언트에서 바로 실행할 수 있습니다."
+    href="/docs/armory"
+  />
+  <Card
+    title="Implants"
+    description="Stageless 및 로더 빌드, C2 설정, 컴파일 워크플로."
+    href="/docs/client/implants"
+  />
+  <Card
+    title="Pivoting"
+    description="임플란트를 통한 Relay, SOCKS, 포트 포워딩."
+    href="/docs/pivoting"
+  />
+  <Card
+    title="Custom channels"
+    description="Telegram, Discord 등 외부 플랫폼을 경유하는 채널."
+    href="/docs/custom-channels"
+  />
+  <Card
+    title="Custom implants"
+    description="자체 바이너리를 가져와도 동일한 태스킹 모델을 사용할 수 있습니다."
+    href="/docs/custom-implants"
+  />
+  <Card
+    title="Listeners"
+    description="임플란트 및 스테이징용 HTTP, HTTPS, 파일 서버 채널."
+    href="/docs/listeners"
+  />
+</Cards>
+
+</div>

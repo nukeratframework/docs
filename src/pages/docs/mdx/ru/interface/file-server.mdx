@@ -1,0 +1,35 @@
+---
+title: Файловый сервер
+---
+
+import { Globe } from 'lucide-react';
+import fileServer from '@/assets/img/tutorial/file_server.png';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+На вкладке **File Server** можно управлять уже настроенными в NukeRat file server. Это удобный способ быстро разместить файлы, в том числе полезные нагрузки.
+
+Вкладку можно открыть через значок <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle"><Globe size={18.5} className="shrink-0 ml-1.5 mr-1.5" /></span> на верхней панели или **Tabs** > **File Server**.
+
+<ImageZoom src={fileServer} alt="File Server" className="tutorial_img" />
+
+## Как пользоваться
+
+  <Steps>
+    <Step>
+      ### Создайте listener типа **File server**
+      Сначала создайте listener типа **File server**. Подробнее — в разделе [Listeners](/docs/listeners).
+    </Step>
+    <Step>
+      ### Выберите file server
+      Вверху вкладки откройте селектор серверов и выберите listener типа **File server**, которым хотите управлять.
+    </Step>
+    <Step>
+      ### Загрузите файл
+      Загрузите файл, который нужно разместить.
+    </Step>
+  </Steps>
+
+## Дополнительно
+
+В NukeRat file server используют не только для раздачи файлов: через них можно размещать приложения для социальной инженерии, например поддельные страницы входа.

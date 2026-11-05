@@ -1,0 +1,62 @@
+---
+title: 高度な設定
+---
+
+import preface from '@/assets/img/tutorial/preface.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+NukeRat のインプラント作成には、プリフェース、ランタイム、PE アーティファクトなどの高度なオプションがあります。インプラントのソースコードを編集せずに、インプラントを大幅にカスタマイズできます。
+
+## Preface
+
+**Preface** セクションではプリフェースコードを設定します。インプラントのメインルーチンが始まる前に実行されます。
+
+Windows と Linux では、ユーザー記述のプリフェースコードは `custom.nim` に注入され、`main_init()` の前に `preface()` から実行されます。エントリポイントは次のとおりです。
+
+```nim
+import custom
+import routine/start
+
+proc main(): void =
+  custom.preface()
+  start.main_init()
+main()
+```
+
+macOS ではプリフェースは Go コードで、`custom.go` に注入されます。ビルドは `routine.MainInit()` の前に `Custom()` を呼び出します。
+
+プリフェースコードは次のような目的に使えます。
+
+- サンドボックス検知
+- ジャンクコードの挿入
+- インプラントサイズの水増し
+
+Windows と Linux インプラントのプリフェースは Nim で書きます。macOS インプラントでは Go で書きます。
+
+## PE Artifacts
+
+このセクションは **Windows** インプラント向けです。PE（Portable Executable）ファイルの変更専用です。
+
+利用できる変更:
+
+- **EXE icon**: 実行ファイルのアイコンを変更（EXE 形式のみ）
+- **PE strings**: PE セクションにデコイ値を埋め込む（EXE および DLL 形式）
+- **TimeDateStamp**: PE のタイムスタンプフィールドを変更
+- **Version fields**: リンカー、OS、イメージ、サブシステムの major / minor 値
+
+これらの変更の目的は、静的回避の改善、または静的解析に対してインプラントをより正規に見せることです。
+
+## Runtime
+
+**Runtime** セクションでは回避および難読化オプションを設定します。
+
+**Windows** では次を設定できます。
+
+- **API resolution**: 動的ロード（固定）
+- **Win API method**: スタックスプーフィング付き間接シスコール（固定）
+- **ETW patch** および **AMSI patch**
+- **Sleep mask**: Off、Ekko、または Zilean
+- **String obfuscation**: Off、Xor、または RC4
+- **Wipe PE headers in memory**
+
+**Linux** と **macOS** では、ランタイムセクションに **string obfuscation**（Off、Xor、または RC4）が表示されます。スリープマスキング、ETW、AMSI、PE ヘッダーのワイプは Windows インプラントのみに適用されます。

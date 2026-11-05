@@ -1,0 +1,62 @@
+---
+title: 고급
+---
+
+import preface from '@/assets/img/tutorial/preface.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+NukeRat 임플란트 생성에는 preface, runtime, PE artifacts 등 고급 옵션이 포함됩니다. 이 설정으로 임플란트 소스 코드를 수정하지 않고도 임플란트를 크게 사용자 지정할 수 있습니다.
+
+## Preface
+
+**Preface** 섹션에서는 preface 코드를 구성합니다. 임플란트 main 루틴이 시작되기 전에 실행됩니다.
+
+Windows와 Linux에서는 사용자 preface 코드가 `custom.nim`에 주입되며 `main_init()` 전에 `preface()`에서 실행됩니다. 진입점은 다음과 같습니다.
+
+```nim
+import custom
+import routine/start
+
+proc main(): void =
+  custom.preface()
+  start.main_init()
+main()
+```
+
+macOS에서는 preface가 `custom.go`에 주입되는 Go 코드입니다. 빌드는 `routine.MainInit()` 전에 `Custom()`을 호출합니다.
+
+Preface 코드는 여러 용도로 사용할 수 있습니다.
+
+- 샌드박스 탐지
+- 정크 코드 삽입
+- 임플란트 크기 부풀리기
+
+Windows 및 Linux 임플란트의 preface는 Nim으로 작성합니다. macOS 임플란트는 Go로 작성합니다.
+
+## PE Artifacts
+
+이 섹션은 **Windows** 임플란트에서만 사용할 수 있습니다. PE(Portable Executable) 파일 수정 전용입니다.
+
+가능한 수정:
+
+- **EXE icon**: 실행 파일 아이콘 변경(EXE 형식만)
+- **PE strings**: PE 섹션에 decoy 값 삽입(EXE 및 DLL 형식)
+- **TimeDateStamp**: PE timestamp 필드 변경
+- **Version fields**: linker, OS, image, subsystem major 및 minor 값
+
+이 변경의 목적은 정적 회피를 개선하거나 정적 분석에서 임플란트가 더 정상적으로 보이게 하는 것입니다.
+
+## Runtime
+
+**Runtime** 섹션은 회피 및 난독화 옵션을 구성합니다.
+
+**Windows**에서는 다음을 설정할 수 있습니다.
+
+- **API resolution**: dynamic loading(고정)
+- **Win API method**: stack spoofing이 있는 indirect syscalls(고정)
+- **ETW patch** 및 **AMSI patch**
+- **Sleep mask**: Off, Ekko, 또는 Zilean
+- **String obfuscation**: Off, Xor, 또는 RC4
+- **Wipe PE headers in memory**
+
+**Linux** 및 **macOS**에서는 runtime 섹션에 **string obfuscation**(Off, Xor, 또는 RC4)만 노출됩니다. Sleep masking, ETW, AMSI, PE header wiping은 Windows 임플란트에만 적용됩니다.

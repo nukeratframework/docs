@@ -1,0 +1,34 @@
+---
+title: Monitoring
+---
+
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import commandQueue from '@/assets/img/tutorial/queue.png';
+
+During an operation, it is always useful to keep track of what is going on. NukeRat has two features to help with that, without you having to access the team server and dig through logs manually.
+
+## Command queue
+
+Go to **NukeRat** > **Queue** to see every command in the execution queue. The table includes commands waiting to run and ones that already ran. That comes in handy for:
+
+- Removing commands added by mistake (before the implant receives them)
+- Seeing output from commands run in a terminal tab you closed
+- Checking what error caused a command to fail
+
+<ImageZoom src={commandQueue} alt="Command queue" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+
+The commands listed in the table are not limited to the terminal tab. They can also include activity from the folder explorer and processes tabs.
+
+Double click a table row to see all details for that queue event.
+
+You can also delete a command from the queue. Select it and click **Delete**. That removes it from the database so the implant will not run it if it has not been delivered yet.
+
+## Event logs
+
+Go to **NukeRat** > **Event Log** to view logs for a specific team server. Logs are grouped into:
+
+- **Listeners**: traffic and actions on HTTP channels and the file server listener (from `listeners.log`)
+- **Launcher**: messages from server startup and the launcher (from `server.log`)
+- **Server**: errors and informational messages from the team server API and core (from `server.log`)
+
+The Event Log view reads from `server.log` and `listeners.log` via the team server [`GET /api/logs/`](/docs/rest-api/team-server) endpoint.

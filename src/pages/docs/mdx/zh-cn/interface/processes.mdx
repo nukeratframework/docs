@@ -1,0 +1,42 @@
+---
+title: 进程
+---
+
+import processes from '@/assets/img/tutorial/processes.png';
+import {
+  Bot,
+  ChevronsUpDown,
+  Cpu,
+  RefreshCw,
+  X,
+} from 'lucide-react';
+import { Callout } from '@/ui/custom/callout';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+进程标签页便于分析和监控主机上正在运行的进程。
+
+可从顶部栏<span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">的 <Cpu size={18.5} className="shrink-0 ml-1.5 mr-1.5" /> 图标</span>打开 **Processes（进程）** 标签页，或从 **Tabs（标签页）** > **Processes（进程）** 进入。
+
+<Callout type="info">
+  使用进程标签页前，请先点击标签名旁的 **Host（主机）** 选择目标主机。
+</Callout>
+
+与文件浏览器类似，选定主机后，客户端会请求该主机的进程列表，首次加载时结果会填充到进程标签页。
+
+<ImageZoom src={processes} alt="Processes" className="tutorial_img" />
+
+## 工作原理
+
+植入体枚举正在运行的进程，并将结果转换为客户端可渲染的自定义 JSON 格式。
+
+### Windows
+
+使用 `kernel32.dll`（`CreateToolhelp32Snapshot`、`Process32FirstW`、`Process32NextW`、`OpenProcess`、`QueryFullProcessImageNameW`）与 `iphlpapi.dll`（`GetExtendedTcpTable`）。核心逻辑位于 `implants/windows/stageless/capabilities/process.nim`。
+
+### Linux
+
+读取 `/proc`（`stat`、`status`、`exe`）与 `/proc/net/tcp`。核心逻辑位于 `implants/linux/stageless/capabilities/process.nim`。
+
+### MacOS
+
+使用 `macapi` 模块（`ListProcessIDs`、`ReadProcessStat`、`ReadProcessStatus`、`GetTcpPidMap`）。核心逻辑位于 `implants/mac/stageless/capabilities/process.go`。

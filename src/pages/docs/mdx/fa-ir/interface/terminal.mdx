@@ -1,0 +1,75 @@
+---
+title: ترمینال
+---
+import hostSelect from '@/assets/img/tutorial/terminal.png';
+import terminalSearch from '@/assets/img/tutorial/terminal_search.png';
+import { SquareChevronRight, Bot } from 'lucide-react';
+import { Callout } from '@/ui/custom/callout';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+ترمینال فضای کاری اصلی برای اجرای دستور روی میزبان نفوذیافته است.
+
+می‌توانید تب **Terminal** را از <span className="inline-flex items-center gap-1 whitespace-nowrap align-middle">آیکون <SquareChevronRight size={18.5} className="shrink-0 ml-1.5 mr-1.5" /></span> در نوار بالا، یا از **Tabs** > **Terminal** باز کنید.
+
+<Callout type="info">
+  پیش از اجرای هر دستور، با کلیک روی **Host** کنار نام تب، میزبان هدف را انتخاب کنید.
+</Callout>
+
+<Callout type="info">
+  توجه کنید کلاینت NukeRat با هر درخواست مقدار `source_terminal` می‌فرستد. این مقدار مشخص می‌کند کدام تب ترمینال دستور را فرستاده است. فقط برای ارجاع است و روی اجرای دستور اثری ندارد.
+</Callout>
+
+دستور را در ورودی تایپ کنید و **Enter** بزنید تا به میزبان انتخاب‌شده ارسال شود.
+<ImageZoom src={hostSelect} alt="انتخاب میزبان" className="tutorial_img" />
+
+برای جست‌وجو در خروجی ترمینال **Ctrl + F** را بزنید.
+
+<ImageZoom src={terminalSearch} alt="جست‌وجو در ترمینال" className="tutorial_img" />
+
+## دستورات
+
+برای دیدن همهٔ دستورهای موجود `help` را اجرا کنید. برای راهنمای دقیق یک دستور از `help <command>` استفاده کنید.
+
+| دستور | توضیح |
+| --- | --- |
+| `help` | نمایش دستورهای موجود و نحوهٔ استفاده |
+| `config` | مشاهدهٔ پیکربندی implant |
+| `delay` | تنظیم تأخیر callback implant به ثانیه |
+| `kill` | خاتمهٔ فرایند implant |
+| `tasks` | فهرست شناسهٔ taskهای در حال اجرا |
+| `pwd` | چاپ مسیر فعلی |
+| `cd` | تغییر مسیر |
+| `ls` | فهرست فایل‌ها و پوشه‌ها |
+| `cat` | نمایش محتوای فایل |
+| `echo` | چاپ متن در خروجی |
+| `cp` | کپی فایل |
+| `mv` | جابه‌جایی یا تغییر نام فایل |
+| `rm` | حذف فایل |
+| `mkdir` | ایجاد پوشه |
+| `rmdir` | حذف پوشه |
+| `echo $` | چاپ متغیر محیطی |
+| `whoami` | نمایش اطلاعات کاربر فعلی |
+| `systeminfo` | نمایش اطلاعات تفصیلی OS و سخت‌افزار |
+| `env` | فهرست متغیرهای محیطی |
+| `tasklist` | فهرست فرایندهای در حال اجرا از طریق WMI |
+| `enumdrives` | فهرست حروف درایو موجود |
+| `ifconfig` | نمایش پیکربندی آداپتر شبکه |
+| `route` | نمایش جدول مسیریابی |
+| `arp` | نمایش cache ARP |
+| `netstat` | نمایش اتصال‌های شبکهٔ فعال |
+| `portscan` | اسکن پورت روی میزبان راه‌دور |
+| `shell` | اجرای دستور shell |
+| `powershell` | اجرای اسکریپت PowerShell |
+| `shellcode` | اجرای shellcode خام |
+| `bof` | اجرای BOF داخلی |
+| `dotnet` | اجرای assembly .NET |
+| `spawn` | ایجاد فرایند جدید |
+| `inj` | تزریق shellcode، DLL reflective یا payload donut به فرایند |
+| `tokens` | مشاهده و مدیریت access tokenها |
+| `relay` | مدیریت relayهای pivot |
+| `keylogger start` | شروع کی‌لاگر پس‌زمینه |
+| `keylogger stop` | توقف کی‌لاگر پس‌زمینه |
+| `screenshot` | گرفتن یک اسکرین‌شات |
+| `screenshot start` | شروع حلقهٔ capture اسکرین‌شات |
+| `screenshot stop` | توقف حلقهٔ capture اسکرین‌شات |
+| `armory` | فهرست ابزارهای armory موجود |

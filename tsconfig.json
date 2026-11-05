@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "incremental": true,
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/.source": ["./.source/index.js"],
+      "fumadocs-ui/provider": ["./node_modules/fumadocs-ui/dist/provider"],
+      "fumadocs-ui/page": ["./node_modules/fumadocs-ui/dist/page"],
+      "fumadocs-ui/components/*": ["./node_modules/fumadocs-ui/dist/components/*"],
+      "fumadocs-ui/layouts/*": ["./node_modules/fumadocs-ui/dist/layouts/*"],
+      "react-router-dom": ["./node_modules/react-router-dom/dist/index.d.mts"]
+    },
+    "types": ["vite/client"]
+  },
+  "include": ["**/*.ts", "**/*.tsx", "**/*.mdx", ".source/**/*.ts", "nativewind-env.d.ts"],
+  "exclude": ["node_modules", "dist"]
+}

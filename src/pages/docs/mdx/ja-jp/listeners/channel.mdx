@@ -1,0 +1,132 @@
+---
+title: チャネル
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import listenerForm from '@/assets/img/tutorial/listener_form.png';
+import listenerOk from '@/assets/img/tutorial/listener_ok.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+インプラントがチームサーバーと通信するには、あらかじめ設定済みのチャネルが必要です。
+
+現在、チャネルには次の 2 カテゴリがあります。
+- HTTP/HTTPS
+- Custom（カスタム）
+
+## HTTP/HTTPS チャネル
+
+設定が最も簡単で、一般的なチャネルです。インプラントが到達する URL 以外に、追加の設定は不要です。
+
+このチャネルを作成する際、次のような高度な設定も調整できます。
+
+- URL パスの変更（例: `https://example.com/path` → `https://example.com/path/custom`）
+- レスポンスヘッダー
+- インプラントリクエストおよびリスナーレスポンス用のカスタムボディテンプレート
+
+## カスタムチャネル
+
+最も複雑なチャネル種別ですが、同時に最も柔軟です。例えば次のような、非常に特殊な通信が必要な場合にカスタムチャネルが不可欠です。
+
+- Telegram
+- Discord
+- Dropbox
+
+プリセットはないため、すべて手動で設定する必要があります。インプラント作成時も同様で、チャネルとの通信用カスタムコードスニペットを書く必要があります。
+
+作成 UI に「カスタムチャネル」という選択肢はありません。手動でセットアップする必要があるためです。詳しくは [Custom C2](/docs/custom-channels) を参照してください。
+
+## 他のチャネル種別はどうなのか
+
+一部のフレームワークでは、DNS、DoH、mTLS などの代替チャネルもサポートしています。NukeRat では、Telegram や Google Drive などの外部通信サービスとの統合ニーズ、とくに現在のトレンドに合わせるため、この 2 種類のチャネルを選んでいます。
+
+今後、公式にチャネル種別を追加する予定はありません。
+
+DNS など特定のチャネル種別が依然として必要な場合は、**カスタムチャネル**を使って通信を自分で構築する必要があります。
+
+## HTTP チャネルの作成 [#creating-an-http-channel]
+
+HTTP チャネル（SSL なし）は作成が最も簡単です。以下の手順に従ってください。
+
+  <Steps>
+    <Step>
+      ### リスナータブを開く
+      **NukeRat** > **Listeners** > **Add** を開きます。
+    </Step>
+    <Step>
+      ### フィールドを入力する
+      <ImageZoom src={listenerForm} alt="Listener Form" className="h-[30rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+      - **Name**: リスナーを識別しやすい名前を付けます。
+      - **Type**: `Channel` を選択
+      - **Channel**: `http` または `https` を選択
+      - **Server**: リスナーを作成するチームサーバーを選択（事前に設定済みである必要があります）
+      - **Port to open**: 使用するポート
+    </Step>
+    <Step>
+      ### **Create** をクリック
+      問題がなければ、リスナーが作成されリスナータブに一覧表示されます。
+      <ImageZoom src={listenerOk} alt="Listener Ok" className="h-[6.5rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+    </Step>
+  </Steps>
+
+作成が完了したら、そのインプラントで、今設定したチャネルと通信できます。
+
+HTTP チャネル（SSL なし）は、インプラントビルド時の共有 AES 256 キーで、インプラントリクエストとリスナーレスポンスを暗号化します。HTTP セッションを傍受されても、そのキーがなければボディは読めません。ワイヤ上でのペイロードの見え方については [通信の暗号化](/docs/rest-api/implants#communication-encryption) を参照してください。
+
+## HTTPS と証明書
+
+SSL を使うには、リスナー作成時に **Channel** フィールドで `https` を選びます。**Certificate** セクションがポートフィールドの下に表示されます。**Source** では自己署名または手動を選びます。
+
+自己署名証明書は NukeRat が `openssl` で自動生成します。有効日数、CN、SAN、鍵種別など、生成設定をカスタマイズできます。
+
+これらのフィールドの一部にはプレースホルダーで例の値が表示されます。当然、その値をそのまま使うべきではありません。証明書シグネチャの一致による検知につながる可能性があります。
+
+手動証明書の場合は、証明書と秘密鍵の PEM を貼り付けるかアップロードします（例: Namecheap などのプロバイダーから取得したもの）。
+
+HTTP チャネル（SSL なし）と同様、HTTPS チャネルもインプラントボディに同じ AES 256 暗号化を使います。TLS がトランスポートを保護し、SSL/TLS インスペクション下でもボディは暗号化されたままです。
+
+## 高度なカスタマイズ
+
+HTTP/HTTPS チャネルには **Advanced** 以下のフィールドがあります。
+
+- **Endpoint path**: インプラントが通信に使う URL パス
+- **Response headers**: チャネルのレスポンスヘッダー
+- **Custom body**: プリセット（`off`、`custom`、または組み込みの `json` / `xml` 例）に加え、カスタムボディが `off` でない場合の任意の **Listener response** および **Implant request** テンプレート
+
+## カスタムボディ
+
+デフォルトでは、インプラントとサーバー間の通信は単純です。文字列が暗号化されボディに付加されます。例:
+
+```http
+POST /api HTTP/1.1
+Host: example.com
+
+U2FsdGVkX1/Z8mN3kL9qP2vX7dQ4jK1mR5sT8uW2xY3aB6cD9e...
+```
+
+ボディは特定の構造を持たない暗号化データの塊であることに注目してください。カスタムボディでは、インプラントとサーバー間で共有する構造を定義できます。例:
+
+**サーバーレスポンス:**
+```http
+{
+  "status": "ok",
+  "data": "§content§"
+}
+```
+
+**インプラントリクエスト:**
+```http
+{
+  "type": "telemetry",
+  "event": "sync",
+  "payload": "§content§",
+}
+```
+
+上記の例では、設定後、チャネルは定義した形式でレスポンスを送り、インプラントリクエストも同じ形式を期待します。
+
+チャネル作成 UI 自体にカスタムボディの例をいくつか用意していますが、表示どおりにそのまま使うことは推奨しません。ボディシグネチャの一致による検知を招く可能性があります。
+
+### 注意
+
+1. インプラントが正しく通信するには、インプラント作成時に同じ **Listener response** および **Implant request** テンプレートを再現してください。リスナーは `implantBody` を読み取り、実行時に `listenerResponse` で返信をラップします（[インプラント API](/docs/rest-api/implants#request-body-template-implantbody) を参照）。
+2. HTTP/HTTPS チャネルでは、`implantBody` が空またはちょうど `§content§` のとき、生のリクエストボディ全体が暗号化されます。カスタム構造の場合は `§content§` の部分だけが暗号化されます。リスナーは復号前にその部分を取り出します。

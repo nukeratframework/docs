@@ -1,0 +1,44 @@
+---
+title: ホーム
+---
+
+import { Card, Cards } from 'fumadocs-ui/components/card';
+
+NukeRat の主なトピック:
+
+<div className="not-prose [&_[data-card]]:rounded-xl [&_[data-card]]:border-fd-border/80 [&_[data-card]]:p-6 [&_[data-card]]:shadow-lg [&_[data-card]]:transition-none [&_[data-card]:hover]:bg-fd-card [&_[data-card]:hover]:shadow-lg [&_[data-card]>h3]:mb-2 [&_[data-card]>h3]:text-lg [&_[data-card]>h3]:font-semibold [&_[data-card]>h3]:tracking-tight [&_[data-card]>p]:text-base [&_[data-card]>p]:leading-relaxed">
+
+<Cards className="gap-5 sm:grid-cols-2">
+  <Card
+    title="Armory"
+    description="公式リポジトリの BOF および .NET ツールを、クライアントからそのまま実行できます。"
+    href="/docs/armory"
+  />
+  <Card
+    title="Implants"
+    description="ステージレスおよびローダービルド、C2 設定、コンパイルのワークフロー。"
+    href="/docs/client/implants"
+  />
+  <Card
+    title="Pivoting"
+    description="インプラント経由のリレー、SOCKS、ポートフォワーディング。"
+    href="/docs/pivoting"
+  />
+  <Card
+    title="Custom channels"
+    description="Telegram、Discord などの外部プラットフォーム経由のチャネル。"
+    href="/docs/custom-channels"
+  />
+  <Card
+    title="Custom implants"
+    description="独自のバイナリを持ち込んでも、同じタスクモデルをそのまま使えます。"
+    href="/docs/custom-implants"
+  />
+  <Card
+    title="Listeners"
+    description="インプラントおよびステージング用の HTTP、HTTPS、ファイルサーバーチャネル。"
+    href="/docs/listeners"
+  />
+</Cards>
+
+</div>

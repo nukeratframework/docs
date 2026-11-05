@@ -1,0 +1,35 @@
+---
+title: SOCKS
+---
+
+import socks from '@/assets/img/tutorial/socks.png';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+NukeRat は SOCKS をネイティブサポートしており、特定ホスト経由でトラフィックをルーティングできます。サポートしているのは SOCKS5 です。
+
+チームサーバーがリスナーポートを開きます。トラフィックは、出口として選択したインプラント経由で中継されます。
+
+## 設定方法
+
+SOCKS5 プロキシを作成するには、次の手順に従います。
+
+  <Steps>
+    <Step>
+      ### Network ウィンドウを開く
+      **NukeRat** > **Network** に移動し、**Add** をクリックします。
+    </Step>
+    <Step>
+      ### プロキシを設定する
+      <ImageZoom src={socks} alt="Socks Add" className="h-[15rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+      - **Team server**: リスナー API エンドポイント（フォーム上部のホストとポート）
+      - **Type**: `socks`
+      - **Host tag**: アウトバウンド接続をプロキシするインプラント
+      - **Port target**: SOCKS リスナー用にチームサーバーで開くポート
+      - **User** / **Password**: オペレーター向けプロキシ認証用の任意の資格情報
+
+      各フィールドを設定したら **Create** をクリックします。
+    </Step>
+  </Steps>
+
+完了すると、プロキシが Network テーブルに表示されます。ツールは `socks5://<team_server_host>:<port_target>/` を向け先に設定し、認証を設定した場合は URI にユーザー名とパスワードを含めます。

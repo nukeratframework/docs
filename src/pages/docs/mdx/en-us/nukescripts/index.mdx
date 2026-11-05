@@ -1,0 +1,68 @@
+---
+title: NukeScript
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import debuggerImage from '@/assets/img/tutorial/debugger.png';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+NukeScript is NukeRat's scripting system, and it serves three main purposes:
+
+1. Automate actions
+2. Create new functionality
+3. Interact with the NukeRat client
+
+In short, NukeScript is nothing more than Python scripts with an extra layer called **events**.
+
+While the server is running, a worker monitors the NukeRat database to check if events have been fired, and based on those, runs the corresponding scripts.
+
+## Creating a script
+
+For demonstration, we'll create a script that runs `whoami` when a new host connects:
+
+  <Steps>
+    <Step>
+      ### Open the NukeScript tab
+      Go to **NukeRat** > **NukeScripts** and click **Add**.
+    </Step>
+    <Step>
+      ### Select a server
+      Add a name of your choice and select the team server that will be used to run the script.
+    </Step>
+    <Step>
+      ### Create the script
+      Paste the code below into the script field:
+      ```python
+def on_new_host(row):
+        host = row["tag"]
+        output = cmd(host, "whoami")
+        echo(f"Output: {output}")
+
+event.new_host:on_new_host()
+      ```
+    </Step>
+    <Step>
+      ### Enable the script
+      After creating the script, you need to enable it so it actually runs. Select the script and click **Enable**.
+    </Step>
+    <Step>
+      ### Test the script
+      To validate, open the **NS Debugger** by clicking **Tabs** > **NS Debugger**.
+
+      If everything is set up correctly, you should see the output of `whoami` in the **NS Debugger** when a new host connects.
+
+      <ImageZoom src={debuggerImage} alt="NS Debugger" className="h-[6rem] tutorial_img" style={{ marginLeft: 0, marginRight: 0, display: 'block' }} />
+
+    </Step>
+  </Steps>
+
+
+## Events and commands
+
+To learn more about events and commands, see:
+- [Events](/docs/nukescripts/events)
+- [Commands](/docs/nukescripts/commands)
+
+## Examples
+
+See some script examples at [Examples](/docs/nukescripts/examples).
