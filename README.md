@@ -16,12 +16,17 @@ Official documentation for the NukeRat project. Available in the following langu
 
 To run a local version of the documentation, use:
 
+1. Install dependencies
+```
+npm install
+```
+
+2. Build the application
 ```
 npm run build
 ```
 
-Then run:
-
+3. Run the application
 ```
 npm run preview
 ```
