@@ -1,0 +1,47 @@
+---
+title: AES sync
+---
+
+Cada listener tiene una interfaz de comunicación para recibir las claves AES de comunicación que los implants usan para cifrar el mensaje. Esto es para que, si un implant se compila en un team server concreto, los demás team servers también puedan recibir esa clave AES y descifrar los mensajes de comunicación del implant.
+
+## Cómo funciona
+
+Durante la compilación de un implant, el team server toma la lista de servers configurados y envía una petición a cada listener configurado con la clave AES de comunicación del implant.
+
+Sin embargo, todos los team servers tienen que tener la misma secret key de AES sync para poder aceptar y guardar esa clave AES. Si es distinta, el implant solo se comunicará con el team server en el que se compiló, ya que será el único que pueda descifrar los mensajes.
+
+## Cómo configurar
+
+1. En el team server, usa el siguiente comando:
+
+```bash
+./nukerat.py server config set server.aes_sync.secret_key 1234567
+```
+
+Este mismo comando tiene que ejecutarse en todos los team servers.
+
+2. Confirma la configuración en el archivo de configuración del team server:
+
+```bash
+./nukerat.py server config list
+```
+
+Debería devolver algo como:
+
+```toml
+[server.aes_sync]
+secret_key = 1234567
+sync_path = "/sync"
+```
+
+3. Reinicia los team servers y sigue con la compilación del implant como siempre.
+
+## Sync path
+
+También puedes cambiar el path de sincronización de las claves AES. Para eso, usa el siguiente comando:
+
+```bash
+./nukerat.py server config set server.aes_sync.sync_path /example
+```
+
+Esto puede servir sobre todo para evitar firmas alrededor de la URL del listener, si estás usando el canal HTTP por defecto.

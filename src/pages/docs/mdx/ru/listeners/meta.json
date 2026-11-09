@@ -1,4 +1,4 @@
 {
   "title": "Слушатели",
-  "pages": ["channel", "file-server"]
+  "pages": ["channel", "file-server", "aes-sync"]
 }

@@ -1,6 +1,7 @@
 {
   "pages": [
     "channel",
-    "file-server"
+    "file-server",
+    "aes-sync"
   ]
 }

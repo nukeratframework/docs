@@ -1,4 +1,4 @@
 {
   "title": "监听器",
-  "pages": ["channel", "file-server"]
+  "pages": ["channel", "file-server", "aes-sync"]
 }

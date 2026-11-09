@@ -1,0 +1,47 @@
+---
+title: AES sync
+---
+
+每个监听器都有一个通信接口，用来接收植入体加密消息时使用的 AES 通信密钥。这样，如果植入体是在某个团队服务端上编译的，其他团队服务端也能收到这把 AES 密钥，从而解密植入体的通信消息。
+
+## 如何工作
+
+编译植入体时，团队服务端会取出已配置的服务器列表，并向每个已配置的监听器发送请求，带上该植入体的 AES 通信密钥。
+
+不过，所有团队服务端都必须使用同一把 AES sync secret key，才能接受并保存这把 AES 密钥。如果不一样，植入体就只会和编译它的那个团队服务端通信，因为只有那里能解密这些消息。
+
+## 如何配置
+
+1. 在团队服务端上使用下面的命令：
+
+```bash
+./nukerat.py server config set server.aes_sync.secret_key 1234567
+```
+
+每个团队服务端都要执行同一条命令。
+
+2. 在团队服务端的配置文件里确认这项配置：
+
+```bash
+./nukerat.py server config list
+```
+
+应该返回类似这样的内容：
+
+```toml
+[server.aes_sync]
+secret_key = 1234567
+sync_path = "/sync"
+```
+
+3. 重启团队服务端，然后照常继续编译植入体。
+
+## Sync path
+
+你也可以改 AES 密钥的同步路径。用下面这条命令：
+
+```bash
+./nukerat.py server config set server.aes_sync.sync_path /example
+```
+
+这主要是为了避开监听器 URL 附近的特征，尤其是在你用默认 HTTP 通道的时候。
