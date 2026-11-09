@@ -33,6 +33,10 @@ export default defineConfig({
     rehypeCodeOptions: {
       themes: { light: 'github-dark-default', dark: 'github-dark-default' },
       theme: 'github-dark-default',
+      langAlias: {
+        'text-plain': 'plaintext',
+        JSON: 'json',
+      },
     },
   },
 });

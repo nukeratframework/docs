@@ -15,13 +15,14 @@ type LoaderContext = {
   context: string;
   mode: 'production';
   cacheable: () => void;
-  getOptions: () => { _ctx: { configPath: string } };
+  getOptions: () => { configPath: string; outDir: string };
   async: () => (error: Error | null | undefined, code?: string) => void;
 };
 
 const root = path.resolve(import.meta.dirname, '../..');
 const docsDir = path.join(root, 'src/pages/docs/mdx/en-us');
 const configPath = path.join(root, 'source.config.ts');
+const sourceDir = path.join(root, '.source');
 
 function walk(dir: string, files: string[] = []) {
   for (const name of readdirSync(dir)) {
@@ -40,7 +41,7 @@ function compile(file: string) {
       context: path.dirname(file),
       mode: 'production',
       cacheable: () => {},
-      getOptions: () => ({ _ctx: { configPath } }),
+      getOptions: () => ({ configPath, outDir: sourceDir }),
       async: () => (error, code) => (error ? reject(error) : resolve(code ?? '')),
     };
     loader.call(context, readFileSync(file, 'utf8'));
@@ -110,6 +111,9 @@ type IndexedPage = {
 };
 
 export async function buildSearch() {
+  const { start } = await import('fumadocs-mdx/next');
+  await start(false, configPath, sourceDir);
+
   const pages: IndexedPage[] = [];
   for (const file of walk(docsDir)) {
     const code = await compile(file);

@@ -14,7 +14,7 @@ type LoaderContext = {
   context: string;
   mode: 'development' | 'production';
   cacheable: (flag?: boolean) => void;
-  getOptions: () => { _ctx: { configPath: string } };
+  getOptions: () => { configPath: string; outDir: string };
   async: () => (error: Error | null | undefined, code?: string, map?: string) => void;
 };
 
@@ -31,7 +31,7 @@ function runMdxLoader(source: string, id: string, mode: 'development' | 'product
       context: path.dirname(resourcePath),
       mode,
       cacheable: () => {},
-      getOptions: () => ({ _ctx: { configPath } }),
+      getOptions: () => ({ configPath, outDir: sourceDir }),
       async: () => (error, code, map) => {
         if (error) reject(error);
         else resolve({ code: code ?? '', map });
