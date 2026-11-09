@@ -5,6 +5,9 @@
 .contentlayer
 .content-collections
 .source
+/dist
+/public/api/search
+/src/generated
 
 # test & build
 /coverage
