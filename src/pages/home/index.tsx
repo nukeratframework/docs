@@ -118,7 +118,7 @@ export default function Home() {
                 />
               </BorderGlow> */}
               <NukeRatDemo
-                className="pt-2 pl-1 pr-1 pb-2 w-full overflow-hidden rounded-[8px] border border-[#3b3b3b] bg-[#0b0b0b] shadow-none"
+                className="pt-2 pl-1 pr-1 pb-2 w-full overflow-hidden rounded-[8px] border border-[#3b3b3bc7] bg-[#0b0b0b] shadow-none"
               />
             </div>
           </main>
