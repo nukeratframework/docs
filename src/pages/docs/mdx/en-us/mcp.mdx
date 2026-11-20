@@ -1,0 +1,53 @@
+---
+title: MCP
+---
+
+import { Callout } from '@/ui/custom/callout';
+
+MCP lets agents in any MCP host call the team server: listeners, sessions, terminal, implants, same surface as the [team server API](/docs/rest-api/team-server)
+
+## Enable on the team server
+
+From the repo root:
+
+```bash
+./nukerat.py server mcp enable
+```
+
+When MCP authentication expires, run the command below to renew it.
+
+```bash
+./nukerat.py server mcp reauth
+```
+
+Disable MCP:
+
+```bash
+./nukerat.py server mcp disable
+```
+
+Optional in `[mcp]`: `base_url` (empty = derive from `[server]` host/port/TLS), `tls_verify` (default `true`)
+
+## Host config
+
+Use **`server/mcp.json`** in the repo as the MCP server entry (paths from repo root):
+
+```json
+{
+  "mcpServers": {
+    "nukerat": {
+      "command": "./server/.venv/bin/python",
+      "args": ["./server/workers/mcp_server/main.py"],
+      "cwd": "./server/workers/mcp_server",
+      "env": {
+        "NUKERAT_BASE_URL": "http://127.0.0.1:9000",
+        "NUKERAT_TLS_VERIFY": "false"
+      }
+    }
+  }
+}
+```
+
+<Callout type="warning">
+  `9000` is the default team server port. If you changed the port in `server.conf`, set `NUKERAT_BASE_URL` to the same host and port.
+</Callout>
