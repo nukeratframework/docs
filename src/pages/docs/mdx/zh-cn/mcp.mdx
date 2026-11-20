@@ -1,0 +1,53 @@
+---
+title: MCP
+---
+
+import { Callout } from '@/ui/custom/callout';
+
+MCP 让任意 MCP 宿主机中的智能体调用 team server：listeners、sessions、terminal、implants，与 [team server API](/docs/rest-api/team-server) 能力一致
+
+## 在 team server 上启用
+
+在仓库根目录执行：
+
+```bash
+./nukerat.py server mcp enable
+```
+
+MCP 认证过期时，运行下面的命令续期。
+
+```bash
+./nukerat.py server mcp reauth
+```
+
+禁用 MCP：
+
+```bash
+./nukerat.py server mcp disable
+```
+
+`[mcp]` 中可选：`base_url`（留空则从 `[server]` 的 host/port/TLS 推导）、`tls_verify`（默认 `true`）
+
+## 主机配置
+
+将仓库中的 **`server/mcp.json`** 作为 MCP 服务器条目（路径相对于仓库根目录）：
+
+```json
+{
+  "mcpServers": {
+    "nukerat": {
+      "command": "./server/.venv/bin/python",
+      "args": ["./server/workers/mcp_server/main.py"],
+      "cwd": "./server/workers/mcp_server",
+      "env": {
+        "NUKERAT_BASE_URL": "http://127.0.0.1:9000",
+        "NUKERAT_TLS_VERIFY": "false"
+      }
+    }
+  }
+}
+```
+
+<Callout type="warning">
+  `9000` 为 team server 默认端口。若在 `server.conf` 中修改了端口，请将 `NUKERAT_BASE_URL` 设为相同的主机与端口。
+</Callout>
