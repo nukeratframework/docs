@@ -1,0 +1,53 @@
+---
+title: MCP
+---
+
+import { Callout } from '@/ui/custom/callout';
+
+MCP は任意の MCP ホスト上のエージェントから team server を呼び出します。listeners、sessions、terminal、implants など、[team server API](/docs/rest-api/team-server) と同じ操作面です
+
+## team server で有効化
+
+リポジトリのルートから:
+
+```bash
+./nukerat.py server mcp enable
+```
+
+MCP 認証の有効期限が切れたら、次のコマンドで更新します。
+
+```bash
+./nukerat.py server mcp reauth
+```
+
+MCP を無効化:
+
+```bash
+./nukerat.py server mcp disable
+```
+
+`[mcp]` の任意項目: `base_url`（空なら `[server]` の host/port/TLS から導出）、`tls_verify`（既定 `true`）
+
+## ホスト設定
+
+リポジトリの **`server/mcp.json`** を MCP サーバー定義として使います（パスはリポジトリルート基準）:
+
+```json
+{
+  "mcpServers": {
+    "nukerat": {
+      "command": "./server/.venv/bin/python",
+      "args": ["./server/workers/mcp_server/main.py"],
+      "cwd": "./server/workers/mcp_server",
+      "env": {
+        "NUKERAT_BASE_URL": "http://127.0.0.1:9000",
+        "NUKERAT_TLS_VERIFY": "false"
+      }
+    }
+  }
+}
+```
+
+<Callout type="warning">
+  `9000` は team server の既定ポートです。`server.conf` でポートを変更した場合は、`NUKERAT_BASE_URL` も同じホストとポートに合わせてください。
+</Callout>
