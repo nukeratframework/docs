@@ -41,6 +41,7 @@ const search = {
     ['Shortcuts', '/docs/shortcuts'],
     ['Operator key', '/docs/operator-key'],
     ['Rest API', '/docs/rest-api'],
+    ['MCP', '/docs/mcp'],
     ['Custom implants', '/docs/custom-implants'],
     ['Custom channels', '/docs/custom-channels'],
     ['Implants', '/docs/client/implants'],
