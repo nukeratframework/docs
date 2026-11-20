@@ -1,0 +1,53 @@
+---
+title: MCP
+---
+
+import { Callout } from '@/ui/custom/callout';
+
+MCP به عامل‌ها در هر میزبان MCP اجازه می‌دهد team server را صدا بزنند: listeners، sessions، terminal، implants — همان سطح [API تیم‌سرور](/docs/rest-api/team-server)
+
+## فعال‌سازی روی team server
+
+از ریشهٔ مخزن:
+
+```bash
+./nukerat.py server mcp enable
+```
+
+وقتی احراز هویت MCP منقضی شد، دستور زیر را برای تمدید اجرا کنید.
+
+```bash
+./nukerat.py server mcp reauth
+```
+
+غیرفعال‌ کردن MCP:
+
+```bash
+./nukerat.py server mcp disable
+```
+
+اختیاری در `[mcp]`: `base_url` (خالی = از host/port/TLS بخش `[server]`)، `tls_verify` (پیش‌فرض `true`)
+
+## پیکربندی میزبان
+
+از **`server/mcp.json`** در مخزن به‌عنوان ورودی سرور MCP استفاده کنید (مسیرها از ریشهٔ مخزن):
+
+```json
+{
+  "mcpServers": {
+    "nukerat": {
+      "command": "./server/.venv/bin/python",
+      "args": ["./server/workers/mcp_server/main.py"],
+      "cwd": "./server/workers/mcp_server",
+      "env": {
+        "NUKERAT_BASE_URL": "http://127.0.0.1:9000",
+        "NUKERAT_TLS_VERIFY": "false"
+      }
+    }
+  }
+}
+```
+
+<Callout type="warning">
+  `9000` پورت پیش‌فرض team server است. اگر پورت را در `server.conf` عوض کرده‌اید، `NUKERAT_BASE_URL` را با همان میزبان و پورت تنظیم کنید.
+</Callout>
